@@ -15,7 +15,7 @@ RSpec.describe XlWasher, type: :model do
 
   end
   it 'has an type of "xl_washer"' do
-    puts xl_washer.inspect
+    # puts xl_washer.inspect
     expect(xl_washer.type).to be_a_kind_of(String)
 
   end

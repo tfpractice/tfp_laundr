@@ -15,7 +15,7 @@ RSpec.describe LWasher, type: :model do
 
   end
   it 'has an type of "l_washer"' do
-    puts l_washer.inspect
+    # puts l_washer.inspect
     expect(l_washer.type).to be_a_kind_of(String)
 
   end
