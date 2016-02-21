@@ -25,6 +25,16 @@ RSpec.describe SWasher, type: :model do
       expect(s_washer.class.included_modules).to include(Small)
 
     end
+    describe '#price' do
+
+      it 'has a price method' do
+        expect(s_washer.methods).to include(:price)
+      end
+      it 'returns 2.00' do
+        expect(s_washer.price).to eq(2.00)
+
+      end
+    end
     describe '#capacity' do
 
       it 'has a capacity method' do
