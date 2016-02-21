@@ -60,4 +60,9 @@ group :test do
   gem "database_cleaner"
 end
 
+gem 'bootstrap'
+gem 'bootstrap-generators', '~> 3.3.4'
+gem 'simple_form'
+gem 'cocoon'
+
 
