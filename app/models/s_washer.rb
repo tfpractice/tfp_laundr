@@ -1,0 +1,2 @@
+class SWasher < Washer
+end
