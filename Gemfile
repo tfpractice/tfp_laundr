@@ -65,4 +65,6 @@ gem 'bootstrap-generators', '~> 3.3.4'
 gem 'simple_form'
 gem 'cocoon'
 gem 'devise'
+gem 'cancancan', '~> 1.13', '>= 1.13.1'
+
 
