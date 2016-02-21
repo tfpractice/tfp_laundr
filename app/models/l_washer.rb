@@ -1,0 +1,2 @@
+class LWasher < Washer
+end

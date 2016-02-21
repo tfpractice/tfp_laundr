@@ -1,0 +1,2 @@
+class MWasher < Washer
+end

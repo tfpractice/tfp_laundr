@@ -1,0 +1,2 @@
+class XlWasher < Washer
+end
