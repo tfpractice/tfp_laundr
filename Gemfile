@@ -66,5 +66,8 @@ gem 'simple_form'
 gem 'cocoon'
 gem 'devise'
 gem 'cancancan', '~> 1.13', '>= 1.13.1'
+gem 'state_machine'
+gem 'acts_as_list'
+
 
 
