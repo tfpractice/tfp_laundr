@@ -64,5 +64,5 @@ gem 'bootstrap'
 gem 'bootstrap-generators', '~> 3.3.4'
 gem 'simple_form'
 gem 'cocoon'
-
+gem 'devise'
 
