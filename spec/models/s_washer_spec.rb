@@ -15,8 +15,36 @@ RSpec.describe SWasher, type: :model do
 
   end
   it 'has an type of "s_washer"' do
-    puts s_washer.inspect
     expect(s_washer.type).to be_a_kind_of(String)
+
+  end
+  context 'included module Small' do
+
+
+    it 'includes the Small module in the ancestor chain' do
+      expect(s_washer.class.included_modules).to include(Small)
+
+    end
+    describe '#capacity' do
+
+      it 'has a capacity method' do
+        expect(s_washer.methods).to include(:capacity)
+      end
+      it 'returns 5.0' do
+        expect(s_washer.capacity).to eq(5.0)
+
+      end
+    end
+    describe '#period' do
+
+      it 'has a period method' do
+        expect(s_washer.methods).to include(:period)
+      end
+      it 'returns 20.0' do
+        expect(s_washer.period).to eq(20.0)
+
+      end
+    end
 
   end
 end
