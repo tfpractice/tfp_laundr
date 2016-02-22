@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
   resources :washers
+  resources :s_washers, controller: 'washers', type: 'SWasher'
+  resources :m_washers, controller: 'washers', type: 'MWasher'
+  resources :l_washers, controller: 'washers', type: 'LWasher'
+  resources :xl_washers, controller: 'washers', type: 'XLWasher'
+
   devise_for :users
   # get 'home/index'
 

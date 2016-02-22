@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:user) { build_stubbed(:user) }
+  let(:admin) { create(:admin) }
   describe 'attributes' do
     it 'has an email address' do
       expect(user.email).to be_a_kind_of(String)
@@ -18,6 +19,12 @@ RSpec.describe User, type: :model do
       end
       it 'defaults admin to false' do
         expect(user.admin).to be false
+      end
+
+      context 'when admin' do
+        it 'returns true' do
+          expect(admin.admin).to be true
+        end
       end
     end
   end
