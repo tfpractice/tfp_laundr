@@ -22,7 +22,9 @@ RSpec.describe SWasher, type: :model do
   context 'SubClass methods' do
 
 
-   
+   it 'includes the Washer class in ancestor chain' do
+     expect(s_washer.class.ancestors ).to include(Washer)
+   end
     describe '#price' do
 
       it 'has a price method' do

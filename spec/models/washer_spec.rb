@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Washer, type: :model do
   let(:user) { create(:user) }
-  let(:washer) { build_stubbed(:washer, user: user) }
+  let(:washer) { create(:washer, user: user) }
 
   it 'has a name' do
     expect(washer.name).to be_a_kind_of(String)
@@ -48,6 +48,13 @@ RSpec.describe Washer, type: :model do
 
       expect {washer.period}.to raise_error(RuntimeError, "Subclass responsibility")
 
+    end
+  end
+
+  context 'statemachine' do
+    it 'initializes with :available as default state' do
+      puts washer.state.inspect
+      expect(washer.state).to eq("available")
     end
   end
 
