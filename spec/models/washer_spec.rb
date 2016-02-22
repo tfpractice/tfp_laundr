@@ -53,9 +53,32 @@ RSpec.describe Washer, type: :model do
 
   context 'statemachine' do
     it 'initializes with :available as default state' do
-      puts washer.state.inspect
+
       expect(washer.state).to eq("available")
     end
+    describe '#claim' do
+      it 'responds to #claim ' do
+        expect(washer).to respond_to(:claim)
+      end
+      it 'changes washer state to :empty' do
+        washer.claim!
+        expect(washer.state).to eq("empty")
+
+      end
+    end
+    describe '#fill' do
+      it 'responds to #fill ' do
+        expect(washer).to respond_to(:fill)
+      end
+      it 'changes washer state to :empty' do
+        washer.claim!
+        washer.fill!
+        expect(washer.state).to eq("unpaid")
+
+      end
+    end
+
+
   end
 
 

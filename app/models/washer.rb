@@ -8,8 +8,24 @@ class Washer < ActiveRecord::Base
 
   workflow do
     state :available do
-      # event :submit, :transitions_to => :awaiting_review
+      event :claim, :transitions_to => :empty
     end
+    state :empty do
+      event :fill, :transitions_to => :unpaid
+    end
+    state :unpaid do
+      # event :fill, :transitions_to => :unpaid
+    end
+  end
+
+  def claim
+
+  end
+  def fill
+
+  end
+  def insert_coins(coins=0)
+
   end
   def capacity
     raise "Subclass responsibility"
