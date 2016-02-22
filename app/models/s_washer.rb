@@ -1,6 +1,5 @@
 class SWasher < Washer
 
-  include Small
 
   def price
     2.00

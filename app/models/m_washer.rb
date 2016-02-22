@@ -1,5 +1,4 @@
 class MWasher < Washer
-  include Medium
 
   def price
     3.00

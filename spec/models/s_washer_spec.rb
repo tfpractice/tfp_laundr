@@ -19,13 +19,10 @@ RSpec.describe SWasher, type: :model do
     expect(s_washer.type).to be_a_kind_of(String)
 
   end
-  context 'included module Small' do
+  context 'SubClass methods' do
 
 
-    it 'includes the Small module in the ancestor chain' do
-      expect(s_washer.class.included_modules).to include(Small)
-
-    end
+   
     describe '#price' do
 
       it 'has a price method' do
