@@ -1,0 +1,35 @@
+<div class="page-header">
+  <%= link_to new_dryer_path, class: 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+    New Dryer
+  <% end %>
+  <h1>Listing dryers</h1>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>State</th>
+            <th>User</th>
+            <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <%= content_tag_for(:tr, @dryers) do |dryer| %>
+            <td><%= dryer.name %></td>
+            <td><%= dryer.position %></td>
+            <td><%= dryer.state %></td>
+            <td><%= dryer.user %></td>
+            <td><%= link_to 'Show', dryer %></td>
+        <td><%= link_to 'Edit', edit_dryer_path(dryer) %></td>
+        <td><%= link_to 'Destroy', dryer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
+    </tbody>
+  </table>
+</div>

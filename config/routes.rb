@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :dryers
   resources :washers
   resources :s_washers, controller: 'washers', type: 'SWasher'
   resources :m_washers, controller: 'washers', type: 'MWasher'

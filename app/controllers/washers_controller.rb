@@ -1,6 +1,8 @@
 class WashersController < ApplicationController
   before_action :set_washer, only: [:show, :edit, :update, :destroy]
   before_action :subclasses
+  # load_and_authorize_resource
+
 
   # GET /washers
   # GET /washers.json
@@ -63,16 +65,16 @@ class WashersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_washer
-      @washer = Washer.find(params[:id])
-    end
-    def subclasses
-      @subclasses = Washer.subclasses
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_washer
+    @washer = Washer.find(params[:id])
+  end
+  def subclasses
+    @subclasses = Washer.subclasses
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def washer_params
-      params.require(:washer).permit(:name, :position, :type, :state, :user_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def washer_params
+    params.require(:washer).permit(:name, :position, :type, :state, :user_id)
+  end
 end
