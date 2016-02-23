@@ -5,6 +5,6 @@ FactoryGirl.define do
     name {Faker::Lorem.words(1)}
     position 1
     type ""
-    association :user
+    # association :user
   end
 end
