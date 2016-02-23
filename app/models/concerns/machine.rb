@@ -55,6 +55,7 @@ module Machine
 
   end
   def start
+    # end_cycle!
 
   end
   def end_cycle

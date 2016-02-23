@@ -24,6 +24,7 @@ RSpec.describe WashersController, type: :controller do
   # Washer. As you add validations to Washer, be sure to
   # adjust the attributes here as well.
   let(:user) { create(:admin) }
+  let(:washers) { Washer.all }
   let(:washer) { create(:washer, type: "MWasher")}
   let(:valid_attributes) {
     attributes_for(:washer, type: "MWasher")
@@ -47,11 +48,13 @@ RSpec.describe WashersController, type: :controller do
     it "assigns all washers as @washers" do
       puts washer.inspect
 
+      # @washer = washer.becomes(Washer)
+      # puts @washer.becomes(Washer)
       @washer = washer.becomes(Washer)
-      puts @washer.becomes(Washer)
+      puts @washer
 
       get :index
-      expect(assigns(:washers)).to eq([@washer.becomes(Washer)])
+      expect(assigns(:washers)).to match_array([@washer])
     end
   end
 
