@@ -31,7 +31,7 @@ RSpec.describe SWasher, type: :model do
         expect(s_washer.methods).to include(:price)
       end
       it 'returns 2.00' do
-        expect(s_washer.price).to eq(2.00)
+        expect(s_washer.price).to eq(8)
 
       end
     end

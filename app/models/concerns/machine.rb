@@ -38,7 +38,14 @@ module Machine
     end
   end
 
-  def claim
+  # def claim
+
+  # end
+  def claim(user=nil)
+    update_attribute(:user, user)
+  end
+  def unclaim
+    update_attribute(:user, nil)
 
   end
   def fill
@@ -56,9 +63,7 @@ module Machine
   def remove_clothes
 
   end
-  def unclaim
-
-  end
+  
   def capacity
     raise "Subclass responsibility"
   end

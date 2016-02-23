@@ -1,7 +1,7 @@
 class MWasher < Washer
 
   def price
-    3.00
+    12
   end
   def capacity
     10.0

@@ -2,7 +2,7 @@ class SWasher < Washer
 
 
   def price
-    2.00
+    8
   end
   def capacity
     5.0
