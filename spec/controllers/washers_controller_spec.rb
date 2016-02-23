@@ -23,13 +23,20 @@ RSpec.describe WashersController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Washer. As you add validations to Washer, be sure to
   # adjust the attributes here as well.
+  let(:user) { create(:admin) }
+  let(:washer) { create(:washer, type: "MWasher")}
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:washer, type: "MWasher")
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {type: nil}
   }
+  before :each do
+    sign_in user
+    # washer = washer.becomes(Washer)
+
+  end
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -38,23 +45,27 @@ RSpec.describe WashersController, type: :controller do
 
   describe "GET #index" do
     it "assigns all washers as @washers" do
-      washer = Washer.create! valid_attributes
-      get :index, {}, valid_session
-      expect(assigns(:washers)).to eq([washer])
+      puts washer.inspect
+
+      @washer = washer.becomes(Washer)
+      puts @washer.becomes(Washer)
+
+      get :index
+      expect(assigns(:washers)).to eq([@washer.becomes(Washer)])
     end
   end
 
   describe "GET #show" do
     it "assigns the requested washer as @washer" do
       washer = Washer.create! valid_attributes
-      get :show, {:id => washer.to_param}, valid_session
+      get :show, {:id => washer.to_param}
       expect(assigns(:washer)).to eq(washer)
     end
   end
 
   describe "GET #new" do
     it "assigns a new washer as @washer" do
-      get :new, {}, valid_session
+      get :new, attributes_for(:washer)
       expect(assigns(:washer)).to be_a_new(Washer)
     end
   end
@@ -103,11 +114,12 @@ RSpec.describe WashersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {type: "SWasher"}
       }
 
       it "updates the requested washer" do
         washer = Washer.create! valid_attributes
+        washer = washer.becomes(Washer)
         put :update, {:id => washer.to_param, :washer => new_attributes}, valid_session
         washer.reload
         skip("Add assertions for updated state")

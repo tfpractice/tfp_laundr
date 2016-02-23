@@ -1,7 +1,7 @@
 require 'rails_helper'
 RSpec.describe Washer, type: :model do
   let(:user) { create(:user) }
-  let(:washer) { create(:washer) }
+  let(:washer) { create(:washer, type: "MWasher") }
   # let(:washer) { create(:washer, user: user) }
   it 'has a name' do
     expect(washer.name).to be_a_kind_of(String)

@@ -1,10 +1,22 @@
 Rails.application.routes.draw do
+
+
+  concern :machine do
+    member do
+      patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
+    end
+  end
   resources :dryers
-  resources :washers
-  resources :s_washers, controller: 'washers', type: 'SWasher'
-  resources :m_washers, controller: 'washers', type: 'MWasher'
-  resources :l_washers, controller: 'washers', type: 'LWasher'
-  resources :xl_washers, controller: 'washers', type: 'XLWasher'
+  resources :washers, concerns: :machine
+  # resources :washers do
+  # member do
+  #   patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
+  # end
+  # end
+  resources :s_washers, controller: 'washers', type: 'SWasher'#, concerns: :machine
+  resources :m_washers, controller: 'washers', type: 'MWasher'#, concerns: :machine
+  resources :l_washers, controller: 'washers', type: 'LWasher'#, concerns: :machine
+  resources :xl_washers, controller: 'washers', type: 'XLWasher'#, concerns: :machine
 
   devise_for :users
   # get 'home/index'

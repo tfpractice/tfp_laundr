@@ -1,7 +1,7 @@
 class WashersController < ApplicationController
   before_action :set_washer, only: [:show, :edit, :update, :destroy]
   before_action :subclasses
-  # load_and_authorize_resource
+  load_and_authorize_resource
 
 
   # GET /washers
