@@ -8,7 +8,7 @@ class Dryer < ActiveRecord::Base
   def capacity
     15.0
   end
-  def period
-    30.0
+  def period(coins=0)
+    5 * coins
   end
 end

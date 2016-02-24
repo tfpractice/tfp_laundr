@@ -2,31 +2,42 @@ module WashersHelper
 
 
   def washer_list_item(washer)
-    case washer.state
-    when "available"
-      content_tag :li, class:"washer list-group-item clearfix" do
+    capture do
+      if can? :use, washer
+        case washer.state
+        when "available"
+          content_tag :li, class:"washer list-group-item clearfix" do
 
-        next_step_link(washer)
-      end
-    when "empty"
-      content_tag :li, class:"washer list-group-item list-group-item-info clearfix" do
-        next_step_link(washer)
-      end
-    when "unpaid"
-      content_tag :li, class:"washer list-group-item list-group-item-warning clearfix" do
-        next_step_link(washer)
-      end
-    when "ready"
-      content_tag :li, class:"washer list-group-item list-group-item-warning clearfix" do
-        next_step_link(washer)
-      end
-    when "in_progess"
-      content_tag :li, class:"washer list-group-item list-group-item-success clearfix" do
-        next_step_link(washer)
-      end
-    when "complete"
-      content_tag :li, class:"washer list-group-item list-group-item-success clearfix" do
-        next_step_link(washer)
+            next_step_link(washer)
+          end
+        when "empty"
+          content_tag :li, class:"washer list-group-item list-group-item-info clearfix" do
+            next_step_link(washer)
+          end
+        when "unpaid"
+          content_tag :li, class:"washer list-group-item list-group-item-warning clearfix" do
+            next_step_link(washer)
+          end
+        when "ready"
+          content_tag :li, class:"washer list-group-item list-group-item-warning clearfix" do
+            next_step_link(washer)
+          end
+        when "in_progess"
+          content_tag :li, class:"washer list-group-item list-group-item-success clearfix" do
+            next_step_link(washer)
+          end
+        when "complete"
+          content_tag :li, class:"washer list-group-item list-group-item-success clearfix" do
+            next_step_link(washer)
+          end
+
+        end
+
+      else
+        content_tag :li, class:"washer list-group-item disabled clearfix" do
+
+          next_step_link(washer)
+        end
       end
 
 

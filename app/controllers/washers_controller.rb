@@ -1,5 +1,6 @@
 class WashersController < ApplicationController
-  before_action :set_washer, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
+  include MachineController
+  # before_action :set_washer, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
   before_action :subclasses
   # before_action :set_type
 
@@ -26,42 +27,42 @@ class WashersController < ApplicationController
   # GET /washers/1/edit
   def edit
   end
-  def claim
-    @washer.claim!(current_user)
-    redirect_to @washer, notice: " Washer #{@washer.name} is yours"
-  end
-  def unclaim
-    @washer.unclaim!
-    redirect_to @washer, notice: " Washer #{@washer.name} is available"
+  # def claim
+  #   @washer.claim!(current_user)
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is yours"
+  # end
+  # def unclaim
+  #   @washer.unclaim!
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is available"
 
-  end
-  def fill
-    @washer.fill!
-    redirect_to @washer, notice: " Washer #{@washer.name} is unpaid"
-
-
-  end
-  def insert_coins(coins=0)
-    @washer.insert_coins!
-    redirect_to @washer, notice: " Washer #{@washer.name} is ready"
-
-  end
-  def start
-    @washer.start!
-    @washer.end_cycle!
-    redirect_to @washer, notice: " Washer #{@washer.name} is in_progress and has ended"
+  # end
+  # def fill
+  #   @washer.fill!
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is unpaid"
 
 
-  end
-  def end_cycle
+  # end
+  # def insert_coins(coins=0)
+  #   @washer.insert_coins!
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is ready"
 
-  end
-  def remove_clothes
-    @washer.remove_clothes!
-    redirect_to @washer, notice: " Washer #{@washer.name} is yours"
+  # end
+  # def start
+  #   @washer.start!
+  #   @washer.end_cycle!
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is in_progress and has ended"
 
 
-  end
+  # end
+  # def end_cycle
+
+  # end
+  # def remove_clothes
+  #   @washer.remove_clothes!
+  #   redirect_to @washer, notice: " Washer #{@washer.name} is yours"
+
+
+  # end
 
 
   # POST /washers
@@ -106,8 +107,11 @@ class WashersController < ApplicationController
 
   private
   # Use callbacks to share common setup or constraints between actions.
-  def set_washer
-    @washer = Washer.find(params[:id]).becomes(Washer)
+  def set_machine
+    @machine = Washer.find(params[:id]).becomes(Washer)
+    @washer = @machine
+
+    # @washer = Washer.find(params[:id]).becomes(Washer)
     # @washer.becomes(Washer)
   end
   # def set_type
