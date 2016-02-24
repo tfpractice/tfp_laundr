@@ -10,6 +10,7 @@ class WashersController < ApplicationController
   # GET /washers.json
   def index
     @washers = Washer.all
+    # @washers.becomes(Washer)
   end
 
   # GET /washers/1
@@ -106,7 +107,8 @@ class WashersController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_washer
-    @washer = Washer.find(params[:id])
+    @washer = Washer.find(params[:id]).becomes(Washer)
+    # @washer.becomes(Washer)
   end
   # def set_type
   #     @type = type

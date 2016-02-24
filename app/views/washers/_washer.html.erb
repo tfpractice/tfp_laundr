@@ -1,43 +1,35 @@
 <li class="washer list-group-item clearfix">
 	<!-- <span class="label label-default label-pill pull-xs-right"></span> -->
-	<%= link_to "#{washer.name}", washer %>
+	<%= link_to "#{washer.name} (#{washer.state})", washer, class:"washerNameLink" %>
+	<%#= link_to washer do %>
+	<!-- <h3><%#= washer.name %></h3> -->
 	<span class= "pull-right ">
-		<sub>
 		<%#= washer.username %>
-		<%= washer.state %>
-		</sub>
-		<%# if can? :manage, washer  %>
-		<%#= link_to edit_washer_path(washer), class: 'btn btn-primary pull-xs-right' do %>
-		<!-- <span class="glyphicon glyphicon-pencil"></span> -->
+		<%#= washer.state %>
 		
-		<%# end %>
-		<%# end %>
-		<%# if can? :claim, washer  %>
-		<%#= link_to claim_washer_path(washer),method: :patch, class: 'btn btn-primary pull-xs-right' do %>
-		<!-- <span class="glyphicon glyphicon-hand-right"></span> -->
 		
-		<%# end %>
-		<%# end %>
 		<% if can? :use, washer  %>
 		<%= next_step_link(washer) %>
 		<%#=	washer.current_state.events %>
 		<%# 	washer.current_state.events.each do |event| %>
 		<%#= event[0].to_sym %>
 		<%# link_to('Click here', controller: 'users',
-        action: 'new', message: 'Welcome!') %>
-        <%# url_for washer.event %>
-        <%# polymorphic_url washer.becomes(Washer), action:"#{event[0].to_sym}", method: :patch %>
+		action: 'new', message: 'Welcome!') %>
+		<%# url_for washer.event %>
+		<%# polymorphic_url washer.becomes(Washer), action:"#{event[0].to_sym}", method: :patch %>
 		<%#= link_to claim_washer_path(washer), method: :patch, class: 'btn btn-primary pull-xs-right' do %>
 		<!-- <span class="glyphicon glyphicon-off"></span> -->
 		
 		<%# end %>
 		<%# end %>
-		<% end %>
-		
-		<%= link_to washer_path(washer), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary pull-xs-left' do %>
+		<% if can? :manage, washer  %><%= link_to washer_path(washer), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary pull-xs-left' do %>
 		<span class="glyphicon glyphicon-remove-circle"></span>
 		
 		<% end %>
+		<% end %>
+		<% end %>
+		
+		
 		<%# end %>
 		
 		

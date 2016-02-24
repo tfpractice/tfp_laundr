@@ -27,3 +27,9 @@
   <dd><%= @washer.user %></dd>
 
 </dl>
+<ul class="list-group bg-info">
+  <%#= @washers.length %>
+  <%#= @washer %>
+  <%= washer_list_item(@washer) %>
+  <%#= render partial: "washer", collection: @washers, as: :washer %>
+</ul>

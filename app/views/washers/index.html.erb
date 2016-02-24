@@ -6,8 +6,11 @@
   <h1>Listing washers</h1>
 </div>
 <ul class="list-group bg-info">
-  <%= @washers.length %>
-  <%= render partial: "washer", collection: @washers, as: :washer %>
+   <% @washers.each do |washer| %>
+  <%= washer_list_item(washer) %>
+     
+   <% end %>
+  <%#= render partial: "washer", collection: @washers, as: :washer %>
 </ul>
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
