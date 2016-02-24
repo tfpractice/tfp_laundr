@@ -198,6 +198,116 @@ RSpec.describe DryersController, type: :controller do
         expect(response).to redirect_to(dryer)
       end
     end
+
+    context 'when claimed' do
+      before(:each) do
+        patch :claim, id: dryer
+      end
+
+
+      describe 'PATCH #unclaim' do
+        it 'sets dryer state to available' do
+          patch :unclaim, id: dryer
+
+          dryer.reload
+          expect(dryer.state).to eq("available")
+
+        end
+        it 'sets dryer user to nil' do
+          patch :unclaim, id: dryer
+
+          dryer.reload
+          expect(dryer.user).to eq(nil)
+
+        end
+        it "redirects to the dryers list" do
+          patch :unclaim, id: dryer
+
+          # delete :destroy, {:id => dryer.to_param}, valid_session
+          expect(response).to redirect_to(dryer)
+        end
+      end
+      describe 'PATCH #fill' do
+        it 'sets dryer state to unpaid' do
+          patch :fill, id: dryer
+
+          dryer.reload
+          expect(dryer.state).to eq("unpaid")
+
+        end
+
+        it "redirects to the dryers list" do
+          patch :fill, id: dryer
+
+          # delete :destroy, {:id => dryer.to_param}, valid_session
+          expect(response).to redirect_to(dryer)
+        end
+      end
+      context 'when unpaid' do
+        before(:each) do
+          patch :fill, id: dryer
+        end
+        describe 'insert_coins' do
+          it 'sets dryer state to ready' do
+            patch :insert_coins, id: dryer
+
+            dryer.reload
+            expect(dryer.state).to eq("ready")
+
+          end
+
+          it "redirects to the dryers list" do
+            patch :insert_coins, id: dryer
+
+            # delete :destroy, {:id => dryer.to_param}, valid_session
+            expect(response).to redirect_to(dryer)
+          end
+        end
+        context 'when ready' do
+          before(:each) do
+            patch :insert_coins, id: dryer
+          end
+          describe 'start' do
+            it 'sets dryer state to complete' do
+              patch :start, id: dryer
+
+              dryer.reload
+              expect(dryer.state).to eq("complete")
+
+            end
+
+            it "redirects to the dryers list" do
+              patch :start, id: dryer
+
+              # delete :destroy, {:id => dryer.to_param}, valid_session
+              expect(response).to redirect_to(dryer)
+            end
+          end
+          context 'when complete' do
+            before(:each) do
+              patch :start, id: dryer
+            end
+            describe 'remove_clothes' do
+              it 'sets dryer state to empty' do
+                patch :remove_clothes, id: dryer
+
+                dryer.reload
+                expect(dryer.state).to eq("empty")
+
+              end
+
+              it "redirects to the dryers list" do
+                patch :remove_clothes, id: dryer
+
+                # delete :destroy, {:id => dryer.to_param}, valid_session
+                expect(response).to redirect_to(dryer)
+              end
+            end
+          end
+        end
+
+      end
+    end
   end
 
 end
