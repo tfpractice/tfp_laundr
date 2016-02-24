@@ -11,7 +11,7 @@ module MachineController
 
   included do
     before_action :set_machine, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
-    before_action :subclasses
+    # before_action :subclasses
     # before_action :set_type
 
     load_and_authorize_resource

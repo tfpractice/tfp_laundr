@@ -1,5 +1,6 @@
 class DryersController < ApplicationController
-  before_action :set_dryer, only: [:show, :edit, :update, :destroy]
+  include MachineController
+  # before_action :set_dryer, only: [:show, :edit, :update, :destroy]
 
   # GET /dryers
   # GET /dryers.json
@@ -63,8 +64,9 @@ class DryersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_dryer
-      @dryer = Dryer.find(params[:id])
+    def set_machine
+      @machine = Dryer.find(params[:id])
+      @dryer =@machine
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

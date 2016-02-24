@@ -200,7 +200,7 @@ RSpec.describe WashersController, type: :controller do
         expect(washer.state).to eq("empty")
 
       end
-       it 'sets washer user to current_user' do
+      it 'sets washer user to current_user' do
         patch :claim, id: washer
         # {:id => washer.to_param, :washer => new_attributes}, valid_session
 
@@ -219,6 +219,114 @@ RSpec.describe WashersController, type: :controller do
         expect(response).to redirect_to(washer)
       end
     end
+    context 'when claimed' do
+      before(:each) do
+        patch :claim, id: washer
+      end
 
+
+      describe 'PATCH #unclaim' do
+        it 'sets washer state to available' do
+          patch :unclaim, id: washer
+
+          washer.reload
+          expect(washer.state).to eq("available")
+
+        end
+        it 'sets washer user to nil' do
+          patch :unclaim, id: washer
+
+          washer.reload
+          expect(washer.user).to eq(nil)
+
+        end
+        it "redirects to the washers list" do
+          patch :unclaim, id: washer
+
+          # delete :destroy, {:id => washer.to_param}, valid_session
+          expect(response).to redirect_to(washer)
+        end
+      end
+      describe 'PATCH #fill' do
+        it 'sets washer state to unpaid' do
+          patch :fill, id: washer
+
+          washer.reload
+          expect(washer.state).to eq("unpaid")
+
+        end
+
+        it "redirects to the washers list" do
+          patch :fill, id: washer
+
+          # delete :destroy, {:id => washer.to_param}, valid_session
+          expect(response).to redirect_to(washer)
+        end
+      end
+      context 'when unpaid' do
+        before(:each) do
+          patch :fill, id: washer
+        end
+        describe 'insert_coins' do
+          it 'sets washer state to ready' do
+            patch :insert_coins, id: washer
+
+            washer.reload
+            expect(washer.state).to eq("ready")
+
+          end
+
+          it "redirects to the washers list" do
+            patch :insert_coins, id: washer
+
+            # delete :destroy, {:id => washer.to_param}, valid_session
+            expect(response).to redirect_to(washer)
+          end
+        end
+        context 'when ready' do
+          before(:each) do
+            patch :insert_coins, id: washer
+          end
+          describe 'start' do
+            it 'sets washer state to complete' do
+              patch :start, id: washer
+
+              washer.reload
+              expect(washer.state).to eq("complete")
+
+            end
+
+            it "redirects to the washers list" do
+              patch :start, id: washer
+
+              # delete :destroy, {:id => washer.to_param}, valid_session
+              expect(response).to redirect_to(washer)
+            end
+          end
+          context 'when complete' do
+            before(:each) do
+              patch :start, id: washer
+            end
+            describe 'remove_clothes' do
+              it 'sets washer state to empty' do
+                patch :remove_clothes, id: washer
+
+                washer.reload
+                expect(washer.state).to eq("empty")
+
+              end
+
+              it "redirects to the washers list" do
+                patch :remove_clothes, id: washer
+
+                # delete :destroy, {:id => washer.to_param}, valid_session
+                expect(response).to redirect_to(washer)
+              end
+            end
+
+          end
+        end
+      end
+    end
   end
 end

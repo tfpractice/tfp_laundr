@@ -22,10 +22,16 @@ RSpec.describe DryersController, type: :controller do
 
   # This should return the minimal set of attributes required to create a valid
   # Dryer. As you add validations to Dryer, be sure to
-  # adjust the attributes here as well.
+  # adjust the attributes here as well.let(:user) { create(:admin) }
+  let(:user) { create(:admin) }
+  let(:dryers) { dryer.all }
+  let(:dryer) { create(:dryer)}
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    attributes_for(:dryer)
   }
+  before :each do
+    sign_in user
+  end
 
   let(:invalid_attributes) {
     skip("Add a hash of attributes invalid for your model")
@@ -38,7 +44,7 @@ RSpec.describe DryersController, type: :controller do
 
   describe "GET #index" do
     it "assigns all dryers as @dryers" do
-      dryer = Dryer.create! valid_attributes
+      # dryer = Dryer.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:dryers)).to eq([dryer])
     end
@@ -46,7 +52,7 @@ RSpec.describe DryersController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested dryer as @dryer" do
-      dryer = Dryer.create! valid_attributes
+      # dryer = Dryer.create! valid_attributes
       get :show, {:id => dryer.to_param}, valid_session
       expect(assigns(:dryer)).to eq(dryer)
     end
@@ -153,6 +159,44 @@ RSpec.describe DryersController, type: :controller do
       dryer = Dryer.create! valid_attributes
       delete :destroy, {:id => dryer.to_param}, valid_session
       expect(response).to redirect_to(dryers_url)
+    end
+  end
+  describe 'MachineController' do
+    it 'includes the MachineController Module from concerns' do
+      # puts controller.class.included_modules
+      expect(controller.class.included_modules).to include(MachineController)
+    end
+
+    describe 'PATCH #claim' do
+      it 'sets dryer state to empty' do
+        patch :claim, id: dryer
+        # {:id => dryer.to_param, :dryer => new_attributes}, valid_session
+
+        # expect {
+        #   patch :claim, id: dryer
+        # }.to change(dryer, :state)
+        dryer.reload
+        expect(dryer.state).to eq("empty")
+
+      end
+      it 'sets dryer user to current_user' do
+        patch :claim, id: dryer
+        # {:id => dryer.to_param, :dryer => new_attributes}, valid_session
+
+        # expect {
+        #   patch :claim, id: dryer
+        # }.to change(dryer, :state)
+        dryer.reload
+        expect(dryer.user).to eq(user)
+
+      end
+      it "redirects to the dryers list" do
+        # dryer = dryer.create! valid_attributes
+        patch :claim, id: dryer
+
+        # delete :destroy, {:id => dryer.to_param}, valid_session
+        expect(response).to redirect_to(dryer)
+      end
     end
   end
 

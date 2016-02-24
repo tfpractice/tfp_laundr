@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
     end
   end
-  resources :dryers
+  resources :dryers, concerns: :machine
   resources :washers, concerns: :machine
   # resources :washers do
   # member do
