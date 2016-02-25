@@ -40,6 +40,8 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'faker'
+  gem "database_cleaner"
+
 end
 
 group :development do
@@ -57,7 +59,6 @@ group :test do
   gem 'shoulda-matchers', '~> 3.1'
   gem "capybara"
   gem "launchy"
-  gem "database_cleaner"
 end
 
 gem 'bootstrap'
@@ -68,6 +69,3 @@ gem 'devise'
 gem 'cancancan', '~> 1.13', '>= 1.13.1'
 gem 'workflow', '~> 1.2'
 gem 'acts_as_list'
-
-
-

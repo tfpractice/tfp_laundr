@@ -1,6 +1,7 @@
 class Dryer < ActiveRecord::Base
   belongs_to :user
 
+
   include Machine
   def initialize(attributes={})
     super()
@@ -9,9 +10,8 @@ class Dryer < ActiveRecord::Base
     @capacity = 15.0
     @period = 5 * @coins
   end
- 
-  # def insert_coins(count=0)
-  #   @coins += count
-
-  # end
+  private
+  def set_name
+    self.update_column(:name, "Dryer ##{self.id}" )  unless self.name
+  end
 end

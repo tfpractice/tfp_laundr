@@ -10,6 +10,8 @@ module Machine
 
 
   included do
+    after_save :set_name, on: [:create, :new]
+
     attr_reader :price, :capacity, :period
 
 
