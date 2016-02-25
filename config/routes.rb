@@ -18,8 +18,7 @@ Rails.application.routes.draw do
   resources :l_washers, controller: 'washers', type: 'LWasher'#, concerns: :machine
   resources :xl_washers, controller: 'washers', type: 'XLWasher'#, concerns: :machine
 
-  devise_for :users
-  # get 'home/index'
+  devise_for :users, controllers: { registrations: 'users/registrations'  }  # get 'home/index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
