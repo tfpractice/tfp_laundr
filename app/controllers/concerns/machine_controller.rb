@@ -1,13 +1,14 @@
 module MachineController
   extend ActiveSupport::Concern
 
-  module ClassMethods
+    # module ClassMethods
 
-  end
+    # end
 
-  module InstanceMethods
+    # module InstanceMethods
 
-  end
+    # end
+
 
   included do
     before_action :set_machine, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
@@ -32,7 +33,7 @@ module MachineController
 
 
   end
-  def insert_coins(coins=0)
+  def insert_coins(count=0)
     @machine.insert_coins!
     redirect_to @machine, notice: " machine #{@machine.name} is ready"
 
@@ -55,10 +56,10 @@ module MachineController
   end
   private
   # Use callbacks to share common setup or constraints between actions.
-  def set_machine
+  # def set_machine
     # @machine = machine.find(params[:id]).becomes(machine)
     # @machine.becomes(machine)
-  end
+  # end
   # def set_type
   #     @type = type
   #  end
@@ -66,19 +67,19 @@ module MachineController
   #  def type
   #      Animal.races.include?(params[:type]) ? params[:type] : "Animal"
   #  end
-  def method_name
+  # def method_name
   	
-  end
+  # end
 
   #  def type_class
   #      type.constantize
   #  end
-  def subclasses
-    @subclasses = machine.subclasses
-  end
+  # def subclasses
+  #   @subclasses = machine.subclasses
+  # end
 
   # Never trust parameters from the scary internet, only allow the white list through.
-  def machine_params
-    params.require(:machine).permit(:name, :position, :type, :state, :user_id)
-  end
+  # def machine_params
+    # params.require(:machine).permit(:name, :position, :type, :state, :user_id)
+  # end
 end

@@ -61,6 +61,7 @@ RSpec.describe DryersController, type: :controller do
   describe "GET #new" do
     it "assigns a new dryer as @dryer" do
       get :new, {}, valid_session
+      # puts controller.instance
       expect(assigns(:dryer)).to be_a_new(Dryer)
     end
   end
@@ -170,11 +171,7 @@ RSpec.describe DryersController, type: :controller do
     describe 'PATCH #claim' do
       it 'sets dryer state to empty' do
         patch :claim, id: dryer
-        # {:id => dryer.to_param, :dryer => new_attributes}, valid_session
 
-        # expect {
-        #   patch :claim, id: dryer
-        # }.to change(dryer, :state)
         dryer.reload
         expect(dryer.state).to eq("empty")
 
@@ -249,6 +246,7 @@ RSpec.describe DryersController, type: :controller do
         end
         describe 'insert_coins' do
           it 'sets dryer state to ready' do
+
             patch :insert_coins, id: dryer
 
             dryer.reload

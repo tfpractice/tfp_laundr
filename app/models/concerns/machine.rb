@@ -1,14 +1,18 @@
 module Machine
   extend ActiveSupport::Concern
-  # module ClassMethods
+  attr_accessor :coins
+  # attr_reader :price, :capacity, :period
 
-  # end
+  def initialize(attributes={})
+    super()
+    @coins = 0
+  end
 
-  # module InstanceMethods
-
-  # end
 
   included do
+    attr_reader :price, :capacity, :period
+
+
     include Workflow
     acts_as_list
 
@@ -38,9 +42,7 @@ module Machine
     end
   end
 
-  # def claim
 
-  # end
   def claim(user=nil)
     update_attribute(:user, user)
   end
@@ -51,7 +53,14 @@ module Machine
   def fill
 
   end
-  def insert_coins(coins=0)
+  def insert_coins(count=0)
+    @price ||= count
+    if @coins + count > @price
+      raise "Cannot supply more than #{@price} coins"
+    else
+      @coins += count
+
+    end
 
   end
   def start
@@ -64,7 +73,7 @@ module Machine
   def remove_clothes
 
   end
-  
+
   def capacity
     raise "Subclass responsibility"
   end

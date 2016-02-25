@@ -25,26 +25,59 @@ RSpec.describe Washer, type: :model do
       it 'has a price method' do
         expect(washer.methods).to include(:price)
       end
-      it 'raises a RuntimeError' do
-        expect {washer.price}.to raise_error(RuntimeError, "Subclass responsibility")
+      it 'returns the subclass price attribute' do
+        # washer.reload
+        # puts washer.class
+        # puts washer
+        # puts washer.instance_variables.sort
+        expect(washer.price).to be(nil)
+        # expect {washer.price}.to raise_error(RuntimeError, "Subclass responsibility")
       end
     end
     describe '#capacity' do
       it 'has a capacity method' do
         expect(washer.methods).to include(:capacity)
       end
-      it 'raises a RuntimeError' do
-        expect {washer.capacity}.to raise_error(RuntimeError, "Subclass responsibility")
+      it 'returns the subclass capacity attribute' do
+
+        expect(washer.capacity).to be(nil)
       end
+      # it 'raises a RuntimeError' do
+      #   expect {washer.capacity}.to raise_error(RuntimeError, "Subclass responsibility")
+      # end
     end
     describe '#period' do
       it 'has a period method' do
         expect(washer.methods).to include(:period)
       end
-      it 'raises a RuntimeError' do
-        expect {washer.period}.to raise_error(RuntimeError, "Subclass responsibility")
+      it 'returns the subclass capacity attribute' do
+
+        expect(washer.period).to be(nil)
+      end
+      # it 'raises a RuntimeError' do
+      #   expect {washer.period}.to raise_error(RuntimeError, "Subclass responsibility")
+      # end
+    end
+
+    describe '#coins' do
+      it 'has a coins attribute' do
+
+
+        expect(washer).to respond_to(:coins)
+
+      end
+      it 'initializes with 0 coins' do
+
+
+        expect(washer.coins).to be(0)
       end
     end
+
+
+
+
+
+
     context 'statemachine' do
       it 'initializes with :available as default state' do
         expect(washer.state).to eq("available")
@@ -92,6 +125,14 @@ RSpec.describe Washer, type: :model do
             describe '#insert_coins' do
               it 'responds to #insert_coins ' do
                 expect(washer).to respond_to(:insert_coins)
+              end
+              it 'changes coins by 0 without args' do
+                # puts washer.instance_variables
+                expect{washer.insert_coins!}.not_to change{washer.coins}
+              end
+              it 'changes coins by count' do
+                puts washer.coins
+                expect{washer.insert_coins!(3)}.to change{washer.coins}.from(0).to(3)
               end
               it 'changes washer state to ready' do
 

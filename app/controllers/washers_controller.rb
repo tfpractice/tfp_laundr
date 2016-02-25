@@ -3,6 +3,7 @@ class WashersController < ApplicationController
   # before_action :set_washer, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
   before_action :subclasses
   # before_action :set_type
+  # attr_accessor :coins
 
   load_and_authorize_resource
 

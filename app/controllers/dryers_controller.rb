@@ -51,6 +51,11 @@ class DryersController < ApplicationController
       end
     end
   end
+  # def insert_coins(count=0)
+  #   @dryer.insert_coins!
+  #   redirect_to @dryer, notice: " machine #{@dryer.name} is ready"
+
+  # end
 
   # DELETE /dryers/1
   # DELETE /dryers/1.json
@@ -63,14 +68,14 @@ class DryersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_machine
-      @machine = Dryer.find(params[:id])
-      @dryer =@machine
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_machine
+    @machine = Dryer.find(params[:id]).becomes(Dryer)
+    @dryer = @machine
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def dryer_params
-      params.require(:dryer).permit(:name, :position, :state, :user_id)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def dryer_params
+    params.require(:dryer).permit(:name, :position, :state, :user_id)
+  end
 end
