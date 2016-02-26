@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+  resources :loads
   concern :machine do
     member do
       patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes

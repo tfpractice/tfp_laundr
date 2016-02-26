@@ -1,0 +1,35 @@
+<div class="page-header">
+  <%= link_to new_load_path, class: 'btn btn-primary' do %>
+    <span class="glyphicon glyphicon-plus"></span>
+    New Load
+  <% end %>
+  <h1>Listing loads</h1>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+            <th>Weight</th>
+            <th>State</th>
+            <th>User</th>
+            <th>Machine</th>
+            <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <%= content_tag_for(:tr, @loads) do |load| %>
+            <td><%= load.weight %></td>
+            <td><%= load.state %></td>
+            <td><%= load.user %></td>
+            <td><%= load.machine %></td>
+            <td><%= link_to 'Show', load %></td>
+        <td><%= link_to 'Edit', edit_load_path(load) %></td>
+        <td><%= link_to 'Destroy', load, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      <% end %>
+    </tbody>
+  </table>
+</div>

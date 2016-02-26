@@ -1,7 +1,6 @@
 module Machine
   extend ActiveSupport::Concern
   attr_accessor :coins
-  # attr_reader :price, :capacity, :period
 
   def initialize(attributes={})
     super()
@@ -10,9 +9,10 @@ module Machine
 
 
   included do
+    attr_reader :price, :capacity, :period
+    has_one :load, as: :machine
     after_save :set_name, on: [:create, :new]
 
-    attr_reader :price, :capacity, :period
 
 
     include Workflow

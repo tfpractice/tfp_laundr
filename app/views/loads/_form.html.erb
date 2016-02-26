@@ -1,0 +1,14 @@
+<%= simple_form_for(@load) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :weight %>
+    <%= f.input :state %>
+    <%= f.association :user %>
+    <%= f.association :machine %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
