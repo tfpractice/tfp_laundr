@@ -4,7 +4,7 @@ module Machine
 
   def initialize(attributes={})
     super()
-    @coins = 0
+    @coins ||= 0
   end
 
 
@@ -12,6 +12,7 @@ module Machine
     attr_reader :price, :capacity, :period
     has_one :load, as: :machine
     after_save :set_name, on: [:create, :new]
+    # after_initialize :set_instance_attributes
 
 
 
@@ -85,4 +86,8 @@ module Machine
   def price
     raise "Subclass responsibility"
   end
+
+  # def set_instance_attributes
+  #   @coins ||= 0
+  # end
 end

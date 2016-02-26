@@ -10,7 +10,9 @@ class Washer < ActiveRecord::Base
   include Machine
 
   def set_name
-  #   self.name ||= "Washer_#{self.id}"
+    #   self.name ||= "Washer_#{self.id}"
   end
-
+  # def set_instance_attributes
+  #   super
+  # end
 end

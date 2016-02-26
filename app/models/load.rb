@@ -7,19 +7,30 @@ class Load < ActiveRecord::Base
   # after_initialize :set_weight, :set_dry_time, on: :create
   attr_accessor :dry_time
 
-  
+
 
   workflow_column :state
 
   workflow do
     state :dirty do
+      event :insert, :transitions_to => :in_washer
 
+    end
+    state :in_washer do
       event :wash, :transitions_to => :washed
+      event :remove_from_machine, :transitions_to => :dirty
     end
     state :washed do
+      event :remove_from_machine, :transitions_to => :ready_to_dry
+
+    end
+    state :ready_to_dry do
+      event :insert, :transitions_to => :in_dryer
+    end
+    state :in_dryer do
       event :dry, :transitions_to => :dried
-      # event :merge, :transitions_to => :available
-      # event :separate, :transitions_to => :available
+      event :remove_from_machine, :transitions_to => :ready_to_dry
+
     end
     state :dried do
       event :fold, :transitions_to => :folded
@@ -49,11 +60,17 @@ class Load < ActiveRecord::Base
     end
   end
   def wash
+    raise "Can only wash if current machine is a Washer" unless self.machine.is_a? Washer
 
   end
   def dry(duration = 0)
-    @dry_time -= duration
-    false unless @dry_time <= 0
+    if self.machine.is_a? Dryer
+      @dry_time -= duration
+      false unless @dry_time <= 0
+    else
+      raise "Cannot Dry if current machine is not a dryer"
+    end
+
   end
   def fold
 
@@ -70,12 +87,13 @@ class Load < ActiveRecord::Base
 
   private
   def set_weight
-    initWeight = self.read_attribute(:weight)
-    self.weight = initWeight || 0
-
+    @weight = self.read_attribute(:weight) || 0
+    # self.weight = initWeight || 0
+    # puts "selfweight,#{self.weight}"
+    # puts "weight, #{@weight}"
 
   end
   def set_dry_time
-    @dry_time = self.weight * 5
+    @dry_time = @weight * 5
   end
 end

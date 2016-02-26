@@ -35,24 +35,105 @@ RSpec.describe Load, type: :model do
 
       end
     end
-    describe '#insert' do
-      it 'assigns the machine association' do
-      	# load.insert(washer)
-      	# load.reload
-      	# expect(load.machine).to eq(washer)
-        expect { load.insert(washer) }.to change{load.machine}.from(nil).to(washer)
+
+    describe 'stateMachine' do
+      describe '#insert' do
+        it 'assigns the machine association' do
+          expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
+        end
+        it 'changes the load state to in_washer' do
+          expect { load.insert!(washer) }.to change{load.state}.from("dirty").to("in_washer")
+        end
+
+      end
+      context 'when in_machine' do
+        before(:each) do
+          load.insert!(washer)
+        end
+        describe '#remove_from_machine' do
+          it 'sets the machine association to nil' do
+            expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
+          end
+          it 'changes the load state to dirty' do
+            expect { load.remove_from_machine! }.to change{load.state}.from("in_washer").to("dirty")
+          end
+
+        end
+        describe '#wash' do
+          it 'sets the machine association to nil' do
+            skip()
+            expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
+          end
+          it 'changes the load state to dirty' do
+            expect { load.wash! }.to change{load.state}.from("in_washer").to("washed")
+          end
+
+        end
+        context 'when washed' do
+          before(:each) do
+            load.wash!
+
+          end
+          describe '#remove_from_machine' do
+            it 'assigns the machine association' do
+              skip()
+              expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
+            end
+            it 'changes the load state to ready_to_dry' do
+              expect { load.remove_from_machine!(washer) }.to change{load.state}.from("washed").to("ready_to_dry")
+            end
+
+          end
+
+          context 'when ready_to_dry' do
+            before(:each) do
+              load.remove_from_machine!
+
+            end
+            describe '#insert' do
+              it 'assigns the machine association' do
+                skip()
+                expect { load.insert!(dryer) }.to change{load.machine}.from(nil).to(dryer)
+              end
+              it 'changes the load state to in_dryer' do
+                expect { load.insert!(dryer) }.to change{load.state}.from("ready_to_dry").to("in_dryer")
+              end
+
+            end
+            context 'when in_dryer' do
+              before(:each) do
+                load.insert!(dryer)
+
+              end
+              describe '#remove_from_machine' do
+                it 'assigns the machine association' do
+                  skip()
+                  expect { load.insert!(dryer) }.to change{load.machine}.from(dryer).to(nil)
+                end
+                it 'changes the load state to in_dryer' do
+                  skip()
+                  expect { load.insert!(dryer) }.to change{load.state}.from("ready_to_dry").to("in_dryer")
+                end
+
+              end
+              describe '#dry' do
+                it 'assigns the machine association' do
+                  skip()
+                  expect { load.insert!(dryer) }.to change{load.machine}.from(nil).to(dryer)
+                end
+                it 'changes the load state to in_dryer' do
+                  expect { load.dry!(100) }.to change{load.state}.from("in_dryer").to("dried")
+                end
+
+              end
+
+            end
+          end
+        end
 
       end
 
     end
-    describe '#remove_from_machine' do
-      it 'sets the machine associationto nil' do
-      	load.insert(washer)
-      	puts load.instance_variables
-        expect { load.remove_from_machine }.to change{load.machine}.from(washer).to(nil)
 
-      end
-
-    end
   end
 end

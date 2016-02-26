@@ -6,7 +6,7 @@ class Dryer < ActiveRecord::Base
   def initialize(attributes={})
     super()
     # @coins ||= 0
-    @price =  3
+    @price =  1
     @capacity = 15.0
     @period = 5 * @coins
   end
