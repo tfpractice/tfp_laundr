@@ -8,7 +8,7 @@ class XlWasher < Washer
   end
   private
   def set_name
-    self.update(:name, "Xtra-Large Washer ##{self.id}" )  unless self.name
+    self.update(name: "Xtra-Large Washer ##{self.id}" )  unless self.name
   end
 
 end

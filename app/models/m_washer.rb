@@ -7,7 +7,7 @@ class MWasher < Washer
   end
   private
   def set_name
-    self.update(:name, "Medium Washer ##{self.id}" )  unless self.name
+    self.update(name: "Medium Washer ##{self.id}" )  unless self.name
   end
 
 end

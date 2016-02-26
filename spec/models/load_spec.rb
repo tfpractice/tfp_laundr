@@ -1,11 +1,9 @@
 require 'rails_helper'
-
 RSpec.describe Load, type: :model do
   let(:user) { create(:user) }
   let(:washer) { create(:xl_washer) }
   let(:dryer) { create(:dryer) }
   let(:load) { create(:load, user: user) }
-
   describe 'attributes' do
     it 'has a weight' do
       expect(load.weight).to be_a_kind_of(Numeric)
@@ -16,11 +14,9 @@ RSpec.describe Load, type: :model do
     it 'has a default dirty state' do
       expect(load.state).to eq("dirty")
     end
-
     describe '#machine' do
       it 'defaults machine to nil' do
         expect(load.machine).to be_nil
-
       end
       it 'has a machine attribute' do
         expect(load).to respond_to(:machine)
@@ -32,10 +28,8 @@ RSpec.describe Load, type: :model do
       end
       it 'is 5 times the weight' do
         expect(load.dry_time).to eq(5*load.weight)
-
       end
     end
-
     describe 'stateMachine' do
       describe '#insert' do
         it 'assigns the machine association' do
@@ -44,7 +38,6 @@ RSpec.describe Load, type: :model do
         it 'changes the load state to in_washer' do
           expect { load.insert!(washer) }.to change{load.state}.from("dirty").to("in_washer")
         end
-
       end
       context 'when in_machine' do
         before(:each) do
@@ -57,7 +50,6 @@ RSpec.describe Load, type: :model do
           it 'changes the load state to dirty' do
             expect { load.remove_from_machine! }.to change{load.state}.from("in_washer").to("dirty")
           end
-
         end
         describe '#wash' do
           it 'sets the machine association to nil' do
@@ -67,12 +59,10 @@ RSpec.describe Load, type: :model do
           it 'changes the load state to dirty' do
             expect { load.wash! }.to change{load.state}.from("in_washer").to("washed")
           end
-
         end
         context 'when washed' do
           before(:each) do
             load.wash!
-
           end
           describe '#remove_from_machine' do
             it 'assigns the machine association' do
@@ -82,13 +72,10 @@ RSpec.describe Load, type: :model do
             it 'changes the load state to ready_to_dry' do
               expect { load.remove_from_machine!(washer) }.to change{load.state}.from("washed").to("ready_to_dry")
             end
-
           end
-
           context 'when ready_to_dry' do
             before(:each) do
               load.remove_from_machine!
-
             end
             describe '#insert' do
               it 'assigns the machine association' do
@@ -98,42 +85,36 @@ RSpec.describe Load, type: :model do
               it 'changes the load state to in_dryer' do
                 expect { load.insert!(dryer) }.to change{load.state}.from("ready_to_dry").to("in_dryer")
               end
-
             end
             context 'when in_dryer' do
               before(:each) do
                 load.insert!(dryer)
-
               end
               describe '#remove_from_machine' do
-                it 'assigns the machine association' do
-                  skip()
-                  expect { load.insert!(dryer) }.to change{load.machine}.from(dryer).to(nil)
-                end
                 it 'changes the load state to in_dryer' do
-                  skip()
-                  expect { load.insert!(dryer) }.to change{load.state}.from("ready_to_dry").to("in_dryer")
+                  expect { load.remove_from_machine!(dryer) }.to change{load.state}.from("in_dryer").to("ready_to_dry")
                 end
-
               end
               describe '#dry' do
-                it 'assigns the machine association' do
-                  skip()
-                  expect { load.insert!(dryer) }.to change{load.machine}.from(nil).to(dryer)
+                context 'when machine is not a dryer' do
+                  it 'raises an error ' do
+                    load.remove_from_machine!
+                    load.insert!(washer)
+                    expect { load.dry!(5) }.to raise_error()
+                    
+                  end
                 end
-                it 'changes the load state to in_dryer' do
+                it 'reduces the @dry_time attribute' do
+                  expect { load.dry!(5) }.to change{load.dry_time}.by(-5)
+                end
+                it 'changes the load state to dried' do
                   expect { load.dry!(100) }.to change{load.state}.from("in_dryer").to("dried")
                 end
-
               end
-
             end
           end
         end
-
       end
-
     end
-
   end
 end

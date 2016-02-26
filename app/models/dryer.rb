@@ -12,6 +12,6 @@ class Dryer < ActiveRecord::Base
   end
   private
   def set_name
-    self.update_column(:name, "Dryer ##{self.id}" )  unless self.name
+    self.update(name: "Dryer ##{self.id}" )  unless self.name
   end
 end

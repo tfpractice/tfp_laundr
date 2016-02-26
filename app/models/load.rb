@@ -34,7 +34,7 @@ class Load < ActiveRecord::Base
     end
     state :dried do
       event :fold, :transitions_to => :folded
-      event :finish, :transitions_to => :clean
+      event :remove_from_machine, :transitions_to => :clean
     end
     state :folded do
       event :finish, :transitions_to => :clean
