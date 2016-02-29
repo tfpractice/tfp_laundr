@@ -4,11 +4,12 @@ Rails.application.routes.draw do
   resources :loads
   concern :machine do
     member do
-      patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
+      patch :claim, :fill, :unclaim, :start, :remove_clothes
+      patch ':insert_coins/:count', action: :insert_coins, as: 'insert_coins'
     end
   end
-  resources :dryers, concerns: :machine
-  resources :washers, concerns: :machine
+  resources :dryers, concerns: :machine 
+  resources :washers, concerns: :machine 
   # resources :washers do
   # member do
   #   patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
