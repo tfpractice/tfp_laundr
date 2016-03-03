@@ -1,27 +1,29 @@
 Rails.application.routes.draw do
 
 
-  resources :loads
+  # resources :loads
   concern :machine do
     member do
-      patch :claim, :fill, :unclaim, :start, :remove_clothes
-      patch ':insert_coins/:count', action: :insert_coins, as: 'insert_coins'
+      patch :claim, :unclaim,  :insert_coins,:fill, :start, :remove_clothes
+
     end
   end
-  resources :dryers, concerns: :machine 
-  resources :washers, concerns: :machine 
+  resources :dryers, concerns: :machine
+  resources :washers, concerns: :machine
   # resources :washers do
   # member do
   #   patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
   # end
-  # end
-  resources :s_washers, controller: 'washers', type: 'SWasher'#, concerns: :machine
-  resources :m_washers, controller: 'washers', type: 'MWasher'#, concerns: :machine
-  resources :l_washers, controller: 'washers', type: 'LWasher'#, concerns: :machine
-  resources :xl_washers, controller: 'washers', type: 'XLWasher'#, concerns: :machine
+  # e,
+  resources :s_washers, path: 'washers', controller: 'washers', type: 'SWasher', concerns: :machine
+  resources :m_washers, path: 'washers', controller: 'washers', type: 'MWasher', concerns: :machine
+  resources :l_washers, path: 'washers', controller: 'washers', type: 'LWasher', concerns: :machine
+  resources :xl_washers,path: 'washers',  controller: 'washers', type: 'XLWasher', concerns: :machine
 
   devise_for :users, controllers: { registrations: 'users/registrations'  }  # get 'home/index'
-
+  devise_scope :user do
+    resources :loads
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

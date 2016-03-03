@@ -7,6 +7,8 @@
     <span class="glyphicon glyphicon-pencil"></span>
     Edit
   <% end %>
+  <%#= select_tag(:load, options_from_collection_for_select(Load.all, "id", "weight"), id: "washer#{washer.id}Load") %>
+  <%#= link_to fill_washer_path( @washer.becomes(Washer), fill: 'fill',  load: params[:load]) %>
   <h1>Show washer</h1>
 </div>
 
@@ -25,6 +27,8 @@
 
   <dt>User:</dt>
   <dd><%= @washer.user %></dd>
+ <dt>Load:</dt>
+  <dd><%= @washer.load.weight %></dd>
 
 </dl>
 <ul class="list-group bg-info">

@@ -9,6 +9,24 @@
    <% @washers.each do |washer| %>
   <%= washer_list_item(washer) %>
      
+<% if washer.state == 'empty' %>
+  <%= form_for washer,  url: fill_washer_path(washer)  do |f| %>
+<%= select_tag(:load, options_from_collection_for_select(Load.all, "id", "weight"), id: "washer#{washer.id}Load") %>
+    <%= f.submit %>
+
+<% end%>
+<% end %>
+
+<%#= simple_form_for washer.becomes(Washer), 
+  #url: fill_washer_path(washer, Load.find(params[:load])),
+    
+    :action => 'fill',
+    :method => 'patch' do |f| %>
+
+    <%#= f.input(:load, collection: Load.all, label_method: :weight, value_method: :id) %>
+<%#= f.hidden_field :load_id, :value => load.id %>
+  <%#= f.button :submit %>
+<%# end %>
    <% end %>
   <%#= render partial: "washer", collection: @washers, as: :washer %>
 </ul>
