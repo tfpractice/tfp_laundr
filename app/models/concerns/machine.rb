@@ -1,18 +1,12 @@
 module Machine
   extend ActiveSupport::Concern
-  attr_accessor :coins
-
-  def initialize(attributes={})
-    super()
-    @coins ||= 0
-  end
-
 
   included do
-    attr_reader :price, :capacity, :period
+    attr_accessor :coins, :price, :capacity, :period
     has_one :load, as: :machine
     after_save :set_name, on: [:create, :new]
-    # after_initialize :set_instance_attributes
+    after_initialize :set_instance_attributes
+    after_initialize :set_coins
 
 
 
@@ -43,6 +37,8 @@ module Machine
         event :remove_clothes, :transitions_to => :empty
       end
     end
+
+
   end
 
 
@@ -53,15 +49,49 @@ module Machine
     update_attribute(:user, nil)
 
   end
-  def fill
+  def fill(load=nil)
+    # puts self.methods.sort
+    # puts "capacity#{self.capacity}"
+    # puts self.inspect
+    if !load
+      raise "Cannot insert an empty load "
+
+    elsif load.weight <= @capacity
+
+      self.update(load: load)
+      reduce_capacity(load.weight)
+
+    else
+      raise "Cannot insert a loadheavier than capacity"
+    end
+    # unless load.weight <= capacity
+
+  end
+  def reduce_capacity(weight=0)
+    @capacity -= weight
+    # puts "reduced capacity#{@capacity}"
+  end
+  def reduce_price
+    @price -= @coins
 
   end
   def insert_coins(count=0)
-    @price ||= count
-    if @coins + count > @price
+    # @price ||= count
+    puts "coins before #{@coins}"
+    puts self.inspect
+
+    iCount = count.to_i
+    puts "iCount before #{iCount}"
+    puts "price before #{@price}"
+
+    if @coins + iCount > @price
       raise "Cannot supply more than #{@price} coins"
     else
-      @coins += count
+      puts "coins before #{coins}"
+      @coins+=iCount
+      puts "coins after #{coins}"
+
+
 
     end
 
@@ -87,7 +117,10 @@ module Machine
     raise "Subclass responsibility"
   end
 
-  # def set_instance_attributes
-  #   @coins ||= 0
-  # end
+  def set_instance_attributes
+    # @coins ||= 0
+  end
+  def set_coins
+    @coins ||= 0
+  end
 end
