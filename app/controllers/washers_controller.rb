@@ -28,10 +28,10 @@ class WashersController < ApplicationController
   # GET /washers/1/edit
   def edit
   end
-  # def claim
-  #   @washer.claim!(current_user)
-  #   redirect_to @washer, notice: " Washer #{@washer.name} is yours"
-  # end
+  def claim
+    @washer.claim!(current_user)
+    redirect_to @washer, notice: " Washer #{@washer.name} is yours"
+  end
   # def unclaim
   #   @washer.unclaim!
   #   redirect_to @washer, notice: " Washer #{@washer.name} is available"
@@ -109,7 +109,7 @@ class WashersController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_machine
-    @machine = Washer.find(params[:id]).becomes(Washer)
+    @machine = Washer.find(params[:id])
     @washer = @machine
 
     # @washer = Washer.find(params[:id]).becomes(Washer)
@@ -132,6 +132,6 @@ class WashersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def washer_params
-    params.require(:washer).permit(:name, :position, :type, :state, :user_id)
+    params.require(:washer).permit(:name, :position, :type, :state, :user_id, :count, :load_id)
   end
 end

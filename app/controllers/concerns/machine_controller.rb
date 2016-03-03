@@ -12,7 +12,7 @@ module MachineController
 
   included do
     before_action :set_machine, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
-    # before_action :subclasses
+    before_action :get_load, only: [:fill]
     # before_action :set_type
 
     load_and_authorize_resource
@@ -28,13 +28,16 @@ module MachineController
 
   end
   def fill
-    @machine.fill!
+    puts params[:load]
+    load = get_load
+    puts load
+    @machine.fill!(load)
     redirect_to @machine, notice: " machine #{@machine.name} is unpaid"
 
 
   end
-  def insert_coins(count=0)
-    @machine.insert_coins!
+  def insert_coins
+    @machine.insert_coins!(params[:count])
     redirect_to @machine, notice: " machine #{@machine.name} is ready"
 
   end
@@ -55,6 +58,10 @@ module MachineController
 
   end
   private
+
+  def get_load
+    @load = Load.find(params[:load])
+  end
   # Use callbacks to share common setup or constraints between actions.
   # def set_machine
     # @machine = machine.find(params[:id]).becomes(machine)

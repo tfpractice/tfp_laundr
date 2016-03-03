@@ -2,6 +2,9 @@ require 'rails_helper'
 RSpec.describe Washer, type: :model do
   let(:user) { create(:user) }
   let(:washer) { create(:washer, type: "MWasher") }
+  # let(:washer) { create(:m_washer) }
+  let(:load) { create(:load, user: user, weight: 5) }
+
   # let(:washer) { create(:washer, user: user) }
   it 'has a name' do
     expect(washer.name).to be_a_kind_of(String)
@@ -25,7 +28,7 @@ RSpec.describe Washer, type: :model do
       it 'has a price method' do
         expect(washer.methods).to include(:price)
       end
-      it 'returns the subclass price attribute' do
+      it 'returns nil for STI superclass' do
         # washer.reload
         # puts washer.class
         # puts washer
@@ -79,6 +82,7 @@ RSpec.describe Washer, type: :model do
 
 
     context 'statemachine' do
+      let(:washer) { create(:m_washer) }
       it 'initializes with :available as default state' do
         expect(washer.state).to eq("available")
       end
@@ -114,13 +118,43 @@ RSpec.describe Washer, type: :model do
           it 'responds to #fill ' do
             expect(washer).to respond_to(:fill)
           end
-          it 'changes washer state to :empty' do
-
-            expect{washer.fill!}.to change{washer.state}.from("empty").to("unpaid")
+          context 'when nil load' do
+            it 'changes raises "null weight Error" ' do
+              expect { washer.fill! }.to raise_error
+            end
           end
+          context 'when load too large ' do
+            it 'changes raises "Load Weight Error" ' do
+              bigLoad = create(:load, user:user, weight: 50)
+              expect { washer.fill!(bigLoad) }.to raise_error
+              # expect{washer.fill!(bigLoad)}.to change{washer.state}.from("empty").to("unpaid")
+            end
+
+          end
+          context 'when load will fit ' do
+            it 'changes washer state to :unpaid' do
+              washer.capacity=20
+
+              expect{washer.fill!(load)}.to change{washer.state}.from("empty").to("unpaid")
+            end
+            it 'reduces washer capacity' do
+              washer.capacity=20
+              expect{washer.fill!(load)}.to change{washer.capacity}.from(20).to(15)
+            end
+            it 'assigns washer load' do
+              washer.capacity=20
+              expect{washer.fill!(load)}.to change{washer.load}.from(nil).to(load)
+            end
+          end
+
+          # it 'changes washer state to :empty' do
+
+          #   expect{washer.fill!}.to change{washer.state}.from("empty").to("unpaid")
+          # end
           context 'when unpaid' do
             before(:each) do
-              washer.fill!
+              washer.capacity=20
+              washer.fill!(load)
             end
             describe '#insert_coins' do
               it 'responds to #insert_coins ' do
@@ -132,6 +166,10 @@ RSpec.describe Washer, type: :model do
               end
               it 'changes coins by count' do
                 puts washer.coins
+                expect{washer.insert_coins!(3)}.to change{washer.coins}.from(0).to(3)
+              end
+              it 'changes price by count' do
+                puts washer.price
                 expect{washer.insert_coins!(3)}.to change{washer.coins}.from(0).to(3)
               end
               it 'changes washer state to ready' do

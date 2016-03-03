@@ -25,6 +25,7 @@ RSpec.describe WashersController, type: :controller do
   # adjust the attributes here as well.
   let(:user) { create(:admin) }
   let(:washers) { Washer.all }
+  let(:load) { create(:load, user: user) }
   let(:washer) { create(:washer, type: "MWasher")}
   let(:valid_attributes) {
     attributes_for(:washer, type: "MWasher")
@@ -51,13 +52,13 @@ RSpec.describe WashersController, type: :controller do
 
       # @washer = washer.becomes(Washer)
       # puts @washer.becomes(Washer)
-      @washer = washer.becomes(Washer)
+
       # puts @washer
 
       get :index
       skip()
 
-      expect(assigns(:washers)).to match_array([@washer.becomes(Washer)])
+      expect(assigns(:washers)).to eq(washer)
     end
   end
 
@@ -67,9 +68,9 @@ RSpec.describe WashersController, type: :controller do
       get :show, id: washer
       # puts controller.instance_variables
       # puts controller.params
-      puts washer.inspect
-      puts assigns(:washer).inspect
-      skip()
+      # puts washer.inspect
+      # puts assigns(:washer).inspect
+      # skip()
       expect(assigns(:washer)).to eq(washer)
       # expect(assigns(:washer)).to eq(@washer.becomes(Washer))
     end
@@ -86,8 +87,8 @@ RSpec.describe WashersController, type: :controller do
     it "assigns the requested washer as @washer" do
       washer = Washer.create! valid_attributes
       # washer.becomes(Washer)
-      get :edit, {:id => washer.to_param}, valid_session
-      expect(assigns(:washer)).to eq(washer.becomes(Washer))
+      get :edit, {:id => washer}, valid_session
+      expect(assigns(:washer)).to eq(washer)
     end
   end
 
@@ -141,8 +142,8 @@ RSpec.describe WashersController, type: :controller do
 
       it "assigns the requested washer as @washer" do
         washer = Washer.create! valid_attributes
-        put :update, {:id => washer.to_param, :washer => valid_attributes}, valid_session
-        expect(assigns(:washer)).to eq(washer.becomes(Washer))
+        put :update, {:id => washer, :washer => valid_attributes}, valid_session
+        expect(assigns(:washer)).to eq(washer)
       end
 
       it "redirects to the washer" do
@@ -154,9 +155,10 @@ RSpec.describe WashersController, type: :controller do
 
     context "with invalid params" do
       it "assigns the washer as @washer" do
-        washer = Washer.create! valid_attributes
+        # washer = Washer.create! valid_attributes
         put :update, {:id => washer.to_param, :washer => invalid_attributes}, valid_session
-        expect(assigns(:washer)).to eq(washer.becomes(Washer))
+        assigns(:washer)
+        expect((assigns(:washer)).id).to eq(washer.id)
       end
 
       it "re-renders the 'edit' template" do
@@ -249,15 +251,18 @@ RSpec.describe WashersController, type: :controller do
       end
       describe 'PATCH #fill' do
         it 'sets washer state to unpaid' do
-          patch :fill, id: washer
-
+          # washer = create(:m_washer)
+          # puts washer.instance_variables
+          # puts "washer capacity#{washer.capacity}"
+          # puts "loadweidght#{load.weight}"
+          patch :fill, id: washer, load: load
           washer.reload
           expect(washer.state).to eq("unpaid")
 
         end
 
         it "redirects to the washers list" do
-          patch :fill, id: washer
+          patch :fill, id: washer, load: load
 
           # delete :destroy, {:id => washer.to_param}, valid_session
           expect(response).to redirect_to(washer)
@@ -265,19 +270,22 @@ RSpec.describe WashersController, type: :controller do
       end
       context 'when unpaid' do
         before(:each) do
-          patch :fill, id: washer
+          patch :fill, id: washer, load: load
         end
         describe 'insert_coins' do
           it 'sets washer state to ready' do
-            patch :insert_coins, id: washer
+            # puts "washer.coins_before#{washer.coins}"
 
+            patch :insert_coins, id: washer, count: 12
             washer.reload
+            # puts "washer.coins_after#{washer.coins}"
+
             expect(washer.state).to eq("ready")
 
           end
 
           it "redirects to the washers list" do
-            patch :insert_coins, id: washer
+            patch :insert_coins, id: washer, count: 12
 
             # delete :destroy, {:id => washer.to_param}, valid_session
             expect(response).to redirect_to(washer)
@@ -285,7 +293,7 @@ RSpec.describe WashersController, type: :controller do
         end
         context 'when ready' do
           before(:each) do
-            patch :insert_coins, id: washer
+            patch :insert_coins, id: washer, count: 12
           end
           describe 'start' do
             it 'sets washer state to complete' do

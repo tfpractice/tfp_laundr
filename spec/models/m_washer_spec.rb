@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe MWasher, type: :model do
   let(:user) { create(:user) }
   let(:m_washer) { create(:m_washer) }
+  let(:load) { create(:load, user: user, weight: 5) }
+
 
   it 'has a name' do
     expect(m_washer.name).to be_a_kind_of(String)
@@ -10,7 +12,7 @@ RSpec.describe MWasher, type: :model do
   it 'has a position' do
     expect(m_washer.position).to be_a_kind_of(Numeric)
   end
-  
+
   it 'has an type of "m_washer"' do
     # puts m_washer.inspect
     expect(m_washer.type).to be_a_kind_of(String)
@@ -95,11 +97,11 @@ RSpec.describe MWasher, type: :model do
           end
           it 'changes m_washer state to :empty' do
 
-            expect{m_washer.fill!}.to change{m_washer.state}.from("empty").to("unpaid")
+            expect{m_washer.fill!(load)}.to change{m_washer.state}.from("empty").to("unpaid")
           end
           context 'when unpaid' do
             before(:each) do
-              m_washer.fill!
+              m_washer.fill!(load)
             end
             describe '#insert_coins' do
               it 'responds to #insert_coins ' do
