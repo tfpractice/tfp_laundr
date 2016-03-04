@@ -70,8 +70,8 @@ module WashersHelper
         when "empty"
           capture do
             concat  link_to content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left"), unclaim_washer_path(washer), method: :patch, class: 'btn btn-primary pull-xs-right'
-            concat " "
-            concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(washer), method: :patch, class: 'btn btn-primary pull-xs-right'
+            #concat " "
+            #concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(washer), method: :patch, class: 'btn btn-primary pull-xs-right'
           end
 
 

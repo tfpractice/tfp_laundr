@@ -3,7 +3,6 @@ class Washer < ActiveRecord::Base
   validates_presence_of :type
   skip_callback :initialize, :after, :set_name, :set_instance_attributes, if: -> { self.class.name == "Washer"}
 
-  # validates :type,  inclusion: {in: self.descendants}
 
 
 
