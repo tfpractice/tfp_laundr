@@ -75,6 +75,10 @@ module Machine
     @price -= @coins
 
   end
+  def next_steps
+    # current_state.events.each { |event, val| event.transitions_to  }
+    current_state.events.collect { |event, val|  event.id2name}
+  end
   def insert_coins(count=0)
     # @price ||= count
     puts "coins before #{@coins}"

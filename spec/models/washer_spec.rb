@@ -7,7 +7,9 @@ RSpec.describe Washer, type: :model do
 
   # let(:washer) { create(:washer, user: user) }
   it 'has a name' do
+  
     expect(washer.name).to be_a_kind_of(String)
+
   end
   it 'has a position' do
     expect(washer.position).to be_a_kind_of(Numeric)
@@ -85,6 +87,11 @@ RSpec.describe Washer, type: :model do
       let(:washer) { create(:m_washer) }
       it 'initializes with :available as default state' do
         expect(washer.state).to eq("available")
+      end
+      describe '#next_steps' do
+        it 'returns the keys of the next possible event for the current state' do
+          expect(washer.next_steps).to include("claim")
+        end
       end
       describe '#claim' do
         it 'responds to #claim ' do
