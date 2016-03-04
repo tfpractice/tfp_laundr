@@ -7,7 +7,7 @@
 </div>
 <ul class="list-group bg-info">
    <% @washers.each do |washer| %>
-  <%= washer_list_item(washer) %>
+  <%= washer.washer_list_item %>
      
 <% if washer.state == 'empty' %>
   <%= form_for washer,  url: fill_washer_path(washer)  do |f| %>

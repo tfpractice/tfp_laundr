@@ -27,13 +27,16 @@
 
   <dt>User:</dt>
   <dd><%= @washer.user %></dd>
- <dt>Load:</dt>
+  <% if @washer.load == true %>
+    <dt>Load:</dt>
   <dd><%= @washer.load.weight %></dd>
 
+  <%end %>
+ 
 </dl>
 <ul class="list-group bg-info">
   <%#= @washers.length %>
   <%#= @washer %>
-  <%= washer_list_item(@washer) %>
+  <%= @washer.washer_list_item %>
   <%#= render partial: "washer", collection: @washers, as: :washer %>
 </ul>
