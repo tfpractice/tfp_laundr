@@ -6,7 +6,7 @@ class LoadsController < ApplicationController
   # GET /loads
   # GET /loads.json
   def index
-    @loads = Load.all
+    @loads = loads.all
   end
 
   # GET /loads/1
@@ -16,7 +16,7 @@ class LoadsController < ApplicationController
 
   # GET /loads/new
   def new
-    @load = Load.new
+    @load = loads.new
   end
 
   # GET /loads/1/edit
@@ -26,7 +26,7 @@ class LoadsController < ApplicationController
   # POST /loads
   # POST /loads.json
   def create
-    @load = Load.new(load_params)
+    @load = loads.new(load_params)
 
     respond_to do |format|
       if @load.save
@@ -65,6 +65,11 @@ class LoadsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def loads
+      current_user ? current_user.loads : Load
+      
+    end
+
     def set_load
       @load = Load.find(params[:id])
     end

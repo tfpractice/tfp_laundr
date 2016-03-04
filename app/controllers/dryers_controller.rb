@@ -76,6 +76,6 @@ class DryersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def dryer_params
-    params.require(:dryer).permit(:name, :position, :state, :user_id)
+    params.require(:dryer).permit(:name, :position, :state, :user_id, :count, :load)
   end
 end
