@@ -1,0 +1,25 @@
+<%# washer.list_item %>
+<%= content_tag(:li, class:"#{washer.list_item_class}") do %>
+<%= washer.position_label %>
+<%= washer.washer_link %>
+<% washer.next_steps.each do |step| -%>
+<%#content_tag(:span, step, class:"pull-right") %>
+<%# state_link %>
+<% if washer.has_form_input(step) -%>
+<%= washer.event_form(step) -%>
+	<% else %>
+	<%= link_to washer.event_path(step) ,method: :patch, class: 'btn btn-primary pull-right pull-xs-right' do  -%>
+
+
+<%=  step -%>
+
+<%= washer.event_icon(step) -%>
+<%#= step %>
+
+<%end %>
+
+<% end -%>
+<%#= washer.event_form(step) %>
+
+<%end %>
+<% end %>

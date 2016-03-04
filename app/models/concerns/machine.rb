@@ -26,6 +26,8 @@ module Machine
       end
       state :unpaid do
         event :insert_coins, :transitions_to => :ready
+        event :remove_clothes, :transitions_to => :empty
+
       end
       state :ready do
         event :start, :transitions_to => :in_progess
@@ -76,7 +78,6 @@ module Machine
 
   end
   def next_steps
-    # current_state.events.each { |event, val| event.transitions_to  }
     current_state.events.collect { |event, val|  event.id2name}
   end
   def insert_coins(count=0)

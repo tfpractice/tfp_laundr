@@ -6,16 +6,19 @@
   <h1>Listing washers</h1>
 </div>
 <ul class="list-group bg-info">
-   <% @washers.each do |washer| %>
-  <%= washer.washer_list_item %>
-     
-<% if washer.state == 'empty' %>
-  <%= form_for washer,  url: fill_washer_path(washer)  do |f| %>
-<%= select_tag(:load, options_from_collection_for_select(Load.all, "id", "weight"), id: "washer#{washer.id}Load") %>
-    <%= f.submit %>
+<%= render partial: "washerLink", collection: @washers, as: :washer %>
 
-<% end%>
-<% end %>
+   <% @washers.each do |washer| %>
+
+  <%# washer.washer_list_item %>
+     
+<%# if washer.state == 'empty' %>
+  <%#= form_for washer,  url: fill_washer_path(washer)  do |f| %>
+<%#= select_tag(:load, options_from_collection_for_select(Load.all, "id", "weight"), id: "washer#{washer.id}Load") %>
+    <%#= f.submit %>
+
+<%# end%>
+<%# end %>
 
 <%#= simple_form_for washer.becomes(Washer), 
   #url: fill_washer_path(washer, Load.find(params[:load])),
