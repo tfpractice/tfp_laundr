@@ -2,12 +2,18 @@ module Machine
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :coins, :price, :capacity, :period
+    attr_accessor :coins, :price, :capacity, :period, :end_time
     has_one :load, as: :machine
     after_save :set_name, on: [:create, :new]
     after_initialize :set_instance_attributes
     after_initialize :set_coins
 
+    scope :available_machines, -> {where(state: "available")}
+    scope :completed_machines, -> {where(state: "complete")}
+    scope :unavailable_machines, -> {where.not(state: "available")}
+    # scope :available_machines, -> {where(state: "available")}
+    # scope :available_machines, -> {where(state: "available")}
+    # scope :available_machines, -> {where(state: "available")}
 
 
     include Workflow
@@ -56,7 +62,7 @@ module Machine
     # puts "capacity#{self.capacity}"
     # puts self.inspect
     if !load
-      raise "Cannot insert an empty load "
+      raise "Cannot insert an empty load"
 
     elsif load.weight <= @capacity
 
@@ -64,14 +70,13 @@ module Machine
       reduce_capacity(load.weight)
 
     else
-      raise "Cannot insert a loadheavier than capacity"
+      raise "Cannot insert a load heavier than capacity"
     end
     # unless load.weight <= capacity
 
   end
   def reduce_capacity(weight=0)
     @capacity -= weight
-    # puts "reduced capacity#{@capacity}"
   end
   def reduce_price
     @price -= @coins
@@ -82,19 +87,19 @@ module Machine
   end
   def insert_coins(count=0)
     # @price ||= count
-    puts "coins before #{@coins}"
-    puts self.inspect
-
+    # puts "coins before #{@coins}"
+    # puts self.inspect
+    #
     iCount = count.to_i
-    puts "iCount before #{iCount}"
-    puts "price before #{@price}"
+    # puts "iCount before #{iCount}"
+    # puts "price before #{@price}"
 
     if @coins + iCount > @price
       raise "Cannot supply more than #{@price} coins"
     else
-      puts "coins before #{coins}"
+      # puts "coins before #{coins}"
       @coins+=iCount
-      puts "coins after #{coins}"
+      # puts "coins after #{coins}"
 
 
 
@@ -102,7 +107,8 @@ module Machine
 
   end
   def start
-    # end_cycle!
+    @end_time = Time.now + self.period
+    end_cycle if Time.now > self.end_time
 
   end
   def end_cycle
@@ -111,7 +117,15 @@ module Machine
   def remove_clothes
 
   end
+  def time_remaining
+    if self.state == "in_progress"
+      (Time.now - self.end_time).to_s
 
+    else
+      return @period
+    end
+
+  end
   def capacity
     raise "Subclass responsibility"
   end
@@ -128,4 +142,5 @@ module Machine
   def set_coins
     @coins ||= 0
   end
+
 end

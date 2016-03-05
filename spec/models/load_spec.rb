@@ -69,11 +69,11 @@ RSpec.describe Load, type: :model do
               skip()
               expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
             end
-            it 'changes the load state to ready_to_dry' do
-              expect { load.remove_from_machine!(washer) }.to change{load.state}.from("washed").to("ready_to_dry")
+            it 'changes the load state to wet' do
+              expect { load.remove_from_machine!(washer) }.to change{load.state}.from("washed").to("wet")
             end
           end
-          context 'when ready_to_dry' do
+          context 'when wet' do
             before(:each) do
               load.remove_from_machine!
             end
@@ -83,7 +83,7 @@ RSpec.describe Load, type: :model do
                 expect { load.insert!(dryer) }.to change{load.machine}.from(nil).to(dryer)
               end
               it 'changes the load state to in_dryer' do
-                expect { load.insert!(dryer) }.to change{load.state}.from("ready_to_dry").to("in_dryer")
+                expect { load.insert!(dryer) }.to change{load.state}.from("wet").to("in_dryer")
               end
             end
             context 'when in_dryer' do
@@ -92,7 +92,7 @@ RSpec.describe Load, type: :model do
               end
               describe '#remove_from_machine' do
                 it 'changes the load state to in_dryer' do
-                  expect { load.remove_from_machine!(dryer) }.to change{load.state}.from("in_dryer").to("ready_to_dry")
+                  expect { load.remove_from_machine!(dryer) }.to change{load.state}.from("in_dryer").to("wet")
                 end
               end
               describe '#dry' do

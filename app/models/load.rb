@@ -7,6 +7,13 @@ class Load < ActiveRecord::Base
   # after_initialize :set_weight, :set_dry_time, on: :create
   attr_accessor :dry_time
 
+  scope :dirty_loads, -> {where(state: "dirty")}
+  scope :in_washer_loads, -> {where(state: "in_washer")}
+  scope :washed_loads, -> {where(state: "washed")}
+  scope :wet_loads, -> {where(state: "wet")}
+  scope :in_dryer_loads, -> {where(state: "in_dryer")}
+  scope :dried_loads, -> {where(state: "dried")}
+
 
 
   workflow_column :state
@@ -21,15 +28,15 @@ class Load < ActiveRecord::Base
       event :remove_from_machine, :transitions_to => :dirty
     end
     state :washed do
-      event :remove_from_machine, :transitions_to => :ready_to_dry
+      event :remove_from_machine, :transitions_to => :wet
 
     end
-    state :ready_to_dry do
+    state :wet do
       event :insert, :transitions_to => :in_dryer
     end
     state :in_dryer do
       event :dry, :transitions_to => :dried
-      event :remove_from_machine, :transitions_to => :ready_to_dry
+      event :remove_from_machine, :transitions_to => :wet
 
     end
     state :dried do

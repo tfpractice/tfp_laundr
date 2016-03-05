@@ -4,10 +4,12 @@ RSpec.describe Washer, type: :model do
   let(:washer) { create(:washer, type: "MWasher") }
   # let(:washer) { create(:m_washer) }
   let(:load) { create(:load, user: user, weight: 5) }
-
+  # before(:each  ) do
+  #   washer.becomes(MWasher)
+  # end
   # let(:washer) { create(:washer, user: user) }
   it 'has a name' do
-  
+
     expect(washer.name).to be_a_kind_of(String)
 
   end
@@ -62,6 +64,48 @@ RSpec.describe Washer, type: :model do
       # it 'raises a RuntimeError' do
       #   expect {washer.period}.to raise_error(RuntimeError, "Subclass responsibility")
       # end
+    end
+    describe '#time_remaining' do
+      it 'has a time_remaining method' do
+        expect(washer.methods).to include(:time_remaining)
+      end
+      context 'when not in_progess' do
+        it 'returns period' do
+          expect(washer.time_remaining).to eq(washer.period)
+        end
+      end
+      context 'when in_progess' do
+
+      end
+    end
+    describe '#end_time' do
+      it 'has a end_time method' do
+        expect(washer.methods).to include(:end_time)
+
+      end
+      context 'when not in_progess' do
+        it 'retuns nil' do
+          expect(washer.end_time).to eq(nil)
+
+        end
+
+      end
+      context 'when in_progess' do
+        it 'sets the end time' do
+          m_washer = create(:m_washer)
+          m_washer.claim!(user)
+          m_washer.capacity=20
+          m_washer.fill!(load)
+          m_washer.insert_coins!(m_washer.price)
+          m_washer.start!
+          puts m_washer.end_time.sec
+          puts m_washer.end_time.sec
+          puts m_washer.end_time.sec
+          # expect(m_washer.end_time.sec).to eq(expect(subject).to be_a_kind_of(klass)59)
+          expect(m_washer.end_time).to be_a_kind_of(Time)
+
+        end
+      end
     end
 
     describe '#coins' do
@@ -127,13 +171,13 @@ RSpec.describe Washer, type: :model do
           end
           context 'when nil load' do
             it 'changes raises "null weight Error" ' do
-              expect { washer.fill! }.to raise_error
+              expect { washer.fill! }.to raise_error("Cannot insert an empty load")
             end
           end
           context 'when load too large ' do
             it 'changes raises "Load Weight Error" ' do
-              bigLoad = create(:load, user:user, weight: 50)
-              expect { washer.fill!(bigLoad) }.to raise_error
+              bigLoad = create(:load, user: user, weight: 50)
+              expect { washer.fill!(bigLoad) }.to raise_error("Cannot insert a load heavier than capacity")
               # expect{washer.fill!(bigLoad)}.to change{washer.state}.from("empty").to("unpaid")
             end
 
@@ -195,6 +239,11 @@ RSpec.describe Washer, type: :model do
                 it 'changes washer state to :in_progess' do
 
                   expect{washer.start!}.to change{washer.state}.from("ready").to("in_progess")
+                end
+                it 'changes @end_time' do
+                  washer.start!
+                  expect(washer.end_time).not_to be_nil
+                  # expect{washer.start!}.to change{washer.end_time}.from(nil).to((Time.now + washer.period))
                 end
               end
               context 'when in_progess' do
