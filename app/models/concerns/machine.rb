@@ -4,6 +4,7 @@ module Machine
   included do
     attr_accessor :coins, :price, :capacity, :period, :end_time
     has_one :load, as: :machine
+    has_one :user, through: :load
     after_save :set_name, on: [:create, :new]
     after_initialize :set_instance_attributes
     after_initialize :set_coins

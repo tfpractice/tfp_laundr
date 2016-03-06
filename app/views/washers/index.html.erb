@@ -5,15 +5,26 @@
   <% end %>
   <h1>Listing washers</h1>
 </div>
+<% if user_signed_in?  %>
+  
 <ul class="unavailable_washers list-group bg-info">
 <h1>My Machines</h1>
+<%= current_user %>
 
-<%= render partial: "washerLink", collection: @washers.accessible_by(current_ability).decorate, as: :washer %>
+<%= render partial: "washerLink", collection: current_user.washers.decorate, as: :washer %>
 </ul>
 <ul class="available_washers list-group bg-info">
 <h1>Available Machines</h1>
-<%= render partial: "washerLink", collection: @washers.available_machines.decorate, as: :washer %>
+<%= render partial: "washerLink", collection:(@washers.available_machines.decorate - current_user.washers.decorate), as: :washer %>
+</ul> 
+<% end %>
 
+<ul class="available_washers list-group bg-info">
+<h1>Available Machines</h1>
+<%= render partial: "washerLink", collection:@washers.available_machines.decorate, as: :washer %>
+
+
+ <!-- (@washers.available_machines - current_user.washers).decorate -->
   
 
   <%# washer.washer_list_item %>
