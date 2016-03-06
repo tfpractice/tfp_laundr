@@ -4,7 +4,6 @@ class Load < ActiveRecord::Base
   belongs_to :machine, polymorphic: true
   acts_as_list scope: :user
   before_save :set_weight, :set_dry_time,  on: :create
-  # after_initialize :set_weight, :set_dry_time, on: :create
   attr_accessor :dry_time
 
   scope :dirty_loads, -> {where(state: "dirty")}

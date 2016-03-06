@@ -1,7 +1,5 @@
 <%= simple_form_for(@washer.becomes(Washer)) do |f| %>
-
   <%= f.error_notification %>
-
   <div class="form-inputs">
     <%= f.input :name %>
     <%= f.input :position %>
@@ -10,7 +8,6 @@
     <%#= f.input :state %>
     <%#= f.association :user %>
   </div>
-
   <div class="form-actions">
     <%= f.button :submit %>
   </div>
