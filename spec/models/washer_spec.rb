@@ -178,7 +178,6 @@ RSpec.describe Washer, type: :model do
             it 'changes raises "Load Weight Error" ' do
               bigLoad = create(:load, user: user, weight: 50)
               expect { washer.fill!(bigLoad) }.to raise_error("Cannot insert a load heavier than capacity")
-              # expect{washer.fill!(bigLoad)}.to change{washer.state}.from("empty").to("unpaid")
             end
 
           end

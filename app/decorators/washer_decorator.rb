@@ -1,7 +1,10 @@
 class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
+ 
+
   delegate_all
   decorates_finders
+  # decorates_association :washer, :scope => :available_machines
   # Define presentation-specific methods here. Helpers are accessed through
   # `helpers` (aka `h`). You can override attributes, for example:
   #

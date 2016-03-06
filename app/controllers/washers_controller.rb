@@ -4,15 +4,16 @@ class WashersController < ApplicationController
   before_action :subclasses
   # before_action :set_type
   # attr_accessor :coins
-
+# decorates_assigned :washers
   load_and_authorize_resource
 
 
   # GET /washers
   # GET /washers.json
   def index
-    # @washers = WasherDecorator.decorate_collection(Washer.all, with: WasherDecorator)
-    @washers = Washer.all.decorate
+    # @washers = WasherDecorator.decorate_collection(Washer.all)
+    # @washers = WashersDecorator.new(Washer.all)
+    @washers = WasherDecorator.all
     # @washers.becomes(Washer)
   end
 

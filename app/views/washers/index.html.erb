@@ -5,10 +5,16 @@
   <% end %>
   <h1>Listing washers</h1>
 </div>
-<ul class="list-group bg-info">
-<%= render partial: "washerLink", collection: @washers, as: :washer %>
+<ul class="unavailable_washers list-group bg-info">
+<h1>My Machines</h1>
 
-   <% @washers.each do |washer| %>
+<%= render partial: "washerLink", collection: @washers.accessible_by(current_ability).decorate, as: :washer %>
+</ul>
+<ul class="available_washers list-group bg-info">
+<h1>Available Machines</h1>
+<%= render partial: "washerLink", collection: @washers.available_machines.decorate, as: :washer %>
+
+  
 
   <%# washer.washer_list_item %>
      
@@ -30,8 +36,13 @@
 <%#= f.hidden_field :load_id, :value => load.id %>
   <%#= f.button :submit %>
 <%# end %>
-   <% end %>
+   <%# end %>
   <%#= render partial: "washer", collection: @washers, as: :washer %>
+</ul>
+<ul class="unavailable_washers list-group bg-info">
+<h1>Unavailable Machines</h1>
+
+<%= render partial: "washerLink", collection: @washers.unavailable_machines.decorate, as: :washer %>
 </ul>
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
