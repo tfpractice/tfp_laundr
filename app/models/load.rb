@@ -4,6 +4,8 @@ class Load < ActiveRecord::Base
   belongs_to :machine, polymorphic: true
   acts_as_list scope: :user
   before_save :set_weight, :set_dry_time,  on: :create
+  after_save :set_name
+
   attr_accessor :dry_time
 
   scope :dirty_loads, -> {where(state: "dirty")}
@@ -94,12 +96,13 @@ class Load < ActiveRecord::Base
   private
   def set_weight
     @weight = self.read_attribute(:weight) || 0
-    # self.weight = initWeight || 0
-    # puts "selfweight,#{self.weight}"
-    # puts "weight, #{@weight}"
-
+   
   end
   def set_dry_time
     @dry_time = @weight * 5
+  end
+  def set_name
+    # self.update_column(:name, "Small Washer ##{self.id}" ) unless self.name
+    self.update(name: "#{self.weight}lbs.— Load ##{self.id}" ) if self.name.blank?
   end
 end

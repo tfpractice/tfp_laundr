@@ -11,6 +11,7 @@
     <thead>
       <tr>
             <th>Weight</th>
+            <th>Name</th>
             <th>State</th>
             <th>User</th>
             <th>Machine</th>
@@ -23,8 +24,9 @@
     <tbody>
       <%= content_tag_for(:tr, @loads) do |load| %>
             <td><%= load.weight %></td>
+            <td><%= load.name %></td>
             <td><%= load.state %></td>
-            <td><%= load.user %></td>
+            <td><%= load.user.username %></td>
             <td><%= load.machine %></td>
             <td><%= link_to 'Show', load %></td>
         <td><%= link_to 'Edit', edit_load_path(load) %></td>
