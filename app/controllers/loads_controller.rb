@@ -76,6 +76,6 @@ class LoadsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def load_params
-      params.require(:load).permit(:weight, :.name, :state, :user_id, :machine_id, :machine_type)
+      params.require(:load).permit(:weight, :name, :state, :user_id, :machine_id, :machine_type)
     end
 end

@@ -1,11 +1,19 @@
 class DryersController < ApplicationController
   include MachineController
+  load_and_authorize_resource
   # before_action :set_dryer, only: [:show, :edit, :update, :destroy]
 
   # GET /dryers
   # GET /dryers.json
   def index
-    @dryers = Dryer.all
+    # @dryers = Dryer.all
+    @dryers = DryerDecorator.all
+     if current_user
+      @my_dryers = current_user.dryers.order(state: :asc).decorate
+      @available_dryers = @dryers.available_machines.decorate - @my_dryers
+    else
+      @available_dryers = @dryers.available_machines.decorate
+    end
   end
 
   # GET /dryers/1

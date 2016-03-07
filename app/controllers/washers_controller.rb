@@ -4,7 +4,7 @@ class WashersController < ApplicationController
   before_action :subclasses
   # before_action :set_type
   # attr_accessor :coins
-# decorates_assigned :washers
+  # decorates_assigned :washers
   load_and_authorize_resource
 
 
@@ -14,6 +14,12 @@ class WashersController < ApplicationController
     # @washers = WasherDecorator.decorate_collection(Washer.all)
     # @washers = WashersDecorator.new(Washer.all)
     @washers = WasherDecorator.all
+    if current_user
+      @my_washers = current_user.washers.order(state: :asc).decorate
+      @available_washers = @washers.available_machines.decorate - @my_washers
+    else
+      @available_washers = @washers.available_machines.decorate
+    end
     # @washers.becomes(Washer)
   end
 
@@ -114,8 +120,7 @@ class WashersController < ApplicationController
     @machine = WasherDecorator.find(params[:id])
     @washer = @machine
 
-    # @washer = Washer.find(params[:id]).becomes(Washer)
-    # @washer.becomes(Washer)
+
   end
   # def set_type
   #     @type = type
