@@ -109,7 +109,6 @@ class MachineDecorator < Draper::Decorator
         concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
       end
     when "insert_coins"
-      # wrapper_html:{class: "input-group"},
       simple_form_for machine, url: insert_coins_machine_path(machine), html: { class: "form-group form-inline btn-group"} do |f|
         content_tag :div, class: "input-group select optional" do
           concat f.input(:coins, as: :select, collection: (1..machine.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )

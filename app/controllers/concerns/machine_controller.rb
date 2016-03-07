@@ -38,7 +38,7 @@ module MachineController
   end
   def insert_coins
     @machine.insert_coins!(params[:count])
-    redirect_to @machine, notice: " machine #{@machine.name} is ready"
+    redirect_to @machine, notice: " machine #{@machine.name} is ready. you inserted #{params[:count]} coins"
 
   end
   def start
