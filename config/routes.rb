@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     end
   end
   resources :dryers, concerns: :machine
+  resources :dryers, concerns: :machine, as: :machine
   resources :washers, concerns: :machine
+  resources :washers, concerns: :machine,as: :machine
   # resources :washers do
   # member do
   #   patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
