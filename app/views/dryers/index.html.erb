@@ -5,6 +5,23 @@
   <% end %>
   <h1>Listing dryers</h1>
 </div>
+<% if user_signed_in?  %>
+  <ul class="unavailable_dryers list-group bg-info">
+    <h1>My Machines</h1>
+    <%= render partial: "shared/machineLink", collection: current_user.dryers.decorate, as: :machine %>
+  </ul>
+ 
+<% end %>
+<ul class="available_dryers list-group ">
+  <h1>Available Machines</h1>
+  <%= render partial: "shared/machineLink", collection: @available_dryers, as: :machine %>
+ 
+    </ul>
+    <ul class="unavailable_dryers list-group">
+      <h1>Unavailable Machines</h1>
+      <%= render partial: "shared/machineLink", collection: @dryers.unavailable_machines.decorate, as: :machine %>
+    </ul>
+
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">

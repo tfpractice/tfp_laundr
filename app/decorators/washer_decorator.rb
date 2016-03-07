@@ -1,6 +1,6 @@
 class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
- 
+
 
   delegate_all
   decorates_finders
@@ -42,6 +42,19 @@ class WasherDecorator < Draper::Decorator
   end
   def next_step_link
   end
+  def washer_info
+     washer_user
+     washer_load
+  end
+  def washer_user
+    "current user: #{washer.user.username}" unless washer.user == nil
+
+  end
+  def washer_load
+    "current load: #{washer.load.name}"  unless washer.load == nil
+
+
+  end
   def event_path(event)
     case event
     when "claim"
@@ -78,14 +91,22 @@ class WasherDecorator < Draper::Decorator
   def event_form(step)
     case step
     when "fill"
-      simple_form_for washer, url: fill_washer_path(washer), html: { class: "  form-group form-inline"} do |f|
-        concat f.input(:load, as: :select, collection: Load.all, label_method: :weight, value_method: :id, input_html: { name: 'load' })
-        concat f.submit "fill with load", value: :fill,method: :patch, class: ' btn btn-primary'
+      simple_form_for washer, url: fill_washer_path(washer), html: { class: "  form-group form-inline  btn-group"} do |f|
+        concat f.input(:load, as: :select, collection: Load.all, inline_label: "choose load" , label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
+        concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
+        # concat button_tag link_icon do
+        #   # f.button_tag
+        #    link_icon
+        #   concat "hello"          
+        # end
       end
     when "insert_coins"
-      simple_form_for washer, url: insert_coins_washer_path(washer), html: { class: "form-group form-inline"} do |f|
-        concat f.input(:coins, as: :select, collection: (1..washer.price), input_html: { name: 'count' } )
-        concat f.button :submit, value: :insert_coins, method: :patch, class: ' btn btn-primary'
+      # wrapper_html:{class: "input-group"},
+      simple_form_for washer, url: insert_coins_washer_path(washer), html: { class: "form-group form-inline btn-group"} do |f|
+        content_tag :div, class: "input-group select optional" do
+          concat f.input(:coins, as: :select, collection: (1..washer.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
+          concat f.button :submit, value: :insert_coins, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'
+        end
       end
     end
   end

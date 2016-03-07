@@ -1,0 +1,3 @@
+class DryersDecorator < MachinesDecorator
+
+end
