@@ -4,10 +4,10 @@ module Machine
   included do
     attr_accessor :coins, :price, :capacity, :period, :end_time
     has_one :load, as: :machine
-    has_one :user, through: :load
+    belongs_to :user
     after_save :set_name, on: [:create, :new]
-    after_initialize :set_instance_attributes
-    after_initialize :set_coins
+    after_initialize :set_coins, :set_instance_attributes
+    # after_initialize :set_coins
 
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
@@ -38,6 +38,8 @@ module Machine
       end
       state :ready do
         event :start, :transitions_to => :in_progess
+        event :remove_clothes, :transitions_to => :empty
+
       end
       state :in_progess do
         event :end_cycle, :transitions_to => :complete
@@ -52,10 +54,13 @@ module Machine
 
 
   def claim(user=nil)
-    update_attribute(:user, user)
+    update(user: user)
+    # update_attribute(:user, user)
   end
   def unclaim
-    update_attribute(:user, nil)
+    update(user: nil)
+
+    # update_attribute(:user, nil)
 
   end
   def fill(load=nil)
@@ -87,26 +92,15 @@ module Machine
     current_state.events.collect { |event, val|  event.id2name}
   end
   def insert_coins(count=0)
-    # @price ||= count
-    # puts "coins before #{@coins}"
-    # puts self.inspect
-    #
+
     iCount = count.to_i
-    # puts "iCount before #{iCount}"
-    # puts "price before #{@price}"
-
-    if @coins + iCount > @price
-      raise "Cannot supply more than #{@price} coins"
-    else
-      # puts "coins before #{coins}"
-      @coins+=iCount
-      # puts "coins after #{coins}"
-
-
-
-    end
+    @coins+=iCount
+    # end
 
   end
+  # def reset
+  # self.update
+  # end
   def start
     @end_time = Time.now + self.period
     end_cycle if Time.now > self.end_time

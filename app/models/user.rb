@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable
 
   has_many :loads
-  has_many :washers, through: :loads, source: :machine, source_type: "Washer"	
+  has_many :washers
+  has_many :dryers
+  # has_many :machines
 
 end

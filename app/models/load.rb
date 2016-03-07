@@ -5,6 +5,8 @@ class Load < ActiveRecord::Base
   acts_as_list scope: :user
   before_save :set_weight, :set_dry_time,  on: :create
   after_save :set_name
+  validates :weight, numericality: { greater_than_or_equal_to: 0 }
+
 
   attr_accessor :dry_time
 
