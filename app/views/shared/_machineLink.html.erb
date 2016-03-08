@@ -1,5 +1,5 @@
 <%= content_tag(:li, class:"#{machine.list_item_class}") do %>
- <span class="row"> <%= machine.position_label %>
+ <span > <%= machine.position_label %>
    <%= machine.machine_link %>  
    <%= content_tag(:span, class:"event_links btn-toolbar pull-right") do  %>
      <% machine.next_steps.each do |step| %>
@@ -12,7 +12,8 @@
          <%end %>
        <% end %>
      <%end %>
-   <% end %></span>
+   <% end %>
+   </span>
 <!-- <div class="machine_info">
  -->  <ul class="available_dryers list-inline ">
     <%= machine.machine_info %>

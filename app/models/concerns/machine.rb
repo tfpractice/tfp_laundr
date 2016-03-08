@@ -94,7 +94,10 @@ module Machine
   def insert_coins(count=0)
 
     iCount = count.to_i
-    @coins+=iCount
+    @coins += iCount
+    update(coins: coins)
+    puts "coins changed #{changed?}"
+    puts "changed attributes #{changed_attributes}"
     # end
 
   end
@@ -135,7 +138,15 @@ module Machine
     # @coins ||= 0
   end
   def set_coins
-    @coins ||= 0
+
+        # puts "pre call machine.coins #{machine.coins}"
+        # puts "pre call self.coins #{self.coins}"
+        # puts "pre call @coins #{@coins}"
+
+       @coins ||= 0
+      # puts "pre call machine.coins #{machine.coins}"
+        # puts "pre call self.coins #{self.coins}"
+        # puts "pre call @coins #{@coins}"
   end
 
 end

@@ -11,8 +11,14 @@ class Dryer < ActiveRecord::Base
   #   @period = 5 * @coins
   # end
   def insert_coins(count=0)
+    # puts "pre call dryer.coins #{coins}"
+    # puts "pre call dryerinstance.coins #{@coins}"
 
     super
+    # puts "post call dryer.coins #{coins}"
+    # puts "post call dryerinstance.coins #{@coins}"
+
+
     @period += (5*count.to_i)
 
   end
