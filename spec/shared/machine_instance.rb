@@ -83,7 +83,21 @@ shared_examples_for("a specific machine") do
           end
           it 'changes coins by count' do
             puts machine.coins
+
             expect{machine.insert_coins!(sufficient_coins)}.to change{machine.coins}.by(sufficient_coins)
+          end
+          it 'persists the coin change' do
+            puts " pre-insert machine.coins #{machine.coins}"
+
+            machine.insert_coins!(3)
+            puts " pre-reload machine.coins #{machine.coins}"
+
+            machine.reload
+            puts "post-insert machine.coins #{machine.coins}"
+            expect(machine.coins).to eq(3)
+
+
+            # expect{machine.insert_coins!(sufficient_coins)}.to change{machine.coins}.by(sufficient_coins)
           end
           xit 'changes price by count' do
             puts machine.price
@@ -135,9 +149,7 @@ shared_examples_for("a specific machine") do
                 end
               end
             end
-            #           end
-            #         end
-            #       end
+
           end
         end
       end
