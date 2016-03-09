@@ -8,7 +8,8 @@ class Washer < ActiveRecord::Base
   include Machine
   def insert_coins(count=0)
     iCount = count.to_i
-    if @coins + iCount > @price
+
+    if self.coins + iCount > @price
       raise "Cannot supply more than #{@price} coins"
     else
       super
@@ -16,7 +17,7 @@ class Washer < ActiveRecord::Base
 
   end
   private
-  
+
   def set_name
     #   self.name ||= "Washer_#{self.id}"
   end

@@ -19,7 +19,7 @@ class Dryer < ActiveRecord::Base
     # puts "post call dryerinstance.coins #{@coins}"
 
 
-    @period += (5*count.to_i)
+    self.period += (5*count.to_i)
 
   end
 
@@ -32,6 +32,6 @@ class Dryer < ActiveRecord::Base
   def set_instance_attributes
     @price ||= 1
     @capacity ||= 15.0
-    @period ||=  5 * @coins
+    @period ||=  5 * self.coins
   end
 end

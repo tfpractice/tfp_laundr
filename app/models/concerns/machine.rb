@@ -2,12 +2,12 @@ module Machine
   extend ActiveSupport::Concern
 
   included do
-    attr_accessor :coins, :price, :capacity, :period, :end_time
+    attr_accessor  :price, :capacity, :period, :end_time
     has_one :load, as: :machine
     belongs_to :user
     after_save :set_name, on: [:create, :new]
-    after_initialize :set_coins, :set_instance_attributes
-    # after_initialize :set_coins
+    after_initialize  :set_instance_attributes
+    # after_initialize :set_count
 
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
@@ -91,15 +91,9 @@ module Machine
   def next_steps
     current_state.events.collect { |event, val|  event.id2name}
   end
-  def insert_coins(count=0)
-
-    iCount = count.to_i
-    @coins += iCount
-    update(coins: coins)
-    puts "coins changed #{changed?}"
-    puts "changed attributes #{changed_attributes}"
-    # end
-
+  def insert_coins(ccount=0)
+  increment!(:coins, ccount.to_i)
+  # increment(:count, ccount.to_i)
   end
   # def reset
   # self.update
@@ -137,16 +131,6 @@ module Machine
   def set_instance_attributes
     # @coins ||= 0
   end
-  def set_coins
-
-        # puts "pre call machine.coins #{machine.coins}"
-        # puts "pre call self.coins #{self.coins}"
-        # puts "pre call @coins #{@coins}"
-
-       @coins ||= 0
-      # puts "pre call machine.coins #{machine.coins}"
-        # puts "pre call self.coins #{self.coins}"
-        # puts "pre call @coins #{@coins}"
-  end
+  
 
 end

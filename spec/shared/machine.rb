@@ -36,7 +36,8 @@ shared_examples_for("a general machine") do
       end
       describe '#coins' do
         it 'has a coins attribute' do
-          expect(machine).to respond_to(:coins)
+          # expect(machine).to respond_to(:coins)
+          expect(machine.attributes).to include('coins')
         end
         it 'initializes with 0 coins' do
           expect(machine.coins).to be(0)

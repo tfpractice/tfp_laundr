@@ -64,20 +64,23 @@ shared_examples_for('a state controller') do
         end
         describe 'insert_coins' do
           it 'sets machine state to ready' do
-            # puts "machine.coins_before#{machine.coins}"
+            # #puts "machine.coins_before#{machine.coins}"
             patch :insert_coins, id: machine, count: 3
             machine.reload
-            # puts "machine.coins_after#{machine.coins}"
+            # #puts "machine.coins_after#{machine.coins}"
             expect(machine.state).to eq("ready")
           end
           it "changes machine coin count " do
-            puts "pre_submit machine.coins #{machine.coins}"
+            #puts "pre_submit machine.coins #{machine.coins}"
+            #puts "pre_submit machine.count #{machine.count}"
 
             patch :insert_coins, id: machine, count: 3
-            puts controller.params
-            puts "post_patch machine.coins #{machine.coins}"
+            #puts controller.params
+            #puts "post_patch machine.coins #{machine.coins}"
+            #puts "post_patch machine.count #{machine.count}"
             machine.reload
-            puts "post_reload machine.coins_after#{machine.coins}"
+            #puts "post_reload machine.coins_after#{machine.coins}"
+            #puts "post_reload machine.count#{machine.count}"
             # expect(machine.coins).to eq(3)
           end
 
@@ -87,14 +90,14 @@ shared_examples_for('a state controller') do
           # context "when insufficient coins inserted" do
           # end
           it "redirects to the machines list" do
-            patch :insert_coins, id: machine, count: 12
+            patch :insert_coins, id: machine, count: sufficient_coins
             # delete :destroy, {:id => machine.to_param}, valid_session
             expect(response).to redirect_to(machine)
           end
         end
         context 'when ready' do
           before(:each) do
-            patch :insert_coins, id: machine, count: 12
+            patch :insert_coins, id: machine, count: sufficient_coins
           end
           describe 'start' do
             it 'sets machine state to complete' do
