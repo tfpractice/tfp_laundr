@@ -65,7 +65,7 @@ shared_examples_for('a state controller') do
         describe 'insert_coins' do
           it 'sets machine state to ready' do
             # #puts "machine.coins_before#{machine.coins}"
-            patch :insert_coins, id: machine, count: 3
+            patch :insert_coins, id: machine, count: sufficient_coins
             machine.reload
             # #puts "machine.coins_after#{machine.coins}"
             expect(machine.state).to eq("ready")

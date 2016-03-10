@@ -55,12 +55,15 @@ RSpec.describe WashersController, type: :controller do
     let(:machines) { Washer.all }
     let(:machine) { create(:washer)}
     let(:load) { create(:load, user: user) }
+    # let(:sufficient_coins) { m_washer.price }
+    # let(:insufficient_coins) { 6 }
+
 
     let(:valid_attributes) {
       attributes_for(:washer)
     }
-let(:sufficient_coins){12}
-let(:insufficient_coints) { 8 }
+    let(:sufficient_coins){12}
+    let(:insufficient_coints) { 3 }
 
   end
 
@@ -294,7 +297,7 @@ let(:insufficient_coints) { 8 }
           it 'sets washer state to ready' do
             # puts "washer.coins_before#{washer.coins}"
 
-            patch :insert_coins, id: washer, count: 12
+            patch :insert_coins, id: washer, count: sufficient_coins
             washer.reload
             # puts "washer.coins_after#{washer.coins}"
 

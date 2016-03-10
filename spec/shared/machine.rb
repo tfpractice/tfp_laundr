@@ -54,5 +54,13 @@ shared_examples_for("a general machine") do
         end
       end
     end
+    # describe "methods" do
+    #   describe"#sufficient_coins?" do
+    #     it "returns true if the machine coins are greater than or equal to the price of the machine" do
+
+    #       expect(machine.sufficient_coins?).to be(false)
+    #     end
+    #   end
+    # end
   end
 end

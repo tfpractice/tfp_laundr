@@ -1,6 +1,27 @@
 shared_examples_for("a specific machine") do
 
 
+  describe "methods" do
+    describe"#enough_coins?" do
+      it "returns false if the machine coins are less than or equal to the price of the machine" do
+        expect(machine.enough_coins?).to be(false)
+      end
+      it "return true of the coins are greater of equal to the price" do
+        machine.coins = sufficient_coins
+        expect(machine.enough_coins?).to be(true)
+
+      end
+    end
+
+    describe '#reset_coins' do
+      it 'resets @coins to 0' do
+        machine.coins = 2
+        expect{machine.reset_coins}.to change{machine.coins}.from(2).to(0)
+      end
+    end
+  end
+
+
   context 'statemachine' do
     #   let(:machine) { create(:m_machine) }
     it 'initializes with :available as default state' do
@@ -77,27 +98,33 @@ shared_examples_for("a specific machine") do
           it 'responds to #insert_coins ' do
             expect(machine).to respond_to(:insert_coins)
           end
-          it 'changes coins by 0 without args' do
-            # puts machine.instance_variables
-            expect{machine.insert_coins!}.not_to change{machine.coins}
-          end
-          it 'changes coins by count' do
-            puts machine.coins
+          context 'when no coins inserted' do
 
-            expect{machine.insert_coins!(sufficient_coins)}.to change{machine.coins}.by(sufficient_coins)
+            it 'changes coins by 0 without args' do
+              expect{machine.insert_coins!}.not_to change{machine.coins}
+            end
+          end
+          context 'when insufficient coins inserted' do
+
+            it 'raises an exception' do
+              puts "pre halt #{machine.coins}"
+              machine.insert_coins(insufficient_coins)
+              puts "post halt #{machine.coins}"
+
+              expect{machine.insert_coins!(insufficient_coins)}.to change{machine.coins}.by(insufficient_coins)
+            end
+            it 'does not change machine state' do
+              expect{machine.insert_coins!(insufficient_coins)}.not_to change{machine.state}
+            end
           end
           it 'persists the coin change' do
             puts " pre-insert machine.coins #{machine.coins}"
 
-            machine.insert_coins!(3)
+            machine.insert_coins!(insufficient_coins)
             puts " pre-reload machine.coins #{machine.coins}"
-
             machine.reload
             puts "post-insert machine.coins #{machine.coins}"
-            expect(machine.coins).to eq(3)
-
-
-            # expect{machine.insert_coins!(sufficient_coins)}.to change{machine.coins}.by(sufficient_coins)
+            expect(machine.coins).to eq(insufficient_coins)
           end
           xit 'changes price by count' do
             puts machine.price
