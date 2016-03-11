@@ -1,9 +1,14 @@
 class Dryer < ActiveRecord::Base
   # belongs_to :user
   include Machine
+  
 
 
+
+
+  
   # self.states[:ready].events.push(event :insert_coins, :transitions_to => :ready)
+  # .states[:ready].events.push(Workflow::Event.new(:insert_coins, :transitions_to => :ready)
   # workflow do
   #   state :available do
   #     event :claim, :transitions_to => :empty
@@ -44,4 +49,13 @@ class Dryer < ActiveRecord::Base
     @capacity ||= 15.0
     @period ||=  5 * self.coins
   end
+
+  private
+  # Dryer.workflow_spec.states[:ready].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
+  def self.append_workflow
+    self.workflow_spec.states[:ready].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
+    self.workflow_spec.states[:in_progess].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :in_progess)))
+    self.workflow_spec.states[:complete].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
+  end
+  append_workflow
 end
