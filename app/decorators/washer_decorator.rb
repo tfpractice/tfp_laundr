@@ -46,15 +46,15 @@ class WasherDecorator < MachineDecorator
   #   washer_user
   #   washer_load
   # end
-  def washer_user
-    "current user: #{washer.user.username}" unless washer.user == nil
+  # def washer_user
+  #   "current user: #{washer.user.username}" unless washer.user == nil
 
-  end
-  def washer_load
-    "current load: #{washer.load.name}"  unless washer.load == nil
+  # end
+  # def washer_load
+  #   "current load: #{washer.load.name}"  unless washer.load == nil
 
 
-  end
+  # end
   #def event_path(event)
   #  case event
   #  when "claim"
@@ -74,79 +74,79 @@ class WasherDecorator < MachineDecorator
   # def has_form_input(event)
   #   event == "fill" || event ==  "insert_coins"
   # end
-  def event_icon(event)
-    case event
-    when "claim"
-      content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-    when "fill"
-    when "unclaim"
-      content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
-      # when "insert_coins"
-    when "start"
-      content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-    when "remove_clothes"
-      content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
-    end
-  end
-  def event_form(step)
-    case step
-    when "fill"
-      simple_form_for washer, url: fill_washer_path(washer), html: { class: "  form-group form-inline  btn-group"} do |f|
-        concat f.input(:load, as: :select, collection: Load.all, inline_label: "choose load" , label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
-        concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
-        # concat button_tag link_icon do
-        #   # f.button_tag
-        #    link_icon
-        #   concat "hello"
-        # end
-      end
-    when "insert_coins"
-      # wrapper_html:{class: "input-group"},
-      simple_form_for washer, url: insert_coins_washer_path(washer), html: { class: "form-group form-inline btn-group"} do |f|
-        content_tag :div, class: "input-group select optional" do
-          concat f.input(:coins, as: :select, collection: (1..washer.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
-          concat f.button :submit, value: :insert_coins, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'
-        end
-      end
-    end
-  end
+  # def event_icon(event)
+  #   case event
+  #   when "claim"
+  #     content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #   when "fill"
+  #   when "unclaim"
+  #     content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
+  #     # when "insert_coins"
+  #   when "start"
+  #     content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #   when "remove_clothes"
+  #     content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
+  #   end
+  # end
+  #def event_form(step)
+  #  case step
+  #  when "fill"
+  #    simple_form_for washer, url: fill_washer_path(washer), html: { class: "  form-group form-inline  btn-group"} do |f|
+  #      concat f.input(:load, as: :select, collection: Load.all, inline_label: "choose load" , label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
+  #      concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
+  #      # concat button_tag link_icon do
+  #      #   # f.button_tag
+  #      #    link_icon
+  #      #   concat "hello"
+  #      # end
+  #    end
+  #  when "insert_coins"
+  #    # wrapper_html:{class: "input-group"},
+  #    simple_form_for washer, url: insert_coins_washer_path(washer), html: { class: "form-group form-inline btn-group"} do |f|
+  #      content_tag :div, class: "input-group select optional" do
+  #        concat f.input(:coins, as: :select, collection: (1..washer.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
+  #        concat f.button :submit, value: :insert_coins, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'
+  #      end
+  #    end
+  #  end
+  #end
   def ctag
-    # capture do
-    if can? :use, object
-      case object.state
-      when "available"
-        link_to claim_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-          content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-        end
-      when "empty"
-        h.capture do
-          concat  link_to content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left"), unclaim_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
-          concat " "
-          concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
-        end
-      when "unpaid"
-        link_to insert_coins_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-          content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-        end
-      when "ready"
-        link_to start_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-          content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-        end
-      when "in_progess"
-        link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-          content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-        end
-      when "complete"
-        link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-          content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-        end
-      end
-    else
-      if object.user
-        content_tag(:p, "currently in use (#{object.user.username})")
-      else
-        content_tag(:p, "currently in use (Guest)")
-      end
-    end
+   # capture do
+   if can? :use, object
+     case object.state
+     when "available"
+       link_to claim_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+       end
+     when "empty"
+       h.capture do
+         concat  link_to content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left"), unclaim_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
+         concat " "
+         concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
+       end
+     when "unpaid"
+       link_to insert_coins_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+       end
+     when "ready"
+       link_to start_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+       end
+     when "in_progess"
+       link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+       end
+     when "complete"
+       link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+       end
+     end
+   else
+     if object.user
+       content_tag(:p, "currently in use (#{object.user.username})")
+     else
+       content_tag(:p, "currently in use (Guest)")
+     end
+   end
   end
 end

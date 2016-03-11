@@ -1,7 +1,7 @@
-<%= content_tag(:li, class:"#{machine.list_item_class}") do %>
+<%= content_tag(:li, class:"machine_link_list #{machine.list_item_class}") do %>
  <span > <%= machine.position_label %>
    <%= machine.machine_link %>  
-   <%= content_tag(:span, class:"event_links btn-toolbar pull-right") do  %>
+   <%= content_tag(:span, class:"machine_event_links btn-toolbar pull-right") do  %>
      <% machine.next_steps.each do |step| %>
        <% if machine.has_form_input(step) %>
          <%= machine.event_form(step) %>
@@ -15,7 +15,7 @@
    <% end %>
    </span>
 <!-- <div class="machine_info">
- -->  <ul class="available_dryers list-inline ">
+ -->  <ul class="machine_info_list clearfix available_dryers list-group list-inline  ">
     <%= machine.machine_info %>
 
   </ul>
