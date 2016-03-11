@@ -159,6 +159,10 @@ shared_examples_for("a specific machine") do
               it 'responds to #end_cycle ' do
                 expect(machine).to respond_to(:end_cycle)
               end
+              it 'can receive #insert_coins' do
+                expect(machine.next_steps).to include("insert_coins")
+
+              end
               it 'changes machine state to :in_progess' do
                 expect{machine.end_cycle!}.to change{machine.state}.from("in_progess").to("complete")
               end
