@@ -2,7 +2,7 @@ class MachineDecorator < Draper::Decorator
   # class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
-
+# decorates :machine
   delegate_all
   decorates_finders
   # decorates_association :machine, :scope => :available_machines
@@ -39,7 +39,7 @@ class MachineDecorator < Draper::Decorator
     content_tag(:span, object.position, class: "label label-primary")
   end
   def machine_link
-    link_to "#{object.name} (#{object.state})", machine_path(object)
+    link_to "#{object.name} (#{object.state})", polymorphic_path(object)
   end
   def next_step_link
   end
@@ -71,17 +71,17 @@ class MachineDecorator < Draper::Decorator
   def event_path(event)
     case event
     when "claim"
-      claim_machine_path(object)
+      polymorphic_path(machine, action: :claim)
     when "fill"
-      fill_machine_path(object)
+      polymorphic_path(machine, action: :fill)
     when "unclaim"
-      unclaim_machine_path(object)
+      polymorphic_path(machine, action: :unclaim)
     when "insert_coins"
-      insert_coins_machine_path(object)
+      polymorphic_path(machine, action: :insert_coins)
     when "start"
-      start_machine_path(object)
+      polymorphic_path(machine, action: :start)
     when "remove_clothes"
-      remove_clothes_machine_path(object)
+      polymorphic_path(machine, action: :remove_clothes)
     end
   end
   def has_form_input(event)
@@ -104,12 +104,12 @@ class MachineDecorator < Draper::Decorator
   def event_form(step)
     case step
     when "fill"
-      simple_form_for machine, url: fill_machine_path(machine), html: { class: "form-group form-inline"} do |f|
-        concat f.input(:load, label: "choose load",  as: :select, collection: current_user.loads, label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'loadaa' })
+      simple_form_for machine, url: polymorphic_path(machine, action: :fill), html: { class: "form-group form-inline btn-group"} do |f|
+        concat f.input(:load, label: "choose load",  as: :select, collection: current_user.loads, label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
         concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
       end
     when "insert_coins"
-      simple_form_for machine, url: insert_coins_machine_path(machine), html: { class: "form-group form-inline btn-group"} do |f|
+      simple_form_for machine, url: polymorphic_path(machine, action: :insert_coins), html: { class: "form-group form-inline btn-group"} do |f|
         content_tag :div, class: "input-group select optional" do
           concat f.input(:coins, as: :select, collection: (1..machine.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
           concat f.button :submit, value: :insert_coins, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'

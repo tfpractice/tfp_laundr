@@ -1,7 +1,7 @@
-class WasherDecorator < Draper::Decorator
+class WasherDecorator < MachineDecorator
   include Draper::LazyHelpers
 
-
+  decorates :washer
   delegate_all
   decorates_finders
   # decorates_association :washer, :scope => :available_machines
@@ -14,38 +14,38 @@ class WasherDecorator < Draper::Decorator
   #     end
   #   end
   # def object_list_item(object)
-  def list_item_class
-    if can? :use, object
-      case object.state
-      when "available"
-        "object list-group-item clearfix"
-      when "empty"
-        "object list-group-item list-group-item-info clearfix"
-      when "unpaid"
-        "object list-group-item list-group-item-warning clearfix"
-      when "ready"
-        "object list-group-item list-group-item-warning clearfix"
-      when "in_progess"
-        "object list-group-item list-group-item-success clearfix"
-      when "complete"
-        "object list-group-item list-group-item-success clearfix"
-      end
-    else
-      "object list-group-item disabled clearfix"
-    end
-  end
-  def position_label
-    content_tag(:span, object.position, class: "label label-primary")
-  end
-  def washer_link
-    link_to "#{object.name} (#{object.state})", washer_path(object)
-  end
-  def next_step_link
-  end
-  def washer_info
-     washer_user
-     washer_load
-  end
+  # def list_item_class
+  # if can? :use, object
+  #   case object.state
+  #   when "available"
+  #     "object list-group-item clearfix"
+  #   when "empty"
+  #     "object list-group-item list-group-item-info clearfix"
+  #   when "unpaid"
+  #     "object list-group-item list-group-item-warning clearfix"
+  #   when "ready"
+  #     "object list-group-item list-group-item-warning clearfix"
+  #   when "in_progess"
+  #     "object list-group-item list-group-item-success clearfix"
+  #   when "complete"
+  #     "object list-group-item list-group-item-success clearfix"
+  #   end
+  # else
+  #   "object list-group-item disabled clearfix"
+  # end
+  # end
+  # def position_label
+  #   content_tag(:span, object.position, class: "label label-primary")
+  # end
+  # def washer_link
+  #   link_to "#{object.name} (#{object.state})", washer_path(object)
+  # end
+  # def next_step_link
+  # end
+  # def washer_info
+  #   washer_user
+  #   washer_load
+  # end
   def washer_user
     "current user: #{washer.user.username}" unless washer.user == nil
 
@@ -55,25 +55,25 @@ class WasherDecorator < Draper::Decorator
 
 
   end
-  def event_path(event)
-    case event
-    when "claim"
-      claim_washer_path(object)
-    when "fill"
-      fill_washer_path(object)
-    when "unclaim"
-      unclaim_washer_path(object)
-    when "insert_coins"
-      insert_coins_washer_path(object)
-    when "start"
-      start_washer_path(object)
-    when "remove_clothes"
-      remove_clothes_washer_path(object)
-    end
-  end
-  def has_form_input(event)
-    event == "fill" || event ==  "insert_coins"
-  end
+  #def event_path(event)
+  #  case event
+  #  when "claim"
+  #    claim_washer_path(object)
+  #  when "fill"
+  #    fill_washer_path(object)
+  #  when "unclaim"
+  #    unclaim_washer_path(object)
+  #  when "insert_coins"
+  #    insert_coins_washer_path(object)
+  #  when "start"
+  #    start_washer_path(object)
+  #  when "remove_clothes"
+  #    remove_clothes_washer_path(object)
+  #  end
+  #end
+  # def has_form_input(event)
+  #   event == "fill" || event ==  "insert_coins"
+  # end
   def event_icon(event)
     case event
     when "claim"
@@ -97,7 +97,7 @@ class WasherDecorator < Draper::Decorator
         # concat button_tag link_icon do
         #   # f.button_tag
         #    link_icon
-        #   concat "hello"          
+        #   concat "hello"
         # end
       end
     when "insert_coins"

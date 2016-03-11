@@ -7,11 +7,14 @@ Rails.application.routes.draw do
       patch :claim, :unclaim, :insert_coins, :fill, :start, :remove_clothes
 
     end
-  end
-  resources :dryers, concerns: :machine
-  resources :dryers, concerns: :machine, as: :machine
-  resources :washers, concerns: :machine
-  resources :washers, concerns: :machine,as: :machine
+  end 
+  # resources :dryers, concerns: :machine,as: :machine, controller: 'dryers'
+  resources  :washers, :dryers, concerns: :machine
+
+  # resources  :washers, :dryers, concerns: :machine, as: :machine
+  # , controller: 'washers'
+  # resources :washers, concerns: :machine
+  # resources :washers, concerns: :machine,as: :machine, controller: 'washers'
   # resources :washers do
   # member do
   #   patch :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes
