@@ -2,7 +2,7 @@ class MachineDecorator < Draper::Decorator
   # class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
-# decorates :machine
+decorates :machine
   delegate_all
   decorates_finders
   # decorates_association :machine, :scope => :available_machines
@@ -104,8 +104,8 @@ class MachineDecorator < Draper::Decorator
   def event_form(step)
     case step
     when "fill"
-      simple_form_for machine, url: polymorphic_path(machine, action: :fill), html: { class: "form-group form-inline btn-group"} do |f|
-        concat f.input(:load, inline_label: "choose load",  as: :select, collection: current_user.loads, label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
+      h.simple_form_for machine, url: polymorphic_path(machine, action: :fill), html: { class: "form-group form-inline btn-group"} do |f|
+        concat f.input(:load, inline_label: "choose load",  as: :select, collection: (current_user.loads || Load.all), label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
         concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
       end
     when "insert_coins"
