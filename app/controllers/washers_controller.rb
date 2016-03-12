@@ -3,6 +3,8 @@ class WashersController < ApplicationController
   # before_action :set_washer, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
   before_action :subclasses
   before_action :coin_excess, only: [:insert_coins]
+  rescue_from Workflow::TransitionHalted, with: :coin_excess
+
   # attr_accessor :coins
   # decorates_assigned :washers
   load_and_authorize_resource
@@ -123,6 +125,7 @@ class WashersController < ApplicationController
 
   end
   def coin_excess
+    flash[:error] = "this machine raised an error" unless @machine.errors.empty?
     submitted_coins = params[:count].to_i
     if @machine.coins + submitted_coins > @machine.price
       newCoins = @machine.coins + submitted_coins
@@ -130,6 +133,7 @@ class WashersController < ApplicationController
       flash[:error] = "machine currently has #{@machine.coins}, cannot insert more than #{coin_diff} coins "
       redirect_to @machine, notice: " Please insert #{coin_diff} coins "
     end
+
 
   end
   def subclasses

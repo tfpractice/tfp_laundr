@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # resources :loads
   concern :machine do
     member do
-      patch :claim, :unclaim, :insert_coins, :fill, :start, :remove_clothes
+      patch :claim, :unclaim, :insert_coins, :return_coins, :fill, :start, :remove_clothes
 
     end
   end 

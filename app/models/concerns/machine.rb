@@ -6,13 +6,11 @@ module Machine
     belongs_to :user
     after_save :set_name, on: [:create, :new]
     after_initialize  :set_instance_attributes
-    # after_initialize :set_count
+    
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
-    # scope :available_machines, -> {where(state: "available")}
-    # scope :available_machines, -> {where(state: "available")}
-    # scope :available_machines, -> {where(state: "available")}
+    
     include Workflow
     acts_as_list
     workflow_column :state
@@ -21,15 +19,20 @@ module Machine
         event :claim, :transitions_to => :empty
       end
       state :empty do
+        event :fill, :transitions_to => :ready, :if => proc {|machine| machine.enough_coins?}
         event :fill, :transitions_to => :unpaid
+        event :return_coins, :transitions_to => :empty, :if => proc {|machine| machine.coins != 0 }
+
         event :unclaim, :transitions_to => :available
       end
       state :unpaid do
         # event :insert_coins, :transitions_to => :unpaid
+        # event :insert_coins, :transitions_to => :unpaid, :if => proc {|machine| !machine.enough_coins?}
         event :insert_coins, :transitions_to => :ready
         event :remove_clothes, :transitions_to => :empty
       end
       state :ready do
+        event :return_coins, :transitions_to => :unpaid, :if => proc {|machine| machine.coins > 0 }
         event :start, :transitions_to => :in_progess, :if => proc {|machine| machine.enough_coins?}
         event :remove_clothes, :transitions_to => :empty
       end
@@ -66,6 +69,10 @@ module Machine
     end
     # unless load.weight <= capacity
   end
+  def return_coins
+    self.reset_coins
+
+  end
   def reduce_capacity(weight=0)
     @capacity -= weight
   end
@@ -76,17 +83,15 @@ module Machine
     current_state.events.collect { |event, val|  event.id2name}
   end
   def insert_coins(count=0)
+    # increment!(:coins, count.to_i)
+    # halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" unless enough_coins?
     begin
       increment!(:coins, count.to_i)
       halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" unless enough_coins?
-   
-      
-    rescue Exception => e
-      puts e
-      
+    rescue Workflow::TransitionHalted => e
+      errors.add(:coins, e)
+      puts self.errors.inspect
     end
-     # puts " halted? #{self.halted?}"
-    # increment(:count, ccount.to_i)
   end
   def reset_coins
     self.update(coins: 0)

@@ -1,7 +1,7 @@
 class Washer < ActiveRecord::Base
   validates_presence_of :type
   skip_callback :initialize, :after, :set_name, :set_instance_attributes, if: -> { self.class.name == "Washer"}
-
+  # validate :coin_excess?, on: [:insert_coins]
 
 
 
@@ -15,6 +15,14 @@ class Washer < ActiveRecord::Base
       super
     end
 
+  end
+
+  def coin_excess?(newCoin=0)
+    # if coins + newCoin.to_i > price
+      # coin_diff = price - coins
+      # errors.add(:coins, "machine currently has #{coins}, cannot insert more than #{coin_diff} coins ")
+    # end
+    return coins + newCoin.to_i > price
   end
   private
 

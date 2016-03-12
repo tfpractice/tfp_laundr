@@ -2,7 +2,7 @@ class MachineDecorator < Draper::Decorator
   # class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
-decorates :machine
+  decorates :machine
   delegate_all
   decorates_finders
   # decorates_association :machine, :scope => :available_machines
@@ -69,6 +69,7 @@ decorates :machine
     content_tag(:li, "current load: #{machine.load.name}", class:"list-group-item ") unless machine.load == nil
   end
   def event_path(event)
+    # return_coins
     case event
     when "claim"
       polymorphic_path(machine, action: :claim)
@@ -78,6 +79,8 @@ decorates :machine
       polymorphic_path(machine, action: :unclaim)
     when "insert_coins"
       polymorphic_path(machine, action: :insert_coins)
+    when "return_coins"
+      polymorphic_path(machine, action: :return_coins)
     when "start"
       polymorphic_path(machine, action: :start)
     when "remove_clothes"
@@ -91,10 +94,12 @@ decorates :machine
     case event
     when "claim"
       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-    when "fill"
+    # when "fill"
     when "unclaim"
       content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
       # when "insert_coins"
+    when "return_coins"
+      content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
     when "start"
       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
     when "remove_clothes"

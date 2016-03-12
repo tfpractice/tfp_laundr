@@ -20,20 +20,20 @@ shared_examples_for("a specific machine") do
       end
     end
     # describe '#coin_excess?' do
-      # it 'checks if quantity coins inserted exceeds price ' do
-        # expect(washer).to respond_to(:coin_excess?)
+    # it 'checks if quantity coins inserted exceeds price ' do
+    # expect(washer).to respond_to(:coin_excess?)
 
-      # end
-      # context 'when inserting insufficient coins' do
-        # it 'returns false' do
-          # washer.claim!(user)
-          # puts "slef.capacity #{washer.capacity}"
-          # washer.fill!(load)
-          # washer.insert_coins!(5)
-          # expect(washer.coin_excess?).to be(false)
-        # end
+    # end
+    # context 'when inserting insufficient coins' do
+    # it 'returns false' do
+    # washer.claim!(user)
+    # puts "slef.capacity #{washer.capacity}"
+    # washer.fill!(load)
+    # washer.insert_coins!(5)
+    # expect(washer.coin_excess?).to be(false)
+    # end
 
-      # end
+    # end
 
     # end
   end
@@ -94,16 +94,33 @@ shared_examples_for("a specific machine") do
           end
         end
         context 'when load will fit ' do
-          it 'changes machine state to :unpaid' do
-            expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
-          end
+          # it 'changes machine state to :unpaid' do
+          # expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
+          # end
           it 'reduces machine capacity' do
             expect{machine.fill!(load)}.to change{machine.capacity}.by(-(load.weight))
           end
           it 'assigns machine load' do
             expect{machine.fill!(load)}.to change{machine.load}.from(nil).to(load)
           end
+          context 'when machine has no coins ' do
+            it 'changes machine state to "unpaid"  ' do
+              # machine.coins = machine.price
+              puts "machine_coins#{machine.coins}"
+              # bigLoad = create(:load, user: user, weight: 50)
+              expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
+            end
+          end
+          context 'already contains coins ' do
+            it 'changes machine status to "ready" ' do
+              machine.coins = machine.price
+              puts "machine_coins#{machine.coins}"
+              # bigLoad = create(:load, user: user, weight: 50)
+              expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("ready")
+            end
+          end
         end
+
       end
       context 'when unpaid' do
         before(:each) do
@@ -111,7 +128,7 @@ shared_examples_for("a specific machine") do
         end
 
 
-        describe '#insert_coins' do
+        fdescribe '#insert_coins' do
           it 'responds to #insert_coins ' do
             expect(machine).to respond_to(:insert_coins)
           end
@@ -122,13 +139,16 @@ shared_examples_for("a specific machine") do
             end
           end
           context 'when insufficient coins inserted' do
-
+            it 'adds a Workflow::TransitionHalted to :coins errors' do
+              machine.insert_coins!(insufficient_coins)
+              expect(machine.errors).to include(:coins)
+            end
             it 'raises an exception' do
               puts "pre halt #{machine.coins}"
-              machine.insert_coins(insufficient_coins)
+              machine.insert_coins!(insufficient_coins)
               puts "post halt #{machine.coins}"
-
-              expect{machine.insert_coins!(insufficient_coins)}.to change{machine.coins}.by(insufficient_coins)
+              expect { machine.insert_coins!(insufficient_coins) }.to raise_error()
+              # expect{machine.insert_coins!(insufficient_coins)}.to change{machine.coins}.by(insufficient_coins)
             end
             it 'does not change machine state' do
               expect{machine.insert_coins!(insufficient_coins)}.not_to change{machine.state}
@@ -167,6 +187,17 @@ shared_examples_for("a specific machine") do
               expect(machine.end_time).not_to be_nil
               # expect{machine.start!}.to change{machine.end_time}.from(nil).to((Time.now + machine.period))
             end
+          end
+          describe '#return_coins' do
+            it 'sets machine coins to 0' do
+              expect{machine.return_coins!}.to change{machine.coins}.from(machine.coins).to(0)
+
+            end
+            it 'changes machine state to "unpaid"' do
+              expect{machine.return_coins!}.to change{machine.state}.from("ready").to("unpaid")
+
+            end
+
           end
           context 'when in_progess' do
             before(:each) do

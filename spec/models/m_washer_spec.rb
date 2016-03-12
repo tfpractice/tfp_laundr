@@ -23,7 +23,7 @@ RSpec.describe MWasher, type: :model do
       puts "slef.capacity #{m_washer.capacity}"
       m_washer.fill!(load)
     end
-    it 'checks if quantity coins inserted exceeds price ' do
+    it 'checks if quantity coins inserted will exceeds price ' do
       expect(m_washer).to respond_to(:coin_excess?)
 
     end

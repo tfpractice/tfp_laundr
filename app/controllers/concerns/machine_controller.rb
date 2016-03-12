@@ -11,7 +11,8 @@ module MachineController
 
 
   included do
-    before_action :set_machine, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
+    before_action :set_machine, except: [:create, :new, :index]
+     # only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
     before_action :get_load, only: [:fill]
     # before_action :reset_coins, except:[:insert_coins]
     # before_action :set_type
@@ -38,9 +39,23 @@ module MachineController
 
   end
   def insert_coins
-    
+
     @machine.insert_coins!(params[:count])
+    # respond_to do |format|
+      # if @machine.save
+        # format.html { redirect_to @machine, notice: "Machine #{@machine.name} is ready. you inserted #{params[:count]} coins" }
+        # format.json { render :show, status: :created, location: @machine }
+      # else
+        # format.html { render :new }
+        # format.json { render json: @machine.errors, status: :unprocessable_entity }
+      # end
+    # end
     redirect_to @machine, notice: " machine #{@machine.name} is ready. you inserted #{params[:count]} coins"
+
+  end
+  def return_coins
+    @machine.return_coins!
+    redirect_to @machine, notice: " machine #{@machine.name} has no coins"
 
   end
   def start
@@ -66,9 +81,9 @@ module MachineController
   end
 
   # def reset_coins(iCount = nil)
-    # if iCount
-      # @machine.insert_coins!(@machine.coins)
-    # end
+  # if iCount
+  # @machine.insert_coins!(@machine.coins)
+  # end
 
   # end
   # Use callbacks to share common setup or constraints between actions.
