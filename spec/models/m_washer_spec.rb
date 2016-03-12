@@ -8,6 +8,7 @@ RSpec.describe MWasher, type: :model do
   it_behaves_like 'a general machine' do
     let(:machine) { m_washer }
   end
+
   it_behaves_like 'a specific machine' do
     let(:machine) { m_washer }
     let(:load) { create(:load, weight: 9 , user: user) }
@@ -16,13 +17,31 @@ RSpec.describe MWasher, type: :model do
     let(:insufficient_coins) { 6 }
 
   end
-  # describe '#reset_coins' do
-  # it 'resets @coins to 0' do
-  # m_washer
-  #
-  # end
-  #
-  # end
+  describe '#coin_excess?' do
+    before(:each) do
+      m_washer.claim!(user)
+      puts "slef.capacity #{m_washer.capacity}"
+      m_washer.fill!(load)
+    end
+    it 'checks if quantity coins inserted exceeds price ' do
+      expect(m_washer).to respond_to(:coin_excess?)
+
+    end
+    context 'when inserting insufficient coins' do
+      it 'returns false' do
+
+        # m_washer.insert_coins!(5)
+        expect(m_washer.coin_excess?(5)).to be(false)
+      end
+
+    end
+    context 'when inserting excessive coins' do
+      # m_washer.insert_coins!(20)
+      # expect(m_washer.coin_excess?).to be(false)
+
+    end
+
+  end
   it 'has a name' do
     expect(m_washer.name).to be_a_kind_of(String)
   end

@@ -19,6 +19,23 @@ shared_examples_for("a specific machine") do
         expect{machine.reset_coins}.to change{machine.coins}.from(2).to(0)
       end
     end
+    # describe '#coin_excess?' do
+      # it 'checks if quantity coins inserted exceeds price ' do
+        # expect(washer).to respond_to(:coin_excess?)
+
+      # end
+      # context 'when inserting insufficient coins' do
+        # it 'returns false' do
+          # washer.claim!(user)
+          # puts "slef.capacity #{washer.capacity}"
+          # washer.fill!(load)
+          # washer.insert_coins!(5)
+          # expect(washer.coin_excess?).to be(false)
+        # end
+
+      # end
+
+    # end
   end
 
 
@@ -159,7 +176,7 @@ shared_examples_for("a specific machine") do
               it 'responds to #end_cycle ' do
                 expect(machine).to respond_to(:end_cycle)
               end
-              
+
               it 'changes machine state to :in_progess' do
                 expect{machine.end_cycle!}.to change{machine.state}.from("in_progess").to("complete")
               end

@@ -64,29 +64,24 @@ shared_examples_for('a state controller') do
         end
         describe 'insert_coins' do
           it 'sets machine state to ready' do
-            # #puts "machine.coins_before#{machine.coins}"
             patch :insert_coins, id: machine, count: sufficient_coins
             machine.reload
-            # #puts "machine.coins_after#{machine.coins}"
             expect(machine.state).to eq("ready")
           end
           it "changes machine coin count " do
-            #puts "pre_submit machine.coins #{machine.coins}"
-            #puts "pre_submit machine.count #{machine.count}"
 
             patch :insert_coins, id: machine, count: 3
-            #puts controller.params
-            #puts "post_patch machine.coins #{machine.coins}"
-            #puts "post_patch machine.count #{machine.count}"
             machine.reload
-            #puts "post_reload machine.coins_after#{machine.coins}"
-            #puts "post_reload machine.count#{machine.count}"
-            # expect(machine.coins).to eq(3)
           end
 
-          # context "when sufficient coins inserted " do
+          context "when excessive coins inserted " do
+            it 'returns a response error' do
+              patch :insert_coins, id: machine, count: excessive_coins
 
-          # end
+              expect(response).not_to be_success
+            end
+
+          end
           # context "when insufficient coins inserted" do
           # end
           it "redirects to the machines list" do

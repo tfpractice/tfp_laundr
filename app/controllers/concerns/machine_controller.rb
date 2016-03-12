@@ -38,14 +38,8 @@ module MachineController
 
   end
   def insert_coins
-    # puts " pre insert machine.coins #{@machine.coins}"
-    # newCoins = params[:count].to_i + @machine.coins
-    # puts "newCoins#{newCoins}"
+    
     @machine.insert_coins!(params[:count])
-    # puts "post-insert machine.coins #{@machine.coins}"
-    # @machine.reload
-    # puts "post-controller-reload machine.coins #{@machine.coins}"
-# @machine.coins = newCoins
     redirect_to @machine, notice: " machine #{@machine.name} is ready. you inserted #{params[:count]} coins"
 
   end

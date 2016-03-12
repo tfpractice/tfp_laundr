@@ -2,7 +2,7 @@ class WashersController < ApplicationController
   include MachineController
   # before_action :set_washer, only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
   before_action :subclasses
-  # before_action :set_type
+  before_action :coin_excess, only: [:insert_coins]
   # attr_accessor :coins
   # decorates_assigned :washers
   load_and_authorize_resource
@@ -122,17 +122,16 @@ class WashersController < ApplicationController
 
 
   end
-  # def set_type
-  #     @type = type
-  #  end
+  def coin_excess
+    submitted_coins = params[:count].to_i
+    if @machine.coins + submitted_coins > @machine.price
+      newCoins = @machine.coins + submitted_coins
+      coin_diff = @machine.price - @machine.coins
+      flash[:error] = "machine currently has #{@machine.coins}, cannot insert more than #{coin_diff} coins "
+      redirect_to @machine, notice: " Please insert #{coin_diff} coins "
+    end
 
-  #  def type
-  #      Animal.races.include?(params[:type]) ? params[:type] : "Animal"
-  #  end
-
-  #  def type_class
-  #      type.constantize
-  #  end
+  end
   def subclasses
     @subclasses = Washer.subclasses
   end
