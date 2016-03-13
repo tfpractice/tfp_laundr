@@ -1,5 +1,4 @@
 shared_examples_for('a state controller') do
-
   describe 'MachineController' do
     before :each do
       sign_in user
@@ -19,9 +18,7 @@ shared_examples_for('a state controller') do
         expect(machine.user).to eq(user)
       end
       it "redirects to the machines list" do
-        # machine = Washer.create! valid_attributes
         patch :claim, id: machine
-        # delete :destroy, {:id => machine.to_param}, valid_session
         expect(response).to redirect_to(machine)
       end
     end
@@ -42,7 +39,6 @@ shared_examples_for('a state controller') do
         end
         it "redirects to the machines list" do
           patch :unclaim, id: machine
-          # delete :destroy, {:id => machine.to_param}, valid_session
           expect(response).to redirect_to(machine)
         end
       end
@@ -54,7 +50,6 @@ shared_examples_for('a state controller') do
         end
         it "redirects to the machines list" do
           patch :fill, id: machine, load: load
-          # delete :destroy, {:id => machine.to_param}, valid_session
           expect(response).to redirect_to(machine)
         end
       end
@@ -69,24 +64,11 @@ shared_examples_for('a state controller') do
             expect(machine.state).to eq("ready")
           end
           it "changes machine coin count " do
-
             patch :insert_coins, id: machine, count: 3
             machine.reload
           end
-
-          context "when excessive coins inserted " do
-            it 'returns a response error' do
-              patch :insert_coins, id: machine, count: excessive_coins
-
-              expect(response).not_to be_success
-            end
-
-          end
-          # context "when insufficient coins inserted" do
-          # end
           it "redirects to the machines list" do
             patch :insert_coins, id: machine, count: sufficient_coins
-            # delete :destroy, {:id => machine.to_param}, valid_session
             expect(response).to redirect_to(machine)
           end
         end
@@ -102,7 +84,6 @@ shared_examples_for('a state controller') do
             end
             it "redirects to the machines list" do
               patch :start, id: machine
-              # delete :destroy, {:id => machine.to_param}, valid_session
               expect(response).to redirect_to(machine)
             end
           end
@@ -118,7 +99,6 @@ shared_examples_for('a state controller') do
               end
               it "redirects to the machines list" do
                 patch :remove_clothes, id: machine
-                # delete :destroy, {:id => machine.to_param}, valid_session
                 expect(response).to redirect_to(machine)
               end
             end
