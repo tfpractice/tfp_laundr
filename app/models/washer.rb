@@ -9,13 +9,15 @@ class Washer < ActiveRecord::Base
     iCount = count.to_i
     coin_diff = price - coins
     begin
-      halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" if coin_excess?(count)
+      halt! "machine currently has #{coins}, cannot insert more than #{coin_diff} coins " if coin_excess?(count)
     rescue Workflow::TransitionHalted => e
       errors.add(:coins, e)
     else
       super
     end
   end
+
+
   def coin_excess?(newCoin=0)
     return coins + newCoin.to_i > price
   end

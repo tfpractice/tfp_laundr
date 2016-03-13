@@ -6,10 +6,13 @@ module Machine
     belongs_to :user
     after_save :set_name, on: [:create, :new]
     after_initialize  :set_instance_attributes
+   
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
+   
     include Workflow
+    
     acts_as_list
     workflow_column :state
     workflow do
@@ -70,7 +73,7 @@ module Machine
   def insert_coins(count=0)
     begin
       increment!(:coins, count.to_i)
-      halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" unless enough_coins?
+      halt! "machine cannot start until #{self.price} coins are inserted, currently has #{self.coins}" unless enough_coins?
     rescue Workflow::TransitionHalted => e
       errors.add(:coins, e)
     end

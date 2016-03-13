@@ -12,8 +12,10 @@ module MachineController
 
   included do
     before_action :set_machine, except: [:create, :new, :index]
-     # only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
-    before_action :get_load, only: [:fill]
+    # only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
+    before_action :get_load, only: [:fill, :load_excess]
+    before_action :load_excess, only: [:fill]
+
     # before_action :reset_coins, except:[:insert_coins]
     # before_action :set_type
 
@@ -42,14 +44,20 @@ module MachineController
 
     @machine.insert_coins!(params[:count])
     # respond_to do |format|
-      # if @machine.save
-        # format.html { redirect_to @machine, notice: "Machine #{@machine.name} is ready. you inserted #{params[:count]} coins" }
-        # format.json { render :show, status: :created, location: @machine }
-      # else
-        # format.html { render :new }
-        # format.json { render json: @machine.errors, status: :unprocessable_entity }
-      # end
+    # if @machine.save
+    # format.html { redirect_to @machine, notice: "Machine #{@machine.name} is ready. you inserted #{params[:count]} coins" }
+    # format.json { render :show, status: :created, location: @machine }
+    # else
+    # format.html { render :new }
+    # format.json { render json: @machine.errors, status: :unprocessable_entity }
     # end
+    # end
+    flash[:error] = @machine.errors.full_messages
+    puts @machine.errors.full_messages
+    puts flash[:error]
+
+    # redirect_to @machine, notice: " Please insert #{coin_diff} coins "
+    # puts "any insertion errors? #{@machine.errors.inspect}"
     redirect_to @machine, notice: " machine #{@machine.name} is ready. you inserted #{params[:count]} coins"
 
   end
@@ -78,6 +86,14 @@ module MachineController
 
   def get_load
     @load = Load.find(params[:load])
+  end
+
+  def load_excess
+    submitted_load = params[:load]
+    if @load.weight > @machine.capacity
+      flash[:error] = "machine cannot hold loadlarger than #{@machine.capacity} lbs"
+      redirect_to @machine, notice: " Please insert  smaller load "
+    end
   end
 
   # def reset_coins(iCount = nil)

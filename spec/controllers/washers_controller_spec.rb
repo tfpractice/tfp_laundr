@@ -25,7 +25,7 @@ RSpec.describe WashersController, type: :controller do
   let(:load) { create(:load, user: user) }
   let(:washer) { create(:washer, type: "MWasher")}
   let(:sufficient_coins){12}
-  let(:insufficient_coints) { 3 }
+  let(:insufficient_coins) { 3 }
   let(:excessive_coins) { 20 }
   let(:valid_attributes) {
     attributes_for(:washer, type: "MWasher")
@@ -43,7 +43,7 @@ RSpec.describe WashersController, type: :controller do
     let(:machine) { create(:washer)}
     let(:load) { create(:load, user: user) }
     let(:sufficient_coins){12}
-    let(:insufficient_coints) { 3 }
+    let(:insufficient_coins) { 3 }
     let(:excessive_coins) { 20 }
     let(:valid_attributes) {
       attributes_for(:washer)
@@ -61,8 +61,15 @@ RSpec.describe WashersController, type: :controller do
       context "when excessive coins inserted " do
         it 'returns a response error' do
           patch :insert_coins, id: washer, count: excessive_coins
-
+          # puts washer.errors.inspect
           expect(response).not_to be_success
+        end
+        context "when insufficient coins inserted " do
+          it 'returns a response error' do
+            patch :insert_coins, id: washer, count: insufficient_coins
+            # puts washer.errors.inspect
+            expect(response).not_to be_success
+          end
         end
 
       end
