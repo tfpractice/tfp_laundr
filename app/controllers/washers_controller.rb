@@ -18,7 +18,7 @@ class WashersController < ApplicationController
     @washers = WasherDecorator.all
     if current_user
       @my_washers = current_user.washers.order(state: :asc).decorate
-      @available_washers = @washers.available_machines.decorate - @my_washers
+      @available_washers = @washers.with_available_state.decorate - @my_washers
     else
       @available_washers = @washers.available_machines.decorate
     end

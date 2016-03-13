@@ -101,7 +101,7 @@ module Machine
     end_cycle if Time.now > self.end_time
   end
   def end_cycle
-    # self.reset_coins
+    self.reset_coins
   end
   def remove_clothes
   end

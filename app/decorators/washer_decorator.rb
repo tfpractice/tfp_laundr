@@ -110,43 +110,43 @@ class WasherDecorator < MachineDecorator
   #    end
   #  end
   #end
-  def ctag
-   # capture do
-   if can? :use, object
-     case object.state
-     when "available"
-       link_to claim_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-       end
-     when "empty"
-       h.capture do
-         concat  link_to content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left"), unclaim_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
-         concat " "
-         concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
-       end
-     when "unpaid"
-       link_to insert_coins_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-       end
-     when "ready"
-       link_to start_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-       end
-     when "in_progess"
-       link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-       end
-     when "complete"
-       link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
-         content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-       end
-     end
-   else
-     if object.user
-       content_tag(:p, "currently in use (#{object.user.username})")
-     else
-       content_tag(:p, "currently in use (Guest)")
-     end
-   end
-  end
+  #def ctag
+  # # capture do
+  # if can? :use, object
+  #   case object.state
+  #   when "available"
+  #     link_to claim_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+  #       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #     end
+  #   when "empty"
+  #     h.capture do
+  #       concat  link_to content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left"), unclaim_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
+  #       concat " "
+  #       concat link_to content_tag(:span, nil, class: "glyphicon glyphicon-download-alt"), fill_washer_path(object), method: :patch, class: 'btn btn-primary pull-xs-right'
+  #     end
+  #   when "unpaid"
+  #     link_to insert_coins_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+  #       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #     end
+  #   when "ready"
+  #     link_to start_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+  #       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #     end
+  #   when "in_progess"
+  #     link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+  #       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #     end
+  #   when "complete"
+  #     link_to remove_clothes_washer_path(object),method: :patch, class: 'btn btn-primary pull-xs-right' do
+  #       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
+  #     end
+  #   end
+  # else
+  #   if object.user
+  #     content_tag(:p, "currently in use (#{object.user.username})")
+  #   else
+  #     content_tag(:p, "currently in use (Guest)")
+  #   end
+  # end
+  #end
 end

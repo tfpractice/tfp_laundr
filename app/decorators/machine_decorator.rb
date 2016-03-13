@@ -2,7 +2,7 @@ class MachineDecorator < Draper::Decorator
   # class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
-  decorates :machine
+  # decorates :machine
   delegate_all
   decorates_finders
   # decorates_association :machine, :scope => :available_machines
