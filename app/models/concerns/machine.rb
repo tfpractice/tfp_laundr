@@ -6,11 +6,9 @@ module Machine
     belongs_to :user
     after_save :set_name, on: [:create, :new]
     after_initialize  :set_instance_attributes
-    
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
-    
     include Workflow
     acts_as_list
     workflow_column :state
@@ -19,15 +17,12 @@ module Machine
         event :claim, :transitions_to => :empty
       end
       state :empty do
+        event :unclaim, :transitions_to => :available
+        event :return_coins, :transitions_to => :empty, :if => proc {|machine| machine.coins > 0 }
         event :fill, :transitions_to => :ready, :if => proc {|machine| machine.enough_coins?}
         event :fill, :transitions_to => :unpaid
-        event :return_coins, :transitions_to => :empty, :if => proc {|machine| machine.coins != 0 }
-
-        event :unclaim, :transitions_to => :available
       end
       state :unpaid do
-        # event :insert_coins, :transitions_to => :unpaid
-        # event :insert_coins, :transitions_to => :unpaid, :if => proc {|machine| !machine.enough_coins?}
         event :insert_coins, :transitions_to => :ready
         event :remove_clothes, :transitions_to => :empty
       end
@@ -44,34 +39,24 @@ module Machine
       end
     end
   end
-  def enough_coins?
-    self.coins >= self.price
-  end
   def claim(user=nil)
     update(user: user)
-    # update_attribute(:user, user)
   end
   def unclaim
     update(user: nil)
-    # update_attribute(:user, nil)
   end
   def fill(load=nil)
-    # puts self.methods.sort
-    # puts "capacity#{self.capacity}"
-    # puts self.inspect
-    if !load
-      raise "Cannot insert an empty load"
-    elsif load.weight <= @capacity
-      self.update(load: load)
-      reduce_capacity(load.weight)
+    begin
+      halt! "Cannot insert an empty load" unless load
+      halt! "Cannot insert a load heavier than capacity" unless load.weight < @capacity
+    rescue Workflow::TransitionHalted => e
+      errors.add(:load, e)
     else
-      raise "Cannot insert a load heavier than capacity"
+      self.update(load: load)
     end
-    # unless load.weight <= capacity
   end
   def return_coins
     self.reset_coins
-
   end
   def reduce_capacity(weight=0)
     @capacity -= weight
@@ -83,15 +68,15 @@ module Machine
     current_state.events.collect { |event, val|  event.id2name}
   end
   def insert_coins(count=0)
-    # increment!(:coins, count.to_i)
-    # halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" unless enough_coins?
     begin
       increment!(:coins, count.to_i)
       halt! "machine cannot start until more coins are inserted, currently has #{self.coins}" unless enough_coins?
     rescue Workflow::TransitionHalted => e
       errors.add(:coins, e)
-      puts self.errors.inspect
     end
+  end
+  def enough_coins?
+    self.coins >= self.price
   end
   def reset_coins
     self.update(coins: 0)
@@ -122,6 +107,5 @@ module Machine
     raise "Subclass responsibility"
   end
   def set_instance_attributes
-    # @coins ||= 0
   end
 end

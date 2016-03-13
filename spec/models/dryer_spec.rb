@@ -18,6 +18,7 @@ RSpec.describe Dryer, type: :model do
     let(:bigLoad) { create(:load, weight: 16, user: user) }
     let(:sufficient_coins) { 1 }
     let(:insufficient_coins) { 0 }
+    let(:excessive_coins) { 20 }
 
   end
 

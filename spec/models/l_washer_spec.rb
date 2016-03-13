@@ -1,6 +1,7 @@
 require 'rails_helper'
 require 'shared/machine'
 require 'shared/machine_instance'
+require 'shared/washer_instance'
 
 RSpec.describe LWasher, type: :model do
   let(:user) { create(:user) }
@@ -22,6 +23,16 @@ RSpec.describe LWasher, type: :model do
     let(:insufficient_coins) { 5 }
 
   end
+
+   it_behaves_like 'a washer instance' do
+    let(:washer) { l_washer }
+    let(:load) { create(:load, weight: 9 , user: user) }
+    let(:bigLoad) { create(:load, weight: 20, user: user) }
+    let(:sufficient_coins) { l_washer.price }
+    let(:insufficient_coins) { 6 }
+    let(:excessive_coins) { 20 }
+  end
+
   it 'has a name' do
     expect(l_washer.name).to be_a_kind_of(String)
   end
@@ -42,7 +53,7 @@ RSpec.describe LWasher, type: :model do
     describe '#price' do
 
       it 'has a price method' do
-        # puts s_washer.methods.sort
+        # puts l_washer.methods.sort
         expect(l_washer.methods).to include(:price)
       end
       it 'returns 14' do

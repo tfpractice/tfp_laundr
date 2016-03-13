@@ -1,6 +1,8 @@
 require 'rails_helper'
 require 'shared/machine'
 require 'shared/machine_instance'
+require 'shared/washer_instance'
+
 
 RSpec.describe SWasher, type: :model do
   let(:user) { create(:user) }
@@ -15,13 +17,21 @@ RSpec.describe SWasher, type: :model do
   it_behaves_like 'a specific machine' do
 
     let(:machine) { s_washer }
-    let(:load) { create(:load, weight: 5 , user: user) }
+    let(:load) { create(:load, weight: 4 , user: user) }
     let(:bigLoad) { create(:load, weight: 16, user: user) }
     let(:sufficient_coins) { s_washer.price }
     let(:insufficient_coins) { 2 }
 
   end
 
+  it_behaves_like 'a washer instance' do
+    let(:washer) { s_washer }
+    let(:load) { create(:load, weight: 4 , user: user) }
+    let(:bigLoad) { create(:load, weight: 20, user: user) }
+    let(:sufficient_coins) { s_washer.price }
+    let(:insufficient_coins) { 6 }
+    let(:excessive_coins) { 20 }
+  end
 
   describe 'SubClass methods' do
 

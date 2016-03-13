@@ -1,6 +1,8 @@
 require 'rails_helper'
 require 'shared/machine'
 require 'shared/machine_instance'
+require 'shared/washer_instance'
+
 RSpec.describe MWasher, type: :model do
   let(:user) { create(:user) }
   let(:m_washer) { create(:m_washer) }
@@ -15,12 +17,24 @@ RSpec.describe MWasher, type: :model do
     let(:bigLoad) { create(:load, weight: 20, user: user) }
     let(:sufficient_coins) { m_washer.price }
     let(:insufficient_coins) { 6 }
+    let(:excessive_coins) { 20 }
 
   end
+  it_behaves_like 'a washer instance' do
+    let(:washer) { m_washer }
+    let(:load) { create(:load, weight: 9 , user: user) }
+    let(:bigLoad) { create(:load, weight: 20, user: user) }
+    let(:sufficient_coins) { m_washer.price }
+    let(:insufficient_coins) { 6 }
+    let(:excessive_coins) { 20 }
+
+  end
+
+
   describe '#coin_excess?' do
     before(:each) do
       m_washer.claim!(user)
-      puts "slef.capacity #{m_washer.capacity}"
+
       m_washer.fill!(load)
     end
     it 'checks if quantity coins inserted will exceeds price ' do
@@ -30,14 +44,15 @@ RSpec.describe MWasher, type: :model do
     context 'when inserting insufficient coins' do
       it 'returns false' do
 
-        # m_washer.insert_coins!(5)
         expect(m_washer.coin_excess?(5)).to be(false)
       end
 
     end
     context 'when inserting excessive coins' do
-      # m_washer.insert_coins!(20)
-      # expect(m_washer.coin_excess?).to be(false)
+      it 'retuns true' do
+        expect(m_washer.coin_excess?(20)).to be(true)
+      end
+
 
     end
 
@@ -57,7 +72,7 @@ RSpec.describe MWasher, type: :model do
     end
     describe '#price' do
       it 'has a price method' do
-        # puts s_washer.methods.sort
+        #
         expect(m_washer.methods).to include(:price)
       end
       it 'returns 12' do

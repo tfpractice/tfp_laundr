@@ -20,6 +20,14 @@ RSpec.describe XlWasher, type: :model do
     let(:insufficient_coins) { 2 }
 
   end
+   it_behaves_like 'a washer instance' do
+    let(:washer) { xl_washer }
+    let(:load) { create(:load, weight: 9 , user: user) }
+    let(:bigLoad) { create(:load, weight: 20, user: user) }
+    let(:sufficient_coins) { xl_washer.price }
+    let(:insufficient_coins) { 6 }
+    let(:excessive_coins) { 20 }
+  end
 
   it 'has an type of "xl_washer"' do
     expect(xl_washer.type).to eq("XlWasher")
