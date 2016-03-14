@@ -6,13 +6,10 @@ module Machine
     belongs_to :user
     after_save :set_name, on: [:create, :new]
     after_initialize  :set_instance_attributes
-   
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
-   
     include Workflow
-    
     acts_as_list
     workflow_column :state
     workflow do
@@ -68,7 +65,20 @@ module Machine
     @price -= @coins
   end
   def next_steps
-    current_state.events.collect { |event, val|  event.id2name}
+    valid_events = []
+    current_state.events.each do |event, val|
+      if (val.any? { |v| v.condition == nil })
+        valid_events << event.id2name
+      elsif (val.any? { |v| v.condition != nil })
+        valid_conditional_events = val.select { |v| v.condition}
+        valid_conditional_events.each do |ve|
+          if ve.condition.call(self) == true
+            valid_events << event.id2name
+          end
+        end
+      end
+    end
+    valid_events
   end
   def insert_coins(count=0)
     begin

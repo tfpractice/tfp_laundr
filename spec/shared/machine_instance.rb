@@ -81,6 +81,37 @@ shared_examples_for("a specific machine") do
           end
         end
       end
+      fdescribe '#next_steps' do
+        it 'includes unclaim' do
+          expect(machine.next_steps).to include("unclaim")
+        end
+        it 'includes fill' do
+          expect(machine.next_steps).to include("fill")
+        end
+        it 'returns an array of length 2' do
+          expect(machine.next_steps.length).to eq(2)
+
+        end
+        context 'if machine has coins' do
+          it 'includes return_coins' do
+            machine.coins = 1
+            expect(machine.next_steps).to include("return_coins")
+          end
+        end
+        context 'if machine has no coins' do
+          it 'doesnt allow return_coins' do
+            machine.coins = 0
+            # machine.return_coins!
+            expect(machine.next_steps).not_to include("return_coins")
+
+
+          end
+          it 'does not include return_coins' do
+            machine.coins = 0
+            expect(machine.next_steps).not_to include("return_coins")
+          end
+        end
+      end
       context 'when unpaid' do
         before(:each) do
           machine.fill!(load)
@@ -114,6 +145,14 @@ shared_examples_for("a specific machine") do
             end
           end
         end
+        describe '#next_steps' do
+          it 'includes insert_coins' do
+            expect(machine.next_steps).to include("insert_coins")
+          end
+          it 'includes remove_clothes' do
+            expect(machine.next_steps).to include("remove_clothes")
+          end
+        end
         context 'when ready' do
           before(:each) do
             machine.insert_coins!(sufficient_coins)
@@ -138,6 +177,26 @@ shared_examples_for("a specific machine") do
               expect{machine.return_coins!}.to change{machine.state}.from("ready").to("unpaid")
             end
           end
+          describe '#next_steps' do
+            it 'includes remove_clothes' do
+              expect(machine.next_steps).to include("remove_clothes")
+            end
+            # it 'includes remove_clothes' do
+            # expect(machine.next_steps).to include("remove_clothes")
+            # end
+            context 'if machine has coins' do
+              it 'includes return_coins' do
+                machine.coins = 1
+                expect(machine.next_steps).to include("return_coins")
+              end
+            end
+            context 'if machine has ennough coins' do
+              it 'includes start' do
+                machine.coins = machine.price
+                expect(machine.next_steps).to include("start")
+              end
+            end
+          end
           context 'when in_progess' do
             before(:each) do
               machine.start!
@@ -148,6 +207,11 @@ shared_examples_for("a specific machine") do
               end
               it 'changes machine state to :in_progess' do
                 expect{machine.end_cycle!}.to change{machine.state}.from("in_progess").to("complete")
+              end
+            end
+            describe '#next_steps' do
+              it 'includes end_cycle' do
+                expect(machine.next_steps).to include("end_cycle")
               end
             end
             context 'when complete' do
