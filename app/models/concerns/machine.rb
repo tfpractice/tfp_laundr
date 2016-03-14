@@ -24,6 +24,8 @@ module Machine
       end
       state :unpaid do
         event :insert_coins, :transitions_to => :ready
+        event :return_coins, :transitions_to => :unpaid, :if => proc {|machine| machine.coins > 0 }
+
         event :remove_clothes, :transitions_to => :empty
       end
       state :ready do
@@ -102,6 +104,7 @@ module Machine
     self.reset_coins
   end
   def remove_clothes
+    self.update(load: nil)
   end
   def time_remaining
     if self.state == "in_progress"

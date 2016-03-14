@@ -145,10 +145,17 @@ shared_examples_for("a specific machine") do
             end
           end
         end
-        describe '#next_steps' do
+        fdescribe '#next_steps' do
           it 'includes insert_coins' do
             expect(machine.next_steps).to include("insert_coins")
           end
+          context 'when mahine has coins' do
+            it 'includes return_coins' do
+              machine.coins = 3
+              expect(machine.next_steps).to include("return_coins")
+            end
+          end
+
           it 'includes remove_clothes' do
             expect(machine.next_steps).to include("remove_clothes")
           end
@@ -214,7 +221,7 @@ shared_examples_for("a specific machine") do
                 expect(machine.next_steps).to include("end_cycle")
               end
             end
-            context 'when complete' do
+            fcontext 'when complete' do
               before(:each) do
                 machine.end_cycle!
               end
@@ -224,6 +231,9 @@ shared_examples_for("a specific machine") do
                 end
                 it 'changes machine state to :empty' do
                   expect{machine.remove_clothes!}.to change{machine.state}.from("complete").to("empty")
+                end
+                it 'changes machine load to nil' do
+                  expect{machine.remove_clothes!}.to change{machine.load}.from(load).to(nil)
                 end
               end
             end
