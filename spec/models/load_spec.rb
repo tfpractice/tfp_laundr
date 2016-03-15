@@ -57,7 +57,7 @@ RSpec.describe Load, type: :model do
           skip()
           expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
         end
-        it 'changes the load state to dirty' do
+        it 'changes the load state to washed' do
           expect { load.wash! }.to change{load.state}.from("in_washer").to("washed")
         end
       end
@@ -68,7 +68,7 @@ RSpec.describe Load, type: :model do
         describe '#remove_from_machine' do
           it 'assigns the machine association' do
             skip()
-            expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
+            expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
           end
           it 'changes the load state to wet' do
             expect { load.remove_from_machine!(washer) }.to change{load.state}.from("washed").to("wet")
