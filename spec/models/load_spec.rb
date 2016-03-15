@@ -4,6 +4,9 @@ RSpec.describe Load, type: :model do
   let(:washer) { create(:xl_washer) }
   let(:dryer) { create(:dryer) }
   let(:load) { create(:load, user: user) }
+  let(:load2) { create(:load, user: user) }
+  let(:user2) { create(:user) }
+  let(:load3) { create(:load, user: user2) }
   describe 'attributes' do
     it 'has a weight' do
       expect(load.weight).to be_a_kind_of(Numeric)
@@ -29,6 +32,60 @@ RSpec.describe Load, type: :model do
       it 'is 5 times the weight' do
         expect(load.dry_time).to eq(5*load.weight)
       end
+    end
+  end
+
+  describe '#shared_user?' do
+    it 'responds to shared_user?' do
+      expect(load).to respond_to(:shared_user?)
+    end
+    it 'retuns true if two loads share a user' do
+      expect(load.shared_user?(load2)).to be true
+    end
+    it 'retuns false if two do not share a user' do
+      expect(load.shared_user?(load3)).to be false
+
+    end
+  end
+
+  describe '#same_state?' do
+    it 'returns true if two loads share state' do
+      expect(load.same_state?(load2)).to be true
+
+    end
+    it 'returns false if two loads do not share state' do
+      load2.insert!(washer)
+      expect(load.same_state?(load2)).to be false
+
+
+    end
+
+
+  end
+
+  describe '#merge' do
+    let(:load4) { create(:load, user: user) }
+
+    it 'respond_to merge' do
+      expect(load).to respond_to(:merge)
+    end
+    it 'increments load weight by that of second ' do
+      expect { load.merge!(load4) }.to change{load.weight}.by(load4.weight)
+    end
+    it 'does not change load state ' do
+      expect { load.merge!(load4) }.not_to change{load.state}
+    end
+    it 'destroys the second Load ' do
+      loadx = create(:load, user: user)
+      loady = create(:load, user: user)
+      loadz = create(:load, user: user)
+      # puts Load.all.length
+      puts Load.count
+
+      loadx.merge!(loady)
+      puts Load.count
+      # expect(Load.count).to eq(value)
+      expect { load.merge!(load4) }.to change{Load.count}.by(1)
     end
   end
   describe 'stateMachine' do

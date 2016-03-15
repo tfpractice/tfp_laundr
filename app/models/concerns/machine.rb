@@ -9,7 +9,9 @@ module Machine
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
+    
     include Workflow
+    
     acts_as_list
     workflow_column :state
     workflow do
