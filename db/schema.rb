@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309150450) do
+ActiveRecord::Schema.define(version: 20160315174908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20160309150450) do
   add_index "dryers", ["user_id"], name: "index_dryers_on_user_id", using: :btree
 
   create_table "loads", force: :cascade do |t|
-    t.decimal  "weight"
+    t.float    "weight"
     t.string   "state"
     t.integer  "user_id"
     t.integer  "machine_id"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20160309150450) do
     t.inet     "last_sign_in_ip"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
-    t.decimal  "laundry"
+    t.float    "laundry"
     t.integer  "coins",                  default: 20
   end
 
