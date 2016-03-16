@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160315174908) do
+ActiveRecord::Schema.define(version: 20160316171508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,10 +34,11 @@ ActiveRecord::Schema.define(version: 20160315174908) do
     t.integer  "user_id"
     t.integer  "machine_id"
     t.string   "machine_type"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "position"
     t.string   "name"
+    t.float    "dry_time",     default: 0.0
   end
 
   add_index "loads", ["machine_type", "machine_id"], name: "index_loads_on_machine_type_and_machine_id", using: :btree

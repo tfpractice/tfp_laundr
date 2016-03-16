@@ -6,27 +6,18 @@ class Load < ActiveRecord::Base
   before_save :set_weight, :set_dry_time,  on: :create
   after_save :set_name
   validates :weight, numericality: { greater_than_or_equal_to: 0 }
-
-
-  attr_accessor :dry_time
-
+  # attr_accessor :dry_time
   scope :dirty_loads, -> {where(state: "dirty")}
   scope :in_washer_loads, -> {where(state: "in_washer")}
   scope :washed_loads, -> {where(state: "washed")}
   scope :wet_loads, -> {where(state: "wet")}
   scope :in_dryer_loads, -> {where(state: "in_dryer")}
   scope :dried_loads, -> {where(state: "dried")}
-
-
-
   workflow_column :state
-
   workflow do
     state :dirty do
       event :insert, :transitions_to => :in_washer
       event :merge, :transitions_to => :dirty#, :if => proc {|machine, secondLoad| machine}
-      #, if: ->(machine, secondLoad) { !machine.shared_user?(secondLoad) }
-
     end
     state :in_washer do
       event :wash, :transitions_to => :washed
@@ -34,7 +25,6 @@ class Load < ActiveRecord::Base
     end
     state :washed do
       event :remove_from_machine, :transitions_to => :wet
-
     end
     state :wet do
       event :insert, :transitions_to => :in_dryer
@@ -43,7 +33,6 @@ class Load < ActiveRecord::Base
     state :in_dryer do
       event :dry, :transitions_to => :dried
       event :remove_from_machine, :transitions_to => :wet
-
     end
     state :dried do
       event :fold, :transitions_to => :folded
@@ -56,15 +45,7 @@ class Load < ActiveRecord::Base
     state :clean do
       event :soil, :transitions_to => :dirty
     end
-    # state :in_progess do
-    #   event :end_cycle, :transitions_to => :complete
-    # end
-    # state :complete do
-    #   event :remove_clothes, :transitions_to => :empty
-    # end
   end
-
-
   def insert(machine = nil)
     update(machine: machine)
   end
@@ -74,30 +55,32 @@ class Load < ActiveRecord::Base
     end
   end
   def wash
-    raise "Can only wash if current machine is a Washer" unless self.machine.is_a? Washer
+    begin
+      halt! "Can only wash if current machine is a Washer" unless self.machine.is_a? Washer
 
+    rescue Workflow::TransitionHalted => e
+      errors.add(:machine, e)
+
+    end
   end
   def dry(duration = 0)
-    if self.machine.is_a? Dryer
-      @dry_time -= duration
-      false unless @dry_time <= 0
+    begin
+      halt! "Can only dry if current machine is a Dryer" unless self.machine.is_a? Dryer
+    rescue Workflow::TransitionHalted => e
+      errors.add(:machine, e)
     else
-      raise "Cannot Dry if current machine is not a dryer"
+      decrement!(:dry_time, duration)
+      false unless dry_time <= 0
     end
-
   end
   def fold
-
   end
   def finish
-
   end
   def soil
-
   end
   def same_state?(secondLoad)
     self.state == secondLoad.state unless !secondLoad
-
   end
   def merge(secondLoad=nil)
     begin
@@ -109,26 +92,22 @@ class Load < ActiveRecord::Base
     else
       increment!(:weight, secondLoad.weight)
       secondLoad.destroy
-
-
     end
-
-
   end
-
   def shared_user?(secondLoad = nil)
     self.user == secondLoad.user
   end
   private
   def set_weight
     @weight = self.read_attribute(:weight) || 0
-
   end
   def set_dry_time
-    @dry_time = @weight * 5
+    puts "@weight#{@weight}"
+    puts "#self.weight#{self.weight}"
+    puts "weight#{weight}"
+    self.dry_time = weight * 5
   end
   def set_name
-    # self.update_column(:name, "Small Washer ##{self.id}" ) unless self.name
     self.update(name: "#{self.weight}lbs.— Load ##{self.id}" ) if self.name.blank?
   end
 end

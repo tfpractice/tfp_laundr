@@ -7,7 +7,7 @@ RSpec.describe Load, type: :model do
   let(:load2) { create(:load, user: user) }
   let(:user2) { create(:user) }
   let(:load3) { create(:load, user: user2) }
-  describe 'attributes' do
+ fdescribe 'attributes' do
     it 'has a weight' do
       expect(load.weight).to be_a_kind_of(Numeric)
     end
@@ -27,14 +27,13 @@ RSpec.describe Load, type: :model do
     end
     describe '#dry_time' do
       it 'initializes with a dry_time' do
-        expect(load.instance_variables).to include(:@dry_time)
+      expect(load.dry_time).to be_a_kind_of(Numeric)
       end
       it 'is 5 times the weight' do
         expect(load.dry_time).to eq(5*load.weight)
       end
     end
   end
-
   describe '#shared_user?' do
     it 'responds to shared_user?' do
       expect(load).to respond_to(:shared_user?)
@@ -44,28 +43,19 @@ RSpec.describe Load, type: :model do
     end
     it 'retuns false if two do not share a user' do
       expect(load.shared_user?(load3)).to be false
-
     end
   end
-
   describe '#same_state?' do
     it 'returns true if two loads share state' do
       expect(load.same_state?(load2)).to be true
-
     end
     it 'returns false if two loads do not share state' do
       load2.insert!(washer)
       expect(load.same_state?(load2)).to be false
-
-
     end
-
-
   end
-
-  fdescribe '#merge' do
+  describe '#merge' do
     let(:load4) { create(:load, user: user) }
-
     it 'respond_to merge' do
       expect(load).to respond_to(:merge)
     end
@@ -79,21 +69,16 @@ RSpec.describe Load, type: :model do
       loadx = create(:load, user: user)
       loady = create(:load, user: user)
       loadz = create(:load, user: user)
-      # puts Load.all.length
       puts Load.count
-
       loadx.merge!(loady)
       puts Load.count
-      # expect(Load.count).to eq(value)
       expect { load.merge!(load4) }.to change{Load.count}.by(1)
     end
-
     context 'when loads belong to different users' do
       it 'adds a Workflow::TransitionHalted error to errors array' do
         load.merge!(load3)
         expect(load.errors).to include(:weight)
       end
-
     end
     context 'when loads have different states' do
       it 'adds a Workflow::TransitionHalted error to errors array' do
@@ -101,14 +86,12 @@ RSpec.describe Load, type: :model do
         load.merge!(load2)
         expect(load.errors).to include(:weight)
       end
-
     end
-    context 'when no load is passed' do 
+    context 'when no load is passed' do
       it 'adds a Workflow::TransitionHalted error to errors array' do
-        load.merge!()
+        load.merge!
         expect(load.errors).to include(:weight)
       end
-
     end
   end
   describe 'stateMachine' do
@@ -139,6 +122,14 @@ RSpec.describe Load, type: :model do
         end
         it 'changes the load state to washed' do
           expect { load.wash! }.to change{load.state}.from("in_washer").to("washed")
+        end
+        context 'when machine is not  washer' do
+          it 'adds a Workflow::TransitionHalted error to errors array' do
+            load.remove_from_machine!
+            load.insert!(dryer)
+            load.wash!
+            expect(load.errors).to include(:machine)
+          end
         end
       end
       context 'when washed' do
@@ -178,11 +169,11 @@ RSpec.describe Load, type: :model do
             end
             describe '#dry' do
               context 'when machine is not a dryer' do
-                it 'raises an error ' do
+                it 'adds a Workflow::TransitionHalted error to errors array' do
                   load.remove_from_machine!
                   load.insert!(washer)
-                  expect { load.dry!(5) }.to raise_error()
-
+                  load.dry!
+                  expect(load.errors).to include(:machine)
                 end
               end
               it 'reduces the @dry_time attribute' do
