@@ -24,7 +24,8 @@ class Load < ActiveRecord::Base
   workflow do
     state :dirty do
       event :insert, :transitions_to => :in_washer
-      event :merge, :transitions_to => :dirty #, :if => proc {|machine, secondLoad| !machine.shared_user?(secondLoad) }
+      event :merge, :transitions_to => :dirty#, :if => proc {|machine, secondLoad| machine}
+      #, if: ->(machine, secondLoad) { !machine.shared_user?(secondLoad) }
 
     end
     state :in_washer do
@@ -37,7 +38,7 @@ class Load < ActiveRecord::Base
     end
     state :wet do
       event :insert, :transitions_to => :in_dryer
-      event :merge, :transitions_to => :wet 
+      event :merge, :transitions_to => :wet
     end
     state :in_dryer do
       event :dry, :transitions_to => :dried
@@ -46,7 +47,7 @@ class Load < ActiveRecord::Base
     end
     state :dried do
       event :fold, :transitions_to => :folded
-      event :merge, :transitions_to => :dried 
+      event :merge, :transitions_to => :dried
       event :remove_from_machine, :transitions_to => :clean
     end
     state :folded do
@@ -96,15 +97,21 @@ class Load < ActiveRecord::Base
   end
   def same_state?(secondLoad)
     self.state == secondLoad.state unless !secondLoad
-    
+
   end
-  def merge(secondLoad)
-    # secondLoad
-    # puts self.can_merge?
-# 
-    # puts self.current_state.events[:merge][0].condition.call(self, secondLoad)
-    increment!(:weight, secondLoad.weight) unless !secondLoad
-    secondLoad.destroy
+  def merge(secondLoad=nil)
+    begin
+      halt! "cannot merge with an empty load" if !secondLoad
+      halt! "Cannot merge loads with different states. Load is currently #{self.state}, merging load is #{secondLoad.state}" if !same_state?(secondLoad)
+      halt! "Cannot merge loads wih different users. Current Load belongs to #{self.user.username}, merging load belongs to #{secondLoad.user.username}" if !shared_user?(secondLoad)
+    rescue Workflow::TransitionHalted, ArgumentError => e
+      errors.add(:weight, e)
+    else
+      increment!(:weight, secondLoad.weight)
+      secondLoad.destroy
+
+
+    end
 
 
   end

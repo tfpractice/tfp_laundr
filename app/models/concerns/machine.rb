@@ -9,9 +9,9 @@ module Machine
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
-    
+
     include Workflow
-    
+
     acts_as_list
     workflow_column :state
     workflow do
@@ -20,19 +20,19 @@ module Machine
       end
       state :empty do
         event :unclaim, :transitions_to => :available
-        event :return_coins, :transitions_to => :empty, :if => proc {|machine| machine.coins > 0 }
-        event :fill, :transitions_to => :ready, :if => proc {|machine| machine.enough_coins?}
+        event :return_coins, :transitions_to => :empty, if: -> (machine) { machine.coins > 0 }
+        event :fill, :transitions_to => :ready, if: -> (machine) { machine.enough_coins? }
         event :fill, :transitions_to => :unpaid
       end
       state :unpaid do
         event :insert_coins, :transitions_to => :ready
-        event :return_coins, :transitions_to => :unpaid, :if => proc {|machine| machine.coins > 0 }
+        event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
 
         event :remove_clothes, :transitions_to => :empty
       end
       state :ready do
-        event :return_coins, :transitions_to => :unpaid, :if => proc {|machine| machine.coins > 0 }
-        event :start, :transitions_to => :in_progess, :if => proc {|machine| machine.enough_coins?}
+        event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
+        event :start, :transitions_to => :in_progess, if: -> (machine) { machine.enough_coins? }
         event :remove_clothes, :transitions_to => :empty
       end
       state :in_progess do
@@ -74,12 +74,8 @@ module Machine
       if (val.any? { |v| v.condition == nil })
         valid_events << event.id2name
       elsif (val.any? { |v| v.condition != nil })
-        valid_conditional_events = val.select { |v| v.condition}
-        valid_conditional_events.each do |ve|
-          if ve.condition.call(self) == true
-            valid_events << event.id2name
-          end
-        end
+        valid_conditional_events = val.select { |v| v.condition}.select { |e|  e.condition.call(self) == true  }
+        valid_conditional_events.each { |e| valid_events << event.id2name  }
       end
     end
     valid_events

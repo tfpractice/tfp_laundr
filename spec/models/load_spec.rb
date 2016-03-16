@@ -63,7 +63,7 @@ RSpec.describe Load, type: :model do
 
   end
 
-  describe '#merge' do
+  fdescribe '#merge' do
     let(:load4) { create(:load, user: user) }
 
     it 'respond_to merge' do
@@ -86,6 +86,29 @@ RSpec.describe Load, type: :model do
       puts Load.count
       # expect(Load.count).to eq(value)
       expect { load.merge!(load4) }.to change{Load.count}.by(1)
+    end
+
+    context 'when loads belong to different users' do
+      it 'adds a Workflow::TransitionHalted error to errors array' do
+        load.merge!(load3)
+        expect(load.errors).to include(:weight)
+      end
+
+    end
+    context 'when loads have different states' do
+      it 'adds a Workflow::TransitionHalted error to errors array' do
+        load2.insert!(washer)
+        load.merge!(load2)
+        expect(load.errors).to include(:weight)
+      end
+
+    end
+    context 'when no load is passed' do 
+      it 'adds a Workflow::TransitionHalted error to errors array' do
+        load.merge!()
+        expect(load.errors).to include(:weight)
+      end
+
     end
   end
   describe 'stateMachine' do
