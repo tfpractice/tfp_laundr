@@ -6,17 +6,18 @@ class Ability
     #
     user ||= User.new # guest user (not logged in)
     alias_action  :claim, :fill, :unclaim, :insert_coins, :return_coins, :start, :remove_clothes, :to => :use
-
+    alias_action :insert, :merge, :wash, :remove_from_machine, :dry, :finish, :to => :handle
 
     if user.admin?
       can :manage, :all
     else
 
-
       can :use, Washer, user: user
       can :use, Dryer, user: user
       can :use, Washer, :state => "available"
       can :use, Dryer, :state => "available"
+      can :handle, Load, user: user
+
       can :manage, Load, user: user
 
       can :read, :all

@@ -81,7 +81,7 @@ shared_examples_for("a specific machine") do
           end
         end
       end
-      fdescribe '#next_steps' do
+      describe '#next_steps' do
         it 'includes unclaim' do
           expect(machine.next_steps).to include("unclaim")
         end
@@ -145,7 +145,7 @@ shared_examples_for("a specific machine") do
             end
           end
         end
-        fdescribe '#next_steps' do
+        describe '#next_steps' do
           it 'includes insert_coins' do
             expect(machine.next_steps).to include("insert_coins")
           end
@@ -164,7 +164,7 @@ shared_examples_for("a specific machine") do
           before(:each) do
             machine.insert_coins!(sufficient_coins)
           end
-          describe '#start' do
+          fdescribe '#start' do
             it 'responds to #start ' do
               expect(machine).to respond_to(:start)
             end
@@ -175,6 +175,12 @@ shared_examples_for("a specific machine") do
               machine.start!
               expect(machine.end_time).not_to be_nil
             end
+            # context 'when machine does not have enough coins' do
+              # it 'is an invalid actions' do
+                # machine.reset_coins
+                # machine.start!
+              # end
+            # end
           end
           describe '#return_coins' do
             it 'sets machine coins to 0' do

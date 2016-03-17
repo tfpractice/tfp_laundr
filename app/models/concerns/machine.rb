@@ -95,10 +95,23 @@ module Machine
     self.update(coins: 0)
   end
   def start
+
     @end_time = Time.now + self.period
-    end_cycle if Time.now > self.end_time
+    # end_cycle if Time.now > self.end_time
+    # p Thread.current
+    endThread = Thread.new do
+      puts "sleeping for #{period} seconds"
+      sleep(0.003)
+    
+
+      puts "calling end_cycle"
+      end_cycle! 
+    end
+    # endThread.join
   end
   def end_cycle
+
+    puts "cycle ended"
     self.reset_coins
   end
   def remove_clothes

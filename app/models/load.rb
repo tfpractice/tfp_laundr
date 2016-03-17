@@ -97,14 +97,26 @@ class Load < ActiveRecord::Base
   def shared_user?(secondLoad = nil)
     self.user == secondLoad.user
   end
+  def next_steps
+    valid_events = []
+    current_state.events.each do |event, val|
+      if (val.any? { |v| v.condition == nil })
+        valid_events << event.id2name
+      elsif (val.any? { |v| v.condition != nil })
+        valid_conditional_events = val.select { |v| v.condition}.select { |e|  e.condition.call(self) == true  }
+        valid_conditional_events.each { |e| valid_events << event.id2name  }
+      end
+    end
+    valid_events
+  end
   private
   def set_weight
     @weight = self.read_attribute(:weight) || 0
   end
   def set_dry_time
-    puts "@weight#{@weight}"
-    puts "#self.weight#{self.weight}"
-    puts "weight#{weight}"
+    # puts "@weight#{@weight}"
+    # puts "#self.weight#{self.weight}"
+    # puts "weight#{weight}"
     self.dry_time = weight * 5
   end
   def set_name

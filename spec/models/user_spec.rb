@@ -13,6 +13,18 @@ RSpec.describe User, type: :model do
     it 'has an password' do
       expect(user.password).to be_a_kind_of(String)
     end
+    it 'has coins' do
+      expect(user.coins).to be_a_kind_of(Numeric)
+
+    end
+    it 'has laundry' do
+      expect(user.laundry).to be_a_kind_of(Numeric)
+
+    end
+    it 'has loads' do
+      # expect(user.loads).to be_a_kind_of(Numeric)
+      expect(user).to respond_to(:loads)
+    end
     describe 'admin' do
       it 'has an admin' do
         expect(user.attributes).to include("admin")
@@ -27,6 +39,9 @@ RSpec.describe User, type: :model do
         end
       end
     end
+    # describe 'description' do
+
+    # end
   end
 
 end
