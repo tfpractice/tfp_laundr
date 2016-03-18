@@ -6,7 +6,7 @@ class LoadsController < ApplicationController
   # GET /loads
   # GET /loads.json
   def index
-    @loads = loads.all
+    @loads = loads.all.decorate
   end
 
   # GET /loads/1

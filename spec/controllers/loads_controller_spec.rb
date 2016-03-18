@@ -23,16 +23,32 @@ RSpec.describe LoadsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Load. As you add validations to Load, be sure to
   # adjust the attributes here as well.
-  let(:user) { create(:admin) }
+  let(:user) { create(:user) }
+  let(:load) {  }
+  let(:washers) { Washer.all }
+  let(:load) { create(:load, weight: 9, user: user) }
+  let(:washer) { create(:washer, type: "MWasher")}
+  let(:dryer) { create(:dryer)}
+  let(:sufficient_coins){12}
+  let(:insufficient_coins) { 3 }
+  let(:excessive_coins) { 20 }
+  let(:valid_attributes) {
+
+    # attributes_for(:load, user:user)
+    {weight: 9, user: user}
+    # machine: nil
+  }
   before :each do
     sign_in user
   end
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  # let(:valid_attributes) {
+  # skip("Add a hash of attributes valid for your model")
+  # }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {weight: -2}
+
+    # skip("Add a h/ash of attributes invalid for your model")
   }
 
   # This should return the minimal set of values that should be in the session
@@ -42,31 +58,31 @@ RSpec.describe LoadsController, type: :controller do
 
   describe "GET #index" do
     it "assigns all loads as @loads" do
-      load = Load.create! valid_attributes
-      get :index, {}, valid_session
+      # load = Load.create! valid_attributes
+      get :index#, {}, valid_session
       expect(assigns(:loads)).to eq([load])
     end
   end
 
   describe "GET #show" do
     it "assigns the requested load as @load" do
-      load = Load.create! valid_attributes
-      get :show, {:id => load.to_param}, valid_session
+      # load = Load.create! valid_attributes
+      get :show, id: load
       expect(assigns(:load)).to eq(load)
     end
   end
 
   describe "GET #new" do
     it "assigns a new load as @load" do
-      get :new, {}, valid_session
+      get :new
       expect(assigns(:load)).to be_a_new(Load)
     end
   end
 
   describe "GET #edit" do
     it "assigns the requested load as @load" do
-      load = Load.create! valid_attributes
-      get :edit, {:id => load.to_param}, valid_session
+      # load = Load.create! valid_attributes
+      get :edit,id: load
       expect(assigns(:load)).to eq(load)
     end
   end
@@ -107,24 +123,26 @@ RSpec.describe LoadsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {weight: 8}
       }
 
       it "updates the requested load" do
-        load = Load.create! valid_attributes
-        put :update, {:id => load.to_param, :load => new_attributes}, valid_session
+        put :update, {:id => load.to_param  , :load => new_attributes}, valid_session
+       
         load.reload
-        skip("Add assertions for updated state")
+
+        expect(load.weight).to eq(8)
+        
       end
 
       it "assigns the requested load as @load" do
-        load = Load.create! valid_attributes
+        # load = Load.create! valid_attributes
         put :update, {:id => load.to_param, :load => valid_attributes}, valid_session
         expect(assigns(:load)).to eq(load)
       end
 
       it "redirects to the load" do
-        load = Load.create! valid_attributes
+        # load = Load.create! valid_attributes
         put :update, {:id => load.to_param, :load => valid_attributes}, valid_session
         expect(response).to redirect_to(load)
       end
@@ -132,13 +150,13 @@ RSpec.describe LoadsController, type: :controller do
 
     context "with invalid params" do
       it "assigns the load as @load" do
-        load = Load.create! valid_attributes
+        # load = Load.create! valid_attributes
         put :update, {:id => load.to_param, :load => invalid_attributes}, valid_session
         expect(assigns(:load)).to eq(load)
       end
 
       it "re-renders the 'edit' template" do
-        load = Load.create! valid_attributes
+        # load = Load.create! valid_attributes
         put :update, {:id => load.to_param, :load => invalid_attributes}, valid_session
         expect(response).to render_template("edit")
       end
@@ -154,10 +172,27 @@ RSpec.describe LoadsController, type: :controller do
     end
 
     it "redirects to the loads list" do
-      load = Load.create! valid_attributes
+      # load = Load.create! valid_attributes
       delete :destroy, {:id => load.to_param}, valid_session
       expect(response).to redirect_to(loads_url)
     end
   end
 
+  describe 'PATCH #insert' do
+    it 'sets machine state to in_washer' do
+      patch :insert, id: load, machine: machine
+      machine.reload
+      expect(machine.state).to eq("in_washer")
+    end
+    it 'sets load machine ' do
+      patch :insert, id: load, machine: machine
+      machine.reload
+      expect(load.machine).to eq(machine)
+    end
+    it "redirects to the loads list" do
+      patch :insert, id: load, machine: machine
+      expect(response).to redirect_to(loads)
+    end
+
+  end
 end
