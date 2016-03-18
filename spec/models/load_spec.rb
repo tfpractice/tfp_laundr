@@ -25,7 +25,7 @@ RSpec.describe Load, type: :model do
         expect(load).to respond_to(:machine)
       end
     end
-   fdescribe '#dry_time' do
+    fdescribe '#dry_time' do
       it 'initializes with a dry_time' do
         expect(load.dry_time).to be_a_kind_of(Numeric)
       end
@@ -69,9 +69,9 @@ RSpec.describe Load, type: :model do
       loadx = create(:load, user: user)
       loady = create(:load, user: user)
       loadz = create(:load, user: user)
-      # puts Load.count
+      # w Load.count
       loadx.merge!(loady)
-      # puts Load.count
+      # # puts Load.count
       expect { load.merge!(load4) }.to change{Load.count}.by(1)
     end
     context 'when loads belong to different users' do
@@ -111,6 +111,17 @@ RSpec.describe Load, type: :model do
         it 'changes the load state to in_washer' do
           expect { load.insert!(washer) }.to change{load.state}.from("dirty").to("in_washer")
         end
+        context 'when called without args' do
+          # it 'raises and Argument error' do
+          # expect { load.insert! }.to raise_error(ArgumentError)
+          # end
+          it 'adds a Workflow::TransitionHalted error to errors array' do
+            # load.remove_from_machine!
+            load.insert!
+            expect(load.errors).to include(:machine)
+          end
+        end
+
       end
     end
     context 'when in_machine' do
@@ -127,7 +138,7 @@ RSpec.describe Load, type: :model do
       end
       describe '#wash' do
         it 'sets the machine association to nil' do
-          skip()
+          # skip()
           expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
         end
         it 'changes the load state to washed' do
@@ -148,7 +159,7 @@ RSpec.describe Load, type: :model do
         end
         describe '#remove_from_machine' do
           it 'assigns the machine association' do
-            skip()
+            # skip()
             expect { load.remove_from_machine! }.to change{load.machine}.from(washer).to(nil)
           end
           it 'changes the load state to wet' do
@@ -161,7 +172,7 @@ RSpec.describe Load, type: :model do
           end
           describe '#insert' do
             it 'assigns the machine association' do
-              skip()
+              # skip()
               expect { load.insert!(dryer) }.to change{load.machine}.from(nil).to(dryer)
             end
             it 'changes the load state to in_dryer' do

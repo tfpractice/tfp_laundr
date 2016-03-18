@@ -57,6 +57,7 @@ module Machine
       errors.add(:load, e)
     else
       self.update(load: load)
+      load.insert(self)
     end
   end
   def return_coins
@@ -102,10 +103,10 @@ module Machine
     endThread = Thread.new do
       puts "sleeping for #{period} seconds"
       sleep(0.003)
-    
+
 
       puts "calling end_cycle"
-      end_cycle! 
+      end_cycle!
     end
     # endThread.join
   end
@@ -115,6 +116,8 @@ module Machine
     self.reset_coins
   end
   def remove_clothes
+    load.remove_from_machine(self)
+
     self.update(load: nil)
   end
   def time_remaining

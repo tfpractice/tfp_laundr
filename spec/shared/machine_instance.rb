@@ -69,11 +69,17 @@ shared_examples_for("a specific machine") do
             expect(machine.errors).to include(:load)
           end
         end
-        context 'when load will fit ' do
+        fcontext 'when load will fit ' do
           it 'assigns machine load' do
             puts "machine #{machine.inspect}"
             expect{machine.fill!(load)}.to change{machine.load}.from(nil).to(load)
           end
+          #it 'calls the Load::insert on specified load' do
+          #  puts "machine #{machine.inspect}"
+          #  machine.fill!(load)
+          #  expect(load).to have_received(:insert).with(machine)
+          #  # expect{machine.fill!(load)}.to change{machine.load}.from(nil).to(load)
+          #end
           context ' machine has no coins ' do
             it 'changes machine state to "unpaid"  ' do
               expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")

@@ -49,8 +49,18 @@ class Load < ActiveRecord::Base
       event :soil, :transitions_to => :dirty
     end
   end
-  def insert(machine = nil)
-    update(machine: machine)
+  def insert(machineArg = nil)
+    begin
+      raise ArgumentError,"Cannot insert a load if machine is nil" unless machineArg
+      halt! "Cannot insert a load if machine is nil" if !machineArg
+    rescue  Workflow::TransitionHalted, ArgumentError => e
+      errors.add(:machine, e)
+    else
+      # puts "load is being inserted"
+      update(machine: machineArg)
+
+
+    end
   end
   def remove_from_machine(machine = nil)
     if self.machine
@@ -68,15 +78,12 @@ class Load < ActiveRecord::Base
   end
   def dry(duration=0)
     begin
-      puts "duration#{duration}"
+      # puts "duration#{duration}"
       # halt! "Can only dry if current machine is a Dryer" unless self.machine.is_a? Dryer
-      puts "current dry_time#{dry_time}"
-      puts "new dry_time#{dry_time-duration}"
+      # puts "current dry_time#{dry_time}"
+      # puts "new dry_time#{dry_time-duration}"
       decrement(:dry_time, duration.to_i)
-      puts "decremented dry_time#{self.dry_time}"
-
-
-
+      # puts "decremented dry_time#{self.dry_time}"
       halt! "load has not dried for long enough" if dry_time > 0
     rescue Workflow::TransitionHalted => e
       errors.add(:machine, e)
@@ -124,14 +131,14 @@ class Load < ActiveRecord::Base
     @weight = self.read_attribute(:weight) || 0
   end
   def set_dry_time
-    # puts "@weight#{@weight}"
-    # puts "#self.weight#{self.weight}"
-    # puts "weight#{weight}"
+    # # puts "@weight#{@weight}"
+    # # puts "#self.weight#{self.weight}"
+    # # puts "weight#{weight}"
     update(dry_time: 5*weight)
     dry_time = weight * 5
-    # puts "dry_time#{dry_time}"
-    # puts "self.dry_time#{self.dry_time}"
-    # puts "self.attributes[:dry_time]#{attributes['dry_time']}"
+    # # puts "dry_time#{dry_time}"
+    # # puts "self.dry_time#{self.dry_time}"
+    # # puts "self.attributes[:dry_time]#{attributes['dry_time']}"
   end
   def set_name
     self.update(name: "#{self.weight}lbs.— Load ##{self.id}" ) if self.name.blank?
