@@ -175,12 +175,12 @@ shared_examples_for("a specific machine") do
               machine.start!
               expect(machine.end_time).not_to be_nil
             end
-            # context 'when machine does not have enough coins' do
-              # it 'is an invalid actions' do
-                # machine.reset_coins
-                # machine.start!
-              # end
-            # end
+
+
+
+
+
+
           end
           describe '#return_coins' do
             it 'sets machine coins to 0' do

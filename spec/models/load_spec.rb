@@ -7,7 +7,7 @@ RSpec.describe Load, type: :model do
   let(:load2) { create(:load, user: user) }
   let(:user2) { create(:user) }
   let(:load3) { create(:load, user: user2) }
- fdescribe 'attributes' do
+  describe 'attributes' do
     it 'has a weight' do
       expect(load.weight).to be_a_kind_of(Numeric)
     end
@@ -25,9 +25,9 @@ RSpec.describe Load, type: :model do
         expect(load).to respond_to(:machine)
       end
     end
-    describe '#dry_time' do
+   fdescribe '#dry_time' do
       it 'initializes with a dry_time' do
-      expect(load.dry_time).to be_a_kind_of(Numeric)
+        expect(load.dry_time).to be_a_kind_of(Numeric)
       end
       it 'is 5 times the weight' do
         expect(load.dry_time).to eq(5*load.weight)
@@ -69,9 +69,9 @@ RSpec.describe Load, type: :model do
       loadx = create(:load, user: user)
       loady = create(:load, user: user)
       loadz = create(:load, user: user)
-      puts Load.count
+      # puts Load.count
       loadx.merge!(loady)
-      puts Load.count
+      # puts Load.count
       expect { load.merge!(load4) }.to change{Load.count}.by(1)
     end
     context 'when loads belong to different users' do
@@ -95,12 +95,22 @@ RSpec.describe Load, type: :model do
     end
   end
   describe 'stateMachine' do
-    describe '#insert' do
-      it 'assigns the machine association' do
-        expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
+    context 'when dirty' do
+      describe '#next_steps' do
+        it 'includes insert_coins' do
+          expect(load.next_steps).to include("insert")
+        end
+        it 'includes insert_coins' do
+          expect(load.next_steps).to include("merge")
+        end
       end
-      it 'changes the load state to in_washer' do
-        expect { load.insert!(washer) }.to change{load.state}.from("dirty").to("in_washer")
+      describe '#insert' do
+        it 'assigns the machine association' do
+          expect { load.insert!(washer) }.to change{load.machine}.from(nil).to(washer)
+        end
+        it 'changes the load state to in_washer' do
+          expect { load.insert!(washer) }.to change{load.state}.from("dirty").to("in_washer")
+        end
       end
     end
     context 'when in_machine' do
@@ -176,11 +186,22 @@ RSpec.describe Load, type: :model do
                   expect(load.errors).to include(:machine)
                 end
               end
-              it 'reduces the @dry_time attribute' do
-                expect { load.dry!(5) }.to change{load.dry_time}.by(-5)
+              it 'respondto dry' do
+                expect(load).to respond_to(:dry)
               end
-              it 'changes the load state to dried' do
-                expect { load.dry!(100) }.to change{load.state}.from("in_dryer").to("dried")
+              it 'reduces the @dry_time attribute' do
+                expect { load.dry!(5) }.to change{load.dry_time}
+              end
+              fcontext 'when drying for less than dry time' do
+                it 'does not change the load state' do
+                  insufficient_time = load.dry_time - 4
+                  expect { load.dry!(insufficient_time) }.not_to change{load.state}
+                end
+              end
+              context 'when drying for a sufficient time' do
+                it 'changes the load state to dried' do
+                  expect { load.dry!(load.dry_time) }.to change{load.state}.from("in_dryer").to("dried")
+                end
               end
             end
           end

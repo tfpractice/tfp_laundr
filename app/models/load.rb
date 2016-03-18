@@ -3,8 +3,9 @@ class Load < ActiveRecord::Base
   belongs_to :user
   belongs_to :machine, polymorphic: true
   acts_as_list scope: :user
-  before_save :set_weight, :set_dry_time,  on: :create
-  after_save :set_name
+  before_save :set_weight, on: :create
+  after_save :set_name,  on: :create
+  after_create :set_dry_time
   validates :weight, numericality: { greater_than_or_equal_to: 0 }
   # attr_accessor :dry_time
   scope :dirty_loads, -> {where(state: "dirty")}
@@ -31,7 +32,9 @@ class Load < ActiveRecord::Base
       event :merge, :transitions_to => :wet
     end
     state :in_dryer do
-      event :dry, :transitions_to => :dried
+      event :dry, :transitions_to => :dried #, if: ->(load) {load.dry_time <=0}
+      # event :dry, :transitions_to => :in_dryer#, if: ->(load) {load.dry_time > 0}
+
       event :remove_from_machine, :transitions_to => :wet
     end
     state :dried do
@@ -63,14 +66,21 @@ class Load < ActiveRecord::Base
 
     end
   end
-  def dry(duration = 0)
+  def dry(duration=0)
     begin
-      halt! "Can only dry if current machine is a Dryer" unless self.machine.is_a? Dryer
+      puts "duration#{duration}"
+      # halt! "Can only dry if current machine is a Dryer" unless self.machine.is_a? Dryer
+      puts "current dry_time#{dry_time}"
+      puts "new dry_time#{dry_time-duration}"
+      decrement(:dry_time, duration.to_i)
+      puts "decremented dry_time#{self.dry_time}"
+
+
+
+      halt! "load has not dried for long enough" if dry_time > 0
     rescue Workflow::TransitionHalted => e
       errors.add(:machine, e)
-    else
-      decrement!(:dry_time, duration)
-      false unless dry_time <= 0
+
     end
   end
   def fold
@@ -117,7 +127,11 @@ class Load < ActiveRecord::Base
     # puts "@weight#{@weight}"
     # puts "#self.weight#{self.weight}"
     # puts "weight#{weight}"
-    self.dry_time = weight * 5
+    update(dry_time: 5*weight)
+    dry_time = weight * 5
+    # puts "dry_time#{dry_time}"
+    # puts "self.dry_time#{self.dry_time}"
+    # puts "self.attributes[:dry_time]#{attributes['dry_time']}"
   end
   def set_name
     self.update(name: "#{self.weight}lbs.— Load ##{self.id}" ) if self.name.blank?
