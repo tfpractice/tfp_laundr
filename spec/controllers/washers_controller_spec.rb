@@ -22,7 +22,7 @@ require 'shared/state_controller'
 RSpec.describe WashersController, type: :controller do
   let(:user) { create(:admin) }
   let(:washers) { Washer.all }
-  let(:load) { create(:load, user: user) }
+  let(:load) { create(:load, weight:8 ,user: user) }
   let(:washer) { create(:washer, type: "MWasher")}
   let(:sufficient_coins){12}
   let(:insufficient_coins) { 3 }
@@ -38,43 +38,50 @@ RSpec.describe WashersController, type: :controller do
   end
   let(:valid_session) { {} }
   it_behaves_like 'a state controller' do
-    let(:user) { create(:admin) }
-    let(:machines) { Washer.all }
-    let(:machine) { create(:washer)}
-    let(:load) { create(:load, user: user) }
-    let(:sufficient_coins){12}
-    let(:insufficient_coins) { 3 }
-    let(:excessive_coins) { 20 }
-    let(:valid_attributes) {
+    let!(:user) { create(:admin) }
+    let!(:machines) { Washer.all }
+    let!(:machine) { create(:washer)}
+    let!(:paidmachine){create(:washer)}
+    let!(:paidLoad) { create(:load, weight: 4, user: user) }
+    let!(:load) { create(:load, weight: 5, user: user) }
+    let!(:sufficient_coins){12}
+    let!(:insufficient_coins) { 3 }
+    let!(:excessive_coins) { 20 }
+    let!(:valid_attributes) {
       attributes_for(:washer)
     }
   end
 
   context 'when unpaid' do
-    before(:each) do
-      patch :claim, id: washer
-      patch :fill, id: washer, load: load
-    end
     describe 'insert_coins' do
-
-
+      before(:each) do
+        patch :claim, id: washer
+        patch :fill, id: washer, load: load
+      end
       context "when excessive coins inserted " do
         it 'returns a response error' do
           patch :insert_coins, id: washer, count: excessive_coins
           # puts washer.errors.inspect
           expect(response).not_to be_success
         end
-        context "when insufficient coins inserted " do
-          it 'returns a response error' do
-            patch :insert_coins, id: washer, count: insufficient_coins
-            # puts washer.errors.inspect
-            expect(response).not_to be_success
-          end
-        end
-
       end
+      context "when insufficient coins inserted " do
+        it 'returns a response error' do
+          washer.reset_coins
+          #binding.pry
+          # washer.reload
+          #binding.pry
+          patch :insert_coins, id: washer, count: insufficient_coins
+          #binding.pry
+          # washer.reload
+          #binding.pry  # puts washer.errors.inspect
+          expect(response).not_to be_success
+        end
+      end
+
     end
   end
+
 
   describe "GET #index" do
     it "assigns all washers as @washers" do

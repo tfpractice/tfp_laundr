@@ -27,7 +27,7 @@ RSpec.describe LoadsController, type: :controller do
   let(:load) {  }
   let(:washers) { Washer.all }
   let(:load) { create(:load, weight: 9, user: user) }
-  let(:washer) { create(:washer, type: "MWasher")}
+  let(:washer) { create(:m_washer)}
   let(:dryer) { create(:dryer)}
   let(:sufficient_coins){12}
   let(:insufficient_coins) { 3 }
@@ -128,11 +128,11 @@ RSpec.describe LoadsController, type: :controller do
 
       it "updates the requested load" do
         put :update, {:id => load.to_param  , :load => new_attributes}, valid_session
-       
+
         load.reload
 
         expect(load.weight).to eq(8)
-        
+
       end
 
       it "assigns the requested load as @load" do
@@ -179,19 +179,19 @@ RSpec.describe LoadsController, type: :controller do
   end
 
   describe 'PATCH #insert' do
-    it 'sets machine state to in_washer' do
-      patch :insert, id: load, machine: machine
-      machine.reload
-      expect(machine.state).to eq("in_washer")
+    it 'sets load state to in_washer' do
+      patch :insert, id: load, machine: washer
+      load.reload
+      expect(load.state).to eq("in_washer")
     end
     it 'sets load machine ' do
-      patch :insert, id: load, machine: machine
-      machine.reload
-      expect(load.machine).to eq(machine)
+      patch :insert, id: load, machine: washer
+      load.reload
+      expect(load.machine).to eq(washer)
     end
     it "redirects to the loads list" do
-      patch :insert, id: load, machine: machine
-      expect(response).to redirect_to(loads)
+      patch :insert, id: load, machine: washer
+      expect(response).to redirect_to(load)
     end
 
   end

@@ -31,16 +31,8 @@ module Machine
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
         event :start, :transitions_to => :in_progress, if: -> (machine) { machine.enough_coins? }
         event :remove_clothes, :transitions_to => :empty
-        # on_exit do |from, to, triggering_event, *event_args|
-        # puts "from#{from}--"
-        # puts "to#{to}--"
-        # puts "triggering_event#{triggering_event}"
-        # puts "event_args#{event_args}"
-        # end
       end
       state :in_progress do
-        # on_pending_exit(new_state, event, *args) do
-        # end
         event :end_cycle, :transitions_to => :complete
       end
       state :complete do
@@ -48,64 +40,19 @@ module Machine
       end
     end
   end
-
-  # def on_ready_entry(new_state, event, *args)
-  # puts "on_ready_entry"
-  # puts self.current_state
-  # puts "new_state#{new_state}"
-  # puts "event#{event}"
-  # puts "args#{args}"
-  # end
-  # def on_ready_exit(new_state, event, *args)
-  # puts "on_ready_exit"
-  # puts self.current_state
-
-  # puts "new_state#{new_state}"
-  # puts "event#{event}"
-  # puts "args#{args}"
-  # end
   def on_in_progress_entry(new_state, event, *args)
     puts "on_in_progress_entry"
-    # args.each { |arg| puts arg }
-    # p new_state
-    # p event
     
-    # puts "current_state#{current_state}"
-    # puts "new_state#{new_state}"
-    # puts "event#{event}"
-    # puts "args#{args}"
     thr = Thread.new do
-      #   # Mutex.new.synchronize do
       puts "current machine state"
       puts state
       puts "new_state#{new_state}"
-
       puts "running thread"
       sleep period
       end_cycle!
     end
-
    
   end
-  # def on_in_progress_exit(*args)
-    # puts "exiting in progress"
-    # args.each { |arg| puts arg }
-  # end
-  # def on_ready_exit(*args)
-  #   puts "on_ready_exit"
-  #   puts "current_state#{current_state}"
-  #   args.each { |arg| puts arg }
-  # end
-  # def showInfo
-  #   puts "showInfo called!"
-  # end
-  # def on_ready_transition(new_state, event, *args)
-  # puts "after_ready_transition"
-  # puts "new_state#{new_state}"
-  # puts "event#{event}"
-  # puts "args#{args}"
-  # end
-  # after_ready_transition
   def claim(user=nil)
     update(user: user)
   end
@@ -115,12 +62,12 @@ module Machine
   def fill(load=nil)
     begin
       halt! "Cannot insert an empty load" unless load
-      halt! "Cannot insert a load heavier than capacity" unless load.weight < @capacity
+      halt! "Cannot insert a load heavier than capacity" unless load.weight <= @capacity
     rescue Workflow::TransitionHalted => e
       errors.add(:load, e)
     else
       self.update(load: load)
-      load.insert(self)
+      load.insert!(self)
     end
   end
   def return_coins
@@ -142,6 +89,7 @@ module Machine
         valid_conditional_events.each { |e| valid_events << event.id2name  }
       end
     end
+    valid_events << "hard_reset"
     valid_events
   end
   def insert_coins(count=0)
@@ -152,6 +100,9 @@ module Machine
       errors.add(:coins, e)
     end
   end
+  def hard_reset
+    self.update(coins: 0, load: nil, user: nil, state: "available")
+  end
   def enough_coins?
     self.coins >= self.price
   end
@@ -160,22 +111,12 @@ module Machine
   end
   def start
     @end_time = Time.now + self.period
-    # thr = Thread.new do
-    #   #   # Mutex.new.synchronize do
-    #   # puts "current machine state"
-    #   # puts state
-    #   sleep period
-    #   end_cycle
-    # end
-    # end
-    # return thr
   end
   def end_cycle
-
     self.reset_coins
   end
   def remove_clothes
-    load.remove_from_machine(self)
+    load.remove_from_machine!(self)
     self.update(load: nil)
   end
   def time_remaining

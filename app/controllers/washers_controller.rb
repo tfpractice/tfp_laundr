@@ -4,8 +4,6 @@ class WashersController < ApplicationController
   before_action :coin_excess, only: [:insert_coins]
 
   # rescue_from Workflow::TransitionHalted, with: :model_coin_excess
-
-
   load_and_authorize_resource
 
 

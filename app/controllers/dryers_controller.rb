@@ -78,7 +78,7 @@ class DryersController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_machine
-    @machine = Dryer.find(params[:id]).becomes(Dryer)
+    @machine = DryerDecorator.find(params[:id])
     @dryer = @machine
   end
 

@@ -1,12 +1,12 @@
 class Dryer < ActiveRecord::Base
   # belongs_to :user
   include Machine
-  
+  # puts self.methods.grep(/^ap/).sort
+  # append_workflow
 
 
 
 
-  
   # self.states[:ready].events.push(event :insert_coins, :transitions_to => :ready)
   # .states[:ready].events.push(Workflow::Event.new(:insert_coins, :transitions_to => :ready)
   # workflow do
@@ -23,11 +23,11 @@ class Dryer < ActiveRecord::Base
   #   end
   #   state :ready do
   #     event :insert_coins, :transitions_to => :ready
-  #     event :start, :transitions_to => :in_progess
+  #     event :start, :transitions_to => :in_progress
   #     event :remove_clothes, :transitions_to => :empty
   #   end
-  #   state :in_progess do
-  #     event :insert_coins, :transitions_to => :in_progess
+  #   state :in_progress do
+  #     event :insert_coins, :transitions_to => :in_progress
   #     event :end_cycle, :transitions_to => :complete
   #   end
   #   state :complete do
@@ -35,7 +35,10 @@ class Dryer < ActiveRecord::Base
   #     event :remove_clothes, :transitions_to => :empty
   #   end
   # end
-
+  def start
+    super
+    load.dry!(period)
+  end
   def insert_coins(count=0)
     super
     self.period += (5*count.to_i)
@@ -54,7 +57,7 @@ class Dryer < ActiveRecord::Base
   # Dryer.workflow_spec.states[:ready].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
   def self.append_workflow
     self.workflow_spec.states[:ready].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
-    self.workflow_spec.states[:in_progess].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :in_progess)))
+    self.workflow_spec.states[:in_progress].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :in_progress)))
     self.workflow_spec.states[:complete].events.push(:insert_coins,(Workflow::Event.new(:insert_coins, :ready)))
   end
   append_workflow

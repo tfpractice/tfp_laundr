@@ -5,7 +5,7 @@ require 'shared/machine_instance'
 RSpec.describe Dryer, type: :model do
   let(:user) { create(:user) }
   let(:dryer) { create(:dryer) }
-  let(:load) { create(:load, weight: 10 , user: user) }
+  let(:load) { create(:load, weight: 10 , state: "wet", user: user) }
   it_behaves_like 'a general machine' do
 
     let(:machine) { dryer }
@@ -14,7 +14,7 @@ RSpec.describe Dryer, type: :model do
   it_behaves_like 'a specific machine' do
 
     let(:machine) { dryer }
-    let(:load) { create(:load, weight: 10 , user: user) }
+  let(:load) { create(:load, weight: 10 , state: "wet", user: user) }
     let(:bigLoad) { create(:load, weight: 16, user: user) }
     let(:sufficient_coins) { 1 }
     let(:insufficient_coins) { 0 }
@@ -45,6 +45,27 @@ RSpec.describe Dryer, type: :model do
         end
         it 'can receive #insert_coins' do
           expect(dryer.next_steps).to include("insert_coins")
+
+        end
+        fdescribe '#start' do
+          context 'when dryer period satisfies load#dry_time' do
+            it 'changes load state to dried' do
+              dryer.insert_coins!(9)
+
+              dryer.start!
+              expect(dryer.load.state).to eq("dried")
+            end
+          end
+          context 'when dryer period doesnt load#dry_time' do
+            it 'changes load state to wet' do
+              # dryer.insert_coins!(9)
+              dryer.start!
+              expect(dryer.load.state).to eq("in_dryer")
+            end
+          end
+
+
+
 
         end
 

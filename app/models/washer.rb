@@ -1,9 +1,9 @@
 class Washer < ActiveRecord::Base
   validates_presence_of :type
   skip_callback :initialize, :after, :set_name, :set_instance_attributes, if: -> { self.class.name == "Washer"}
- 
+
   include Machine
- 
+
 
   def insert_coins(count=0)
     iCount = count.to_i
@@ -17,7 +17,10 @@ class Washer < ActiveRecord::Base
     end
   end
 
-
+  def start
+    super
+    load.wash!
+  end
   def coin_excess?(newCoin=0)
     return coins + newCoin.to_i > price
   end

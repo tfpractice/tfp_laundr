@@ -57,7 +57,7 @@ class Load < ActiveRecord::Base
       errors.add(:machine, e)
     else
       # puts "load is being inserted"
-      update(machine: machineArg)
+      update(machine: machineArg) unless machineArg.load == self
 
 
     end
@@ -70,7 +70,6 @@ class Load < ActiveRecord::Base
   def wash
     begin
       halt! "Can only wash if current machine is a Washer" unless self.machine.is_a? Washer
-
     rescue Workflow::TransitionHalted => e
       errors.add(:machine, e)
 

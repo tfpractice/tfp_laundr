@@ -42,6 +42,13 @@ shared_examples_for("a washer instance") do
         # bigLoad = create(:load, user: user, weight: 50)
         expect{washer.fill!(load)}.to change{washer.state}.from("empty").to("ready")
       end
+
+    end
+    describe '#fill' do
+      it 'sets the loads sate to in_washer' do
+        washer.fill!(load)
+        expect(load.state).to eq("in_washer")
+      end
     end
     describe '#return_coins' do
       before(:each) do
@@ -67,18 +74,21 @@ shared_examples_for("a washer instance") do
           expect{washer.insert_coins!(excessive_coins)}.not_to change{washer.state}.from("unpaid")
         end
       end
+      context 'when ready' do
+        before(:each) do
+          washer.insert_coins!(washer.price)
+          # washer.start!
+        end
+        describe '#start' do
+          it 'changes load state to washed' do
+            washer.start!
+            expect(washer.load.state).to eq("washed")
+          end
+
+        end
+      end
     end
   end
-
-
-
-
-
-
-
-
-
-
 
 
 

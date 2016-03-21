@@ -1,5 +1,26 @@
 shared_examples_for("a specific machine") do
   describe "methods" do
+    describe '#hard_reset' do
+      it 'sets coins to 0' do
+        machine.hard_reset
+        expect(machine.coins).to eq(0)
+      end
+      it 'sets user to nil' do
+        machine.hard_reset
+        expect(machine.user).to be_nil
+
+      end
+      it 'sets load to nil' do
+        machine.hard_reset
+        expect(machine.load).to be_nil
+
+      end
+      it 'sets state to available' do
+        machine.hard_reset
+        expect(machine.state).to eq("available")
+      end
+
+    end
     describe"#enough_coins?" do
       it "returns false if the machine coins are less than or equal to the price of the machine" do
         expect(machine.enough_coins?).to be(false)
@@ -69,17 +90,19 @@ shared_examples_for("a specific machine") do
             expect(machine.errors).to include(:load)
           end
         end
-        fcontext 'when load will fit ' do
+        context 'when load will fit ' do
           it 'assigns machine load' do
             puts "machine #{machine.inspect}"
             expect{machine.fill!(load)}.to change{machine.load}.from(nil).to(load)
           end
-          #it 'calls the Load::insert on specified load' do
-          #  puts "machine #{machine.inspect}"
-          #  machine.fill!(load)
-          #  expect(load).to have_received(:insert).with(machine)
-          #  # expect{machine.fill!(load)}.to change{machine.load}.from(nil).to(load)
-          #end
+          it 'sets the loads :machine attribute to current machine' do
+            machine.fill!(load)
+            expect(load.machine).to eq(machine)
+          end
+         
+         
+         
+         
           context ' machine has no coins ' do
             it 'changes machine state to "unpaid"  ' do
               expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
@@ -94,10 +117,10 @@ shared_examples_for("a specific machine") do
         it 'includes fill' do
           expect(machine.next_steps).to include("fill")
         end
-        it 'returns an array of length 2' do
-          expect(machine.next_steps.length).to eq(2)
+        # it 'returns an array of length 2' do
+        #   expect(machine.next_steps.length).to eq(2)
 
-        end
+        # end
         context 'if machine has coins' do
           it 'includes return_coins' do
             machine.coins = 1
@@ -122,7 +145,7 @@ shared_examples_for("a specific machine") do
         before(:each) do
           machine.fill!(load)
         end
-        describe '#insert_coins' do
+        describe '#_coins' do
           it 'responds to #insert_coins ' do
             expect(machine).to respond_to(:insert_coins)
           end
@@ -170,12 +193,12 @@ shared_examples_for("a specific machine") do
           before(:each) do
             machine.insert_coins!(sufficient_coins)
           end
-          fdescribe '#start' do
+          describe '#start' do
             it 'responds to #start ' do
               expect(machine).to respond_to(:start)
             end
-            it 'changes machine state to :in_progess' do
-              expect{machine.start!}.to change{machine.state}.from("ready").to("in_progess")
+            it 'changes machine state to :in_progress' do
+              expect{machine.start!}.to change{machine.state}.from("ready").to("in_progress")
             end
             it 'changes @end_time' do
               machine.start!
@@ -216,7 +239,7 @@ shared_examples_for("a specific machine") do
               end
             end
           end
-          context 'when in_progess' do
+          context 'when in_progress' do
             before(:each) do
               machine.start!
             end
@@ -224,8 +247,8 @@ shared_examples_for("a specific machine") do
               it 'responds to #end_cycle ' do
                 expect(machine).to respond_to(:end_cycle)
               end
-              it 'changes machine state to :in_progess' do
-                expect{machine.end_cycle!}.to change{machine.state}.from("in_progess").to("complete")
+              it 'changes machine state to :in_progress' do
+                expect{machine.end_cycle!}.to change{machine.state}.from("in_progress").to("complete")
               end
             end
             describe '#next_steps' do
@@ -233,7 +256,7 @@ shared_examples_for("a specific machine") do
                 expect(machine.next_steps).to include("end_cycle")
               end
             end
-            fcontext 'when complete' do
+            context 'when complete' do
               before(:each) do
                 machine.end_cycle!
               end

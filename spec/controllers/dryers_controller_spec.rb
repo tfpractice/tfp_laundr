@@ -47,11 +47,11 @@ RSpec.describe DryersController, type: :controller do
     let(:user) { create(:admin) }
     let(:machines) { Dryer.all }
     let(:machine) { create(:dryer)}
-    let(:load) { create(:load, user: user) }
+    let(:load) { create(:load, state: "wet", user: user) }
+    let(:paidmachine){create(:dryer)}
+    let(:paidLoad) { create(:load, weight: 4, state:"wet", user: user) }
     let(:sufficient_coins) { 1 }
     let(:insufficient_coins) { 0 }
-
-
     let(:valid_attributes) {
       attributes_for(:dryer)
     }

@@ -1,8 +1,8 @@
 class LoadsController < ApplicationController
-  before_action :set_load, only: [:show, :edit, :update, :destroy]
-  # before_action :set_machine, only: []
+  before_action :set_load, only: [:show, :edit, :update, :destroy,:insert, :merge, :wash, :remove_from_machine, :dry, :finish]
+  before_action :get_machine, only: [:insert]
   load_and_authorize_resource :through => :current_user, except: [:index]
-  
+
   # GET /loads
   # GET /loads.json
   def index
@@ -63,19 +63,39 @@ class LoadsController < ApplicationController
     end
   end
 
+  def insert
+    @load.insert!(@machine)
+    redirect_to @load
+  end
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def loads
-      current_user ? current_user.loads : Load
-      
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def loads
+    current_user ? current_user.loads : Load
 
-    def set_load
-      @load = Load.find(params[:id])
-    end
+  end
+  def set_load
+    @load = Load.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def load_params
-      params.require(:load).permit(:weight, :name, :state, :user_id, :machine_id, :machine_type)
+  def get_machine
+    puts params[:machine]
+    puts params[:machine_type]
+    puts params[:machine_id]
+    if @load.state == "dirty"
+      @machine = Washer.find(params[:machine])
+    elsif @load.state == "wet"
+      @machine = Dryer.find(params[:machine])
     end
+    # klass = [Washer, Dryer].detect{|c| params["#{c.name.underscore}_id"]}
+    # puts klass
+
+    # klass = params[:machine_type]
+    # binding.pry
+
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def load_params
+    params.require(:load).permit(:weight, :name, :state, :user_id, :machine_id, :machine_type)
+  end
 end

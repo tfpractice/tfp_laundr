@@ -5,7 +5,7 @@ class Ability
     # Define abilities for the passed in user here. For example:
     #
     user ||= User.new # guest user (not logged in)
-    alias_action  :claim, :fill, :unclaim, :insert_coins, :return_coins, :start, :remove_clothes, :to => :use
+    alias_action  :claim, :fill, :unclaim, :insert_coins, :return_coins, :start, :hard_reset, :remove_clothes, :to => :use
     alias_action :insert, :merge, :wash, :remove_from_machine, :dry, :finish, :to => :handle
 
     if user.admin?
