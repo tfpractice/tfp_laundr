@@ -25,24 +25,26 @@ module Machine
       state :unpaid do
         event :insert_coins, :transitions_to => :ready
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
-        event :remove_clothes, :transitions_to => :empty
+        event :unclaim, :transitions_to => :available, if: -> (machine) { machine.coins == 0 }
+        event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
+
       end
       state :ready do
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
         event :start, :transitions_to => :in_progress, if: -> (machine) { machine.enough_coins? }
-        event :remove_clothes, :transitions_to => :empty
+        event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
       end
       state :in_progress do
         event :end_cycle, :transitions_to => :complete
       end
       state :complete do
-        event :remove_clothes, :transitions_to => :empty
+        event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
       end
     end
   end
   def on_in_progress_entry(new_state, event, *args)
     puts "on_in_progress_entry"
-    
+
     thr = Thread.new do
       puts "current machine state"
       puts state
@@ -51,7 +53,7 @@ module Machine
       sleep period
       end_cycle!
     end
-   
+
   end
   def claim(user=nil)
     update(user: user)

@@ -14,6 +14,7 @@ class Load < ActiveRecord::Base
   scope :wet_loads, -> {where(state: "wet")}
   scope :in_dryer_loads, -> {where(state: "in_dryer")}
   scope :dried_loads, -> {where(state: "dried")}
+  scope :can_fit_machine, ->(machine) {where("weight<= ?", machine.capacity)}
   workflow_column :state
   workflow do
     state :dirty do
@@ -114,15 +115,21 @@ class Load < ActiveRecord::Base
     self.user == secondLoad.user
   end
   def next_steps
+    # "merge" if current_state.events.include?(:merge)
     valid_events = []
-    current_state.events.each do |event, val|
-      if (val.any? { |v| v.condition == nil })
-        valid_events << event.id2name
-      elsif (val.any? { |v| v.condition != nil })
-        valid_conditional_events = val.select { |v| v.condition}.select { |e|  e.condition.call(self) == true  }
-        valid_conditional_events.each { |e| valid_events << event.id2name  }
-      end
-    end
+    valid_events << "merge" if can_merge?
+    # "merge" if current_state.events.select { |e| e.id2name == "merge" }
+
+    # current_state.events
+    # valid_events = []
+    # current_state.events.each do |event, val|
+    # if (val.any? { |v| v.condition == nil })
+    # valid_events << event.id2name
+    # elsif (val.any? { |v| v.condition != nil })
+    # valid_conditional_events = val.select { |v| v.condition}.select { |e|  e.condition.call(self) == true  }
+    # valid_conditional_events.each { |e| valid_events << event.id2name  }
+    # end
+    # end
     valid_events
   end
   private

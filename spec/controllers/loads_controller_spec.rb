@@ -178,21 +178,24 @@ RSpec.describe LoadsController, type: :controller do
     end
   end
 
-  describe 'PATCH #insert' do
-    it 'sets load state to in_washer' do
-      patch :insert, id: load, machine: washer
-      load.reload
-      expect(load.state).to eq("in_washer")
-    end
-    it 'sets load machine ' do
-      patch :insert, id: load, machine: washer
-      load.reload
-      expect(load.machine).to eq(washer)
-    end
-    it "redirects to the loads list" do
-      patch :insert, id: load, machine: washer
-      expect(response).to redirect_to(load)
-    end
+ #describe 'PATCH #insert' do
+ #  it 'sets load state to in_washer' do
+ #    patch :insert, id: load, machine: washer
+ #    load.reload
+ #    expect(load.state).to eq("in_washer")
+ #  end
+ #  it 'sets load machine ' do
+ #    patch :insert, id: load, machine: washer
+ #    load.reload
+ #    expect(load.machine).to eq(washer)
+ #  end
+ #  it "redirects to the loads list" do
+ #    patch :insert, id: load, machine: washer
+ #    expect(response).to redirect_to(load)
+ #  end
+ #  # it 'assigns :available_machines' do
+ #    
+ #  # end
 
-  end
+ #end
 end

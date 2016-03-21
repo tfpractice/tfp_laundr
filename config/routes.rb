@@ -4,10 +4,9 @@ Rails.application.routes.draw do
   # resources :loads
   concern :machine do
     member do
-      patch :claim, :unclaim, :insert_coins, :return_coins, :fill, :start, :remove_clothes
-
+      patch :claim, :unclaim, :insert_coins, :return_coins, :fill, :start, :hard_reset, :remove_clothes
     end
-  end 
+  end
   # resources :dryers, concerns: :machine,as: :machine, controller: 'dryers'
   resources  :washers, :dryers, concerns: :machine
 
@@ -27,7 +26,13 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: { registrations: 'users/registrations'  }  # get 'home/index'
   devise_scope :user do
-    resources :loads
+    resources :loads do
+      member do
+        patch :merge
+
+      end
+    end
+
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
