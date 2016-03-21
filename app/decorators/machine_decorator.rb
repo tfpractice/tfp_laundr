@@ -2,7 +2,7 @@ class MachineDecorator < Draper::Decorator
   # class WasherDecorator < Draper::Decorator
   include Draper::LazyHelpers
 
-  # decorates :machine
+  decorates :machine
   delegate_all
   decorates_finders
   # decorates_association :machine, :scope => :available_machines
@@ -26,7 +26,7 @@ class MachineDecorator < Draper::Decorator
         "object list-group-item list-group-item-warning clearfix"
       when "ready"
         "object list-group-item list-group-item-warning clearfix"
-      when "in_progess"
+      when "in_progress"
         "object list-group-item list-group-item-success clearfix"
       when "complete"
         "object list-group-item list-group-item-success clearfix"
@@ -47,12 +47,18 @@ class MachineDecorator < Draper::Decorator
     h.capture do
       concat machine_user
       concat machine_load
+      concat machine_capacity
       concat machine_coins
       concat machine_period
     end
   end
   def machine_user
     content_tag(:li, "current user: #{machine.user.username}", class:"list-group-item ") unless machine.user == nil
+
+  end
+  def machine_capacity
+    content_tag(:li, "can hold up to #{machine.capacity}lbs", class:"list-group-item ")
+
 
   end
   def machine_coins
@@ -83,6 +89,8 @@ class MachineDecorator < Draper::Decorator
       polymorphic_path(machine, action: :return_coins)
     when "start"
       polymorphic_path(machine, action: :start)
+    when "hard_reset"
+      polymorphic_path(machine, action: :hard_reset)
     when "remove_clothes"
       polymorphic_path(machine, action: :remove_clothes)
     end
@@ -94,7 +102,7 @@ class MachineDecorator < Draper::Decorator
     case event
     when "claim"
       content_tag(:span, nil, class: "glyphicon glyphicon-hand-right")
-    # when "fill"
+      # when "fill"
     when "unclaim"
       content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
       # when "insert_coins"
@@ -106,11 +114,15 @@ class MachineDecorator < Draper::Decorator
       content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
     end
   end
+  # def potential_loads
+  #   current_user ? current_user.loads.can_fit_machine(machine) : Load.all.can_fit_machine(machine)
+    
+  # end
   def event_form(step)
     case step
     when "fill"
       h.simple_form_for machine, url: polymorphic_path(machine, action: :fill), html: { class: "form-group form-inline btn-group"} do |f|
-        concat f.input(:load, inline_label: "choose load",  as: :select, collection: (current_user.loads || Load.all), label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
+        concat f.input(:load, inline_label: "choose load",  as: :select, collection: (potential_loads), label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
         concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
       end
     when "insert_coins"

@@ -1,7 +1,7 @@
 class WasherDecorator < MachineDecorator
   include Draper::LazyHelpers
 
-  decorates :washer
+  # decorates :washer
   delegate_all
   decorates_finders
   # decorates_association :washer, :scope => :available_machines
@@ -13,6 +13,11 @@ class WasherDecorator < MachineDecorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
+
+  def potential_loads
+    current_user ? current_user.loads.with_dirty_state.can_fit_machine(machine) : Load.all.with_dirty_state.can_fit_machine(machine)
+    
+  end
   # def object_list_item(object)
   # def list_item_class
   # if can? :use, object

@@ -15,6 +15,8 @@ module MachineController
     # only: [:show, :edit, :update, :destroy, :claim, :fill, :unclaim, :insert_coins, :start, :remove_clothes]
     before_action :get_load, only: [:fill, :load_excess]
     before_action :load_excess, only: [:fill]
+    # before_action :potential_loads
+
     rescue_from Workflow::TransitionHalted, with: :transitionHandler
 
 

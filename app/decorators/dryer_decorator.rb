@@ -14,6 +14,10 @@ class DryerDecorator < MachineDecorator
     content_tag(:li, "this machine runs for 5 seconds for every coin inserted", class:"list-group-item inline")
 
   end
+  def potential_loads
+    current_user ? current_user.loads.with_wet_state.can_fit_machine(machine) : Load.all.with_wet_state.can_fit_machine(machine)
+
+  end
   #def event_form(step)
   #  case step
   #  when "fill"

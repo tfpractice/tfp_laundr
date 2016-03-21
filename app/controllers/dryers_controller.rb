@@ -8,7 +8,7 @@ class DryersController < ApplicationController
   def index
     # @dryers = Dryer.all
     @dryers = DryerDecorator.all
-     if current_user
+    if current_user
       @my_dryers = current_user.dryers.order(state: :asc).decorate
       @available_dryers = @dryers.available_machines.decorate - @my_dryers
     else
@@ -81,7 +81,10 @@ class DryersController < ApplicationController
     @machine = DryerDecorator.find(params[:id])
     @dryer = @machine
   end
-
+  def potential_loads
+        @potential_loads =  current_user.loads.with_dirty_state.can_fit_machine(@machine)#: Load.all.with_dirty_state.can_fit_machine(@machine)
+# @potential_loads = current_user ? current_user.loads.with_wet_state.can_fit_machine(@machine): Load.all.with_wet_state.can_fit_machine(@machine)
+  end
   # Never trust parameters from the scary internet, only allow the white list through.
   def dryer_params
     params.require(:dryer).permit(:name, :position, :state, :user_id, :count, :load)

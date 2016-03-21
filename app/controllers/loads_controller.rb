@@ -63,10 +63,39 @@ class LoadsController < ApplicationController
     end
   end
 
-  def insert
-    @load.insert!(@machine)
+  def merge
+    @mLoad = Load.find(params[:mLoad])
+    @load.merge!(@mLoad)
     redirect_to @load
+
   end
+
+  # def insert
+  #   @machine.claim!(current_user)
+  #   @machine.fill!(@load)
+  #   redirect_to @machine
+  # end
+  # def remove_from_machine
+  #   @load.machine.remove_clothes!
+  #   # @load.remove_from_machine!
+  #   redirect_to @load
+
+  # end
+  # def wash
+  #   @load.machine.start!
+  #   redirect_to @load
+  # end
+  # def dry
+  #   @load.machine.start!
+  #   redirect_to @load
+
+  # end
+  # def wash
+
+  # end
+  # def wash
+
+  # end
   private
   # Use callbacks to share common setup or constraints between actions.
   def loads

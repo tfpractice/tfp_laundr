@@ -24,3 +24,6 @@
   <dd><%= @dryer.user %></dd>
 
 </dl>
+<ul class="list-group bg-info">
+   <%= render partial: "shared/machineLink", object: @dryer, as: :machine %>
+</ul>

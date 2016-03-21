@@ -2,6 +2,7 @@ class WashersController < ApplicationController
   include MachineController
   before_action :subclasses
   before_action :coin_excess, only: [:insert_coins]
+  # before_action :potential_loads, :only[:fill]
 
   # rescue_from Workflow::TransitionHalted, with: :model_coin_excess
   load_and_authorize_resource
@@ -130,7 +131,10 @@ class WashersController < ApplicationController
       redirect_to @machine, notice: " Please insert #{coin_diff} coins "
     end
   end
-
+  def potential_loads
+    # @potential_loads = current_user ? current_user.loads.with_dirty_state.can_fit_machine(@machine): Load.all.with_dirty_state.can_fit_machine(@machine)
+    @potential_loads =  current_user.loads.with_dirty_state.can_fit_machine(@machine)#: Load.all.with_dirty_state.can_fit_machine(@machine)
+  end
   def subclasses
     @subclasses = Washer.subclasses
   end

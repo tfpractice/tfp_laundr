@@ -1,0 +1,29 @@
+<%= content_tag(:li, class:"load_link_list #{load.list_item_class}") do %>
+ <span > <%#= load.position_label %>
+   <%= load.load_link %>
+   <% if can? :handle, load %>
+     
+   <%= content_tag(:span, class:"load_event_links btn-toolbar pull-right") do  %>
+     <% load.next_steps.each do |step| %>
+     <%#= step %>
+       <% if load.has_form_input(step) %>
+       <%# true %>
+         <%= load.event_form(step) %>
+       <% else %>
+         <%= link_to load.event_path(step) ,method: :patch, class: 'btn btn-primary pull-right pull-xs-right' do  %>
+           <%=  step %>
+           <%= load.event_icon(step) %>
+         <%end %>
+       <% end %>
+     <%end %>
+   <% end %>
+      <% end %>  
+
+   </span>
+<!-- <div class="load_info">
+ -->  <ul class="load_info_list clearfix available_dryers list-group list-inline  ">
+    <%= load.load_info %>
+
+  </ul>
+  <!-- </div> -->
+<% end %>
