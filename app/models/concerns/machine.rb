@@ -9,6 +9,8 @@ module Machine
     scope :available_machines, -> {where(state: "available")}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
+    scope :can_accept_load, ->(load){where("capacity >= ?", load.weight)}
+    # scope :can_merge_with_load, ->(load){where("capacity >= ?", load.weight)}
     include Workflow
     acts_as_list
     workflow_column :state
@@ -28,7 +30,7 @@ module Machine
         event :unclaim, :transitions_to => :available, if: -> (machine) { machine.coins == 0 }
         event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
 
-      end
+      # end
       state :ready do
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
         event :start, :transitions_to => :in_progress, if: -> (machine) { machine.enough_coins? }
@@ -75,12 +77,12 @@ module Machine
   def return_coins
     self.reset_coins
   end
-  def reduce_capacity(weight=0)
-    @capacity -= weight
-  end
-  def reduce_price
-    @price -= @coins
-  end
+  # def reduce_capacity(weight=0)
+  #   @capacity -= weight
+  # end
+  # def reduce_price
+    # @price -= @coins
+  # end
   def next_steps
     valid_events = []
     current_state.events.each do |event, val|

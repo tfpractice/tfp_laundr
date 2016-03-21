@@ -51,6 +51,10 @@ class LoadDecorator < Draper::Decorator
     def load_link
       link_to "#{object.name} (#{object.state})", polymorphic_path(object)
     end
+    def can_merge
+      current_user.loads.same_state(load)
+
+    end
     def next_step_link
     end
     def load_info
@@ -130,7 +134,7 @@ class LoadDecorator < Draper::Decorator
         # "merge"
         simple_form_for load, url: polymorphic_path(load, action: :merge), html: { class: "form-group form-inline btn-group"} do |f|
           # content_tag :div, class: "input-group select optional" do
-          concat f.input(:merge, as: :select, collection: (current_user.loads),inline_label: "merge load", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'mergeLoad' } )
+          concat f.input(:merge, as: :select, collection: can_merge ,label_method: :name, value_method: :id,inline_label: "merge load", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'mergeLoad' } )
           concat f.button :submit, value: :merge, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'
         end
         # end

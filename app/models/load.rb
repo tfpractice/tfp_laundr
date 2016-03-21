@@ -15,6 +15,7 @@ class Load < ActiveRecord::Base
   scope :in_dryer_loads, -> {where(state: "in_dryer")}
   scope :dried_loads, -> {where(state: "dried")}
   scope :can_fit_machine, ->(machine) {where("weight<= ?", machine.capacity)}
+  scope :same_state, ->(load) {where(state: load.state)}
   workflow_column :state
   workflow do
     state :dirty do

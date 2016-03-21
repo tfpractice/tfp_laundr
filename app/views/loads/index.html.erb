@@ -3,41 +3,20 @@
     <span class="glyphicon glyphicon-plus"></span>
     New Load
   <% end %>
-  <h1>Listing loads</h1>
+  <h1>My Loads</h1>
 </div>
 
-<ul class="unavailable_washers list-group bg-info">
-    <h1>My Machines</h1>
-    <%= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
+    <%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
+<ul class="dirty_loads list-group bg-info">
+    <h1>Dirty Loads</h1>
+    <%= render partial: "loadLink", collection: current_user.loads.with_dirty_state.decorate, as: :load %>
+  </ul> 
+<ul class="wet_load list-group bg-info">
+    <h1>Wet Loads</h1>
+    <%= render partial: "loadLink", collection: current_user.loads.with_wet_state.decorate, as: :load %>
+  </ul> 
+  <ul class="clean_load list-group bg-info">
+    <h1>Clean Loads</h1>
+    <%= render partial: "loadLink", collection: current_user.loads.with_clean_state.decorate, as: :load %>
   </ul> 
 
-
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
-      <tr>
-            <th>Weight</th>
-            <th>Name</th>
-            <th>State</th>
-            <th>User</th>
-            <th>Machine</th>
-            <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <%= content_tag_for(:tr, @loads) do |load| %>
-            <td><%= load.weight %></td>
-            <td><%= load.name %></td>
-            <td><%= load.state %></td>
-            <td><%= load.user.username %></td>
-            <td><%= load.machine %></td>
-            <td><%= link_to 'Show', load %></td>
-        <td><%= link_to 'Edit', edit_load_path(load) %></td>
-        <td><%= link_to 'Destroy', load, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      <% end %>
-    </tbody>
-  </table>
-</div>

@@ -64,7 +64,7 @@ class LoadsController < ApplicationController
   end
 
   def merge
-    @mLoad = Load.find(params[:mLoad])
+    @mLoad = Load.find(params[:mergeLoad])
     @load.merge!(@mLoad)
     redirect_to @load
 
