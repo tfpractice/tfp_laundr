@@ -7,6 +7,8 @@ module Machine
     after_save :set_name, on: [:create, :new]
     after_initialize  :set_instance_attributes
     scope :available_machines, -> {where(state: "available")}
+    scope :affordable_machines, ->(user){where(id: all.select { |machine| machine.price<= user.coins }.map(&:id))}
+    # where("price <= ?", user.coins)}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
     scope :can_accept_load, ->(load){where("capacity >= ?", load.weight)}

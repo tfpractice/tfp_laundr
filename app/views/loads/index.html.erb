@@ -4,6 +4,9 @@
     New Load
   <% end %>
   <h1>My Loads</h1>
+  <h2>My info</h2>
+  <p> <%= "I currently have #{current_user.laundry}lbs. of laundry" %></p>
+  <p><%= "I currently have #{current_user.coins} coins" %></p>
 </div>
 
     <%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
