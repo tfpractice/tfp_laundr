@@ -30,7 +30,7 @@ module Machine
         event :unclaim, :transitions_to => :available, if: -> (machine) { machine.coins == 0 }
         event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
 
-      # end
+      end
       state :ready do
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
         event :start, :transitions_to => :in_progress, if: -> (machine) { machine.enough_coins? }
@@ -81,7 +81,7 @@ module Machine
   #   @capacity -= weight
   # end
   # def reduce_price
-    # @price -= @coins
+  # @price -= @coins
   # end
   def next_steps
     valid_events = []
