@@ -18,6 +18,10 @@ class User < ActiveRecord::Base
   end
   def reset_coins
   	update(coins: 20)
+  end 
+  def calculate_laundry
+    total = loads.pluck(:weight).reduce(:+)
+    update(laundry: total)
   end
 
 end

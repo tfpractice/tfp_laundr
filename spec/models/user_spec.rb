@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:user) { create(:user) }
+
   let(:admin) { create(:admin) }
   describe 'attributes' do
     it 'has an email address' do
@@ -58,6 +59,19 @@ RSpec.describe User, type: :model do
         # expect{user.reset_coins}.to change{user.coins}.by(-3)
       end
     end
+    describe 'calculate_laundry' do
+      it 'sums the total weight of user.loads' do
+        puts user.laundry 
+        # user.reload
+        (1..4).each { |e| create(:load, user: user)  }
+        # expb
+        # user.calculate_laundry
+        expect{user.calculate_laundry}.to change{user.laundry}
+        
+      end
+
+    end
+
   end
 
 end
