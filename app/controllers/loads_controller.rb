@@ -1,8 +1,7 @@
 class LoadsController < ApplicationController
   before_action :set_load, only: [:show, :edit, :update, :destroy,:insert, :merge, :wash, :remove_from_machine, :dry, :finish]
   before_action :get_machine, only: [:insert]
-  load_and_authorize_resource :through => :current_user, except: [:index]
-
+  load_and_authorize_resource :through => :current_or_guest_user
   # GET /loads
   # GET /loads.json
   def index
