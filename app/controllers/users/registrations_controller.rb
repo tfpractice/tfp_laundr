@@ -1,6 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-# before_filter :configure_sign_up_params, only: [:create]
-before_filter :configure_account_update_params, only: [:update]
+  # before_filter :configure_sign_up_params, only: [:create]
+  before_filter :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   # def new
@@ -19,12 +19,20 @@ before_filter :configure_account_update_params, only: [:update]
 
   # PUT /resource
   def update
-    super
+    # super
+    if current_user.update(user_params)
+      redirect_to edit_user_registration_path, notice: 'User was successfully updated.'
+
+    else
+      render :edit
+
+    end
   end
+
   def reset_coins
     current_user.reset_coins
-    # redirect_to @loads
-    
+    redirect_to current_user
+
   end
 
   # DELETE /resource
@@ -41,7 +49,7 @@ before_filter :configure_account_update_params, only: [:update]
   #   super
   # end
 
-  # protected
+  protected
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params
@@ -51,13 +59,17 @@ before_filter :configure_account_update_params, only: [:update]
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
     devise_parameter_sanitizer.for(:account_update) << :coins
+    devise_parameter_sanitizer.for(:account_update) << :laundry
   end
 
   # The path used after sign up.
   # def after_sign_up_path_for(resource)
   #   super(resource)
   # end
-
+  private
+  def user_params
+    params.require(:user).permit(:username, :laundry, :coins)
+  end
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)

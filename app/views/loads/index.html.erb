@@ -5,8 +5,10 @@
   <% end %>
   <h1>My Loads</h1>
   <h2>My info</h2>
-  <p> <%#= "I currently have #{current_user.laundry}lbs. of laundry" %></p>
-  <p><%#= "I currently have #{current_user.coins} coins" %></p>
+  <%# @user %>
+  <%# @current_user.attributes %>
+  <p> <%= "I currently have #{current_user.laundry}lbs. of laundry" %></p>
+  <p><%= "I currently have #{current_user.coins} coins" %></p>
   <%= link_to reset_coins_path(current_user) %>
 </div>
 <%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
