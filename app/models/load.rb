@@ -5,7 +5,8 @@ class Load < ActiveRecord::Base
   acts_as_list scope: :user
   before_save :set_weight, on: :create
   after_save :set_name,  on: :create
-  after_create :set_dry_time
+  after_create :set_dry_time#, :update_user_laundry
+  validates_presence_of :user
   validates :weight, numericality: { greater_than_or_equal_to: 0 }
   # attr_accessor :dry_time
   scope :dirty_loads, -> {where(state: "dirty")}
@@ -153,6 +154,10 @@ class Load < ActiveRecord::Base
     # # puts "self.dry_time#{self.dry_time}"
     # # puts "self.attributes[:dry_time]#{attributes['dry_time']}"
   end
+  # def update_user_laundry
+    # user.calculate_laundry
+    
+  # end
   def set_name
     self.update(name: "#{self.weight}lbs.— Load ##{self.id}" ) if self.name.blank?
   end
