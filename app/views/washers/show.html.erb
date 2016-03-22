@@ -7,33 +7,24 @@
     <span class="glyphicon glyphicon-pencil"></span>
     Edit
   <% end %>
- 
   <h1>Show washer</h1>
 </div>
-
 <dl class="dl-horizontal">
   <dt>Name:</dt>
   <dd><%= @washer.name %></dd>
-
   <dt>Position:</dt>
   <dd><%= @washer.position %></dd>
-
   <dt>Type:</dt>
   <dd><%= @washer.type %></dd>
-
   <dt>State:</dt>
   <dd><%= @washer.state %></dd>
-
   <dt>User:</dt>
   <dd><%= @washer.user %></dd>
   <% if @washer.load == true %>
     <dt>Load:</dt>
-  <dd><%= @washer.load.weight %></dd>
-
+    <dd><%= @washer.load.weight %></dd>
   <%end %>
- 
 </dl>
-
 <ul class="list-group bg-info">
-   <%= render partial: "shared/machineLink", object: @washer, as: :machine %>
+  <%= render partial: "shared/machineLink", object: @washer, as: :machine %>
 </ul>

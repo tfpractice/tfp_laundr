@@ -10,18 +10,14 @@
     <h1>My Machines</h1>
     <%= render partial: "shared/machineLink", collection: current_user.dryers.decorate, as: :machine %>
   </ul>
- 
 <% end %>
 <ul class="available_dryers list-group ">
   <h1>Available Machines</h1>
   <%= render partial: "shared/machineLink", collection: @available_dryers, as: :machine %>
- 
-    </ul>
-    <ul class="unavailable_dryers list-group">
-      <h1>Unavailable Machines</h1>
-      <%= render partial: "shared/machineLink", collection: @dryers.unavailable_machines.decorate, as: :machine %>
-    </ul>
-
-        <%#= link_to 'Edit', edit_dryer_path(dryer) %>
-        <%#= link_to 'Destroy', dryer, method: :delete, data: { confirm: 'Are you sure?' } %>
- 
+</ul>
+<ul class="unavailable_dryers list-group">
+  <h1>Unavailable Machines</h1>
+  <%= render partial: "shared/machineLink", collection: @dryers.unavailable_machines.decorate, as: :machine %>
+</ul>
+<%#= link_to 'Edit', edit_dryer_path(dryer) %>
+<%#= link_to 'Destroy', dryer, method: :delete, data: { confirm: 'Are you sure?' } %>

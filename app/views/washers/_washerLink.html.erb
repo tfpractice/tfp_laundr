@@ -2,7 +2,6 @@
   <%= washer.position_label %>
   <%= washer.washer_link %>
   <%= washer.washer_info %>
-  
   <%= content_tag(:div, class:"event_links btn-toolbar pull-right") do  %>
     <% washer.next_steps.each do |step| %>
       <% if washer.has_form_input(step) %>

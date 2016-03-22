@@ -9,21 +9,16 @@
   <% end %>
   <h1>Show dryer</h1>
 </div>
-
 <dl class="dl-horizontal">
   <dt>Name:</dt>
   <dd><%= @dryer.name %></dd>
-
   <dt>Position:</dt>
   <dd><%= @dryer.position %></dd>
-
   <dt>State:</dt>
   <dd><%= @dryer.state %></dd>
-
   <dt>User:</dt>
   <dd><%= @dryer.user %></dd>
-
 </dl>
 <ul class="list-group bg-info">
-   <%= render partial: "shared/machineLink", object: @dryer, as: :machine %>
+  <%= render partial: "shared/machineLink", object: @dryer, as: :machine %>
 </ul>

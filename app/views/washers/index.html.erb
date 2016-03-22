@@ -10,14 +10,12 @@
     <h1>My Machines</h1>
     <%= render partial: "shared/machineLink", collection: current_user.washers.decorate, as: :machine %>
   </ul>
- 
 <% end %>
 <ul class="available_washers list-group ">
   <h1>Available Machines</h1>
   <%= render partial: "shared/machineLink", collection: @available_washers, as: :machine %>
- 
-    </ul>
-    <ul class="unavailable_washers list-group">
-      <h1>Unavailable Machines</h1>
-      <%= render partial: "shared/machineLink", collection: @washers.unavailable_machines.decorate, as: :machine %>
-    </ul>
+</ul>
+<ul class="unavailable_washers list-group">
+  <h1>Unavailable Machines</h1>
+  <%= render partial: "shared/machineLink", collection: @washers.unavailable_machines.decorate, as: :machine %>
+</ul>

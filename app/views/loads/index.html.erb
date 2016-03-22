@@ -9,31 +9,28 @@
   <p><%= "I currently have #{current_user.coins} coins" %></p>
   <%= link_to reset_coins_path(current_user) %>
 </div>
-
-    <%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
+<%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
 <ul class="dirty_loads list-group bg-danger">
-    <h1>Dirty Loads</h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_dirty_state.decorate, as: :load %>
-  </ul>
-  <ul class="in_washer_loads list-group bg-info">
-    <h1> Loads in washers </h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_in_washer_state.decorate, as: :load %>
-  </ul>
-
+  <h1>Dirty Loads</h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_dirty_state.decorate, as: :load %>
+</ul>
+<ul class="in_washer_loads list-group bg-info">
+  <h1> Loads in washers </h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_in_washer_state.decorate, as: :load %>
+</ul>
 <ul class="wet_load list-group bg-warning">
-    <h1>Wet Loads</h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_wet_state.decorate, as: :load %>
-  </ul> 
-  <ul class="in_dryer_loads list-group bg-info">
-    <h1> Loads in Dryers </h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_in_dryer_state.decorate, as: :load %>
-  </ul>
-  <ul class="dried_load list-group bg-warning">
-    <h1>Dried Loads</h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_dried_state.decorate, as: :load %>
-  </ul>
-  <ul class="clean_load list-group bg-success">
-    <h1>Clean Loads</h1>
-    <%= render partial: "loadLink", collection: current_user.loads.with_clean_state.decorate, as: :load %>
-  </ul> 
-
+  <h1>Wet Loads</h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_wet_state.decorate, as: :load %>
+</ul>
+<ul class="in_dryer_loads list-group bg-info">
+  <h1> Loads in Dryers </h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_in_dryer_state.decorate, as: :load %>
+</ul>
+<ul class="dried_load list-group bg-warning">
+  <h1>Dried Loads</h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_dried_state.decorate, as: :load %>
+</ul>
+<ul class="clean_load list-group bg-success">
+  <h1>Clean Loads</h1>
+  <%= render partial: "loadLink", collection: current_user.loads.with_clean_state.decorate, as: :load %>
+</ul>

@@ -1,28 +1,25 @@
 <%= content_tag(:li, class:"machine_link_list #{machine.list_item_class}") do %>
- <span > <%= machine.position_label %>
-   <%= machine.machine_link %>
-   <% if can? :use, machine %>
-     
-   <%= content_tag(:span, class:"machine_event_links btn-toolbar pull-right") do  %>
-     <% machine.next_steps.each do |step| %>
-
-       <% if machine.has_form_input(step) %>
-         <%= machine.event_form(step) %>
-       <% elsif step !="end_cycle" %>
-         <%= link_to machine.event_path(step) ,method: :patch, class: 'btn btn-primary pull-right pull-xs-right' do  %>
-           <%=  step %>
-           <%= machine.event_icon(step) %>
-         <%end %>
-       <% end %>
-     <%end %>
-   <% end %>
-      <% end %>  
-
-   </span>
-<!-- <div class="machine_info">
- -->  <ul class="machine_info_list clearfix available_dryers list-group list-inline  ">
+  <span > <%= machine.position_label %>
+    <%= machine.machine_link %>
+    <% if can? :use, machine %>
+      <%= content_tag(:span, class:"machine_event_links btn-toolbar pull-right") do  %>
+        <% machine.next_steps.each do |step| %>
+          <% if machine.has_form_input(step) %>
+            <%= machine.event_form(step) %>
+          <% elsif step !="end_cycle" %>
+            <%= link_to machine.event_path(step) ,method: :patch, class: 'btn btn-primary pull-right pull-xs-right' do  %>
+              <%=  step %>
+              <%= machine.event_icon(step) %>
+            <%end %>
+          <% end %>
+        <%end %>
+      <% end %>
+    <% end %>
+  </span>
+  <!-- <div class="machine_info">
+ -->  
+  <ul class="machine_info_list clearfix available_dryers list-group list-inline  ">
     <%= machine.machine_info %>
-
   </ul>
   <!-- </div> -->
 <% end %>
