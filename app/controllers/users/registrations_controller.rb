@@ -21,6 +21,11 @@ before_filter :configure_account_update_params, only: [:update]
   def update
     super
   end
+  def reset_coins
+    current_user.reset_coins
+    # redirect_to @loads
+    
+  end
 
   # DELETE /resource
   # def destroy
