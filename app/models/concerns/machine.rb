@@ -75,6 +75,8 @@ module Machine
     end
   end
   def return_coins
+    user.increase_coins(coins)
+
     self.reset_coins
   end
   # def reduce_capacity(weight=0)
@@ -98,6 +100,7 @@ module Machine
   end
   def insert_coins(count=0)
     begin
+      user.reduce_coins(count.to_i)
       increment!(:coins, count.to_i)
       halt! "machine cannot start until #{self.price} coins are inserted, currently has #{self.coins}" unless enough_coins?
     rescue Workflow::TransitionHalted => e

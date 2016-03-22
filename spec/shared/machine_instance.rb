@@ -99,10 +99,10 @@ shared_examples_for("a specific machine") do
             machine.fill!(load)
             expect(load.machine).to eq(machine)
           end
-         
-         
-         
-         
+
+
+
+
           context ' machine has no coins ' do
             it 'changes machine state to "unpaid"  ' do
               expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
@@ -145,9 +145,17 @@ shared_examples_for("a specific machine") do
         before(:each) do
           machine.fill!(load)
         end
-        describe '#_coins' do
+        describe '#insert_coins' do
           it 'responds to #insert_coins ' do
             expect(machine).to respond_to(:insert_coins)
+          end
+          it 'changes @coins by amt' do
+            expect{machine.insert_coins!(3)}.to change{machine.coins}.by(3)
+
+          end
+          it 'changes user.coins by amt' do
+            expect{machine.insert_coins!(3)}.to change{user.coins}.by(-3)
+
           end
           context 'when no coins inserted' do
             it 'changes coins by 0 without args' do
@@ -178,7 +186,7 @@ shared_examples_for("a specific machine") do
           it 'includes insert_coins' do
             expect(machine.next_steps).to include("insert_coins")
           end
-          context 'when mahine has coins' do
+          context 'when machine has coins' do
             it 'includes return_coins' do
               machine.coins = 3
               expect(machine.next_steps).to include("return_coins")
@@ -211,7 +219,10 @@ shared_examples_for("a specific machine") do
 
 
           end
-          describe '#return_coins' do
+          fdescribe '#return_coins' do
+             it 'increases user.coins by machine.coins' do
+              expect{machine.return_coins!}.to change{user.coins}.by(machine.coins)
+            end
             it 'sets machine coins to 0' do
               expect{machine.return_coins!}.to change{machine.coins}.from(machine.coins).to(0)
             end
