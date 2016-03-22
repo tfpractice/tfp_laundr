@@ -1,7 +1,7 @@
-<%= content_tag(:li, class:"load_link_list #{load.list_item_class}") do %>
+<%= content_tag(:li, class: "load_link_list_item #{load.list_item_class}") do %>
  <span > <%#= load.position_label %>
    <%= load.load_link %>
-   <% if can? :handle, load %>
+   <% if can? :manage, load %>
      
    <%= content_tag(:span, class:"load_event_links btn-toolbar pull-right") do  %>
      <% load.next_steps.each do |step| %>
