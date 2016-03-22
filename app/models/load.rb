@@ -21,6 +21,7 @@ class Load < ActiveRecord::Base
     state :dirty do
       event :insert, :transitions_to => :in_washer
       event :merge, :transitions_to => :dirty#, :if => proc {|machine, secondLoad| machine}
+      event :split, :transitions_to => :dirty
     end
     state :in_washer do
       event :wash, :transitions_to => :washed
@@ -32,6 +33,8 @@ class Load < ActiveRecord::Base
     state :wet do
       event :insert, :transitions_to => :in_dryer
       event :merge, :transitions_to => :wet
+      event :split, :transitions_to => :wet
+
     end
     state :in_dryer do
       event :dry, :transitions_to => :dried #, if: ->(load) {load.dry_time <=0}
@@ -68,6 +71,9 @@ class Load < ActiveRecord::Base
     if self.machine
       update(machine: nil)
     end
+  end
+  def split
+    
   end
   def wash
     begin

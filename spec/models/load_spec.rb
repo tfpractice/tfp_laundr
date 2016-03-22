@@ -94,15 +94,56 @@ RSpec.describe Load, type: :model do
       end
     end
   end
+  describe '#split' do
+    let(:load5) { create(:load, weight: 30, user: user) }
+    it 'respond_to split' do
+      expect(load).to respond_to(:split)
+    end
+    # it 'increments load weight by that of second ' do
+    # expect { load.split!(load4) }.to change{load.weight}.by(load4.weight)
+    # end
+    # it 'does not change load state ' do
+    # expect { load.split!(load4) }.not_to change{load.state}
+    # end
+    # it 'destroys the second Load ' do
+    #   loadx = create(:load, user: user)
+    #   loady = create(:load, user: user)
+    #   loadz = create(:load, user: user)
+    #   # w Load.count
+    #   loadx.split!(loady)
+    #   # # puts Load.count
+    #   expect { load.split!(load4) }.to change{Load.count}.by(1)
+    # end
+    # context 'when loads belong to different users' do
+    #   it 'adds a Workflow::TransitionHalted error to errors array' do
+    #     load.split!(load3)
+    #     expect(load.errors).to include(:weight)
+    #   end
+    # end
+    # context 'when loads have different states' do
+    #   it 'adds a Workflow::TransitionHalted error to errors array' do
+    #     load2.insert!(washer)
+    #     load.split!(load2)
+    #     expect(load.errors).to include(:weight)
+    #   end
+    # end
+    # context 'when no load is passed' do
+    #   it 'adds a Workflow::TransitionHalted error to errors array' do
+    #     load.split!
+    #     expect(load.errors).to include(:weight)
+    #   end
+    # end
+  end
   describe 'stateMachine' do
     context 'when dirty' do
       describe '#next_steps' do
-        it 'includes insert_coins' do
-          expect(load.next_steps).to include("insert")
-        end
+        # it 'includes insert_coins' do
+        #   expect(load.next_steps).to include("insert")
+        # end
         it 'includes insert_coins' do
           expect(load.next_steps).to include("merge")
         end
+
       end
       describe '#insert' do
         it 'assigns the machine association' do
