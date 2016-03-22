@@ -18,6 +18,10 @@ class DryerDecorator < MachineDecorator
     current_user ? current_user.loads.with_wet_state.can_fit_machine(machine) : Load.all.with_wet_state.can_fit_machine(machine)
 
   end
+  def max_coins
+    # coin_limit=[machine.user.coins, machine.price].min
+    return 1..machine.user.coins
+  end
   #def event_form(step)
   #  case step
   #  when "fill"

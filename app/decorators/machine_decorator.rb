@@ -114,21 +114,21 @@ class MachineDecorator < Draper::Decorator
       content_tag(:span, nil, class: "glyphicon glyphicon-chevron-left")
     end
   end
-  # def potential_loads
-  #   current_user ? current_user.loads.can_fit_machine(machine) : Load.all.can_fit_machine(machine)
-    
-  # end
+  def max_coins
+    coin_limit=[machine.user.coins, machine.price].min
+    return 1..coin_limit
+  end
   def event_form(step)
     case step
     when "fill"
       h.simple_form_for machine, url: polymorphic_path(machine, action: :fill), html: { class: "form-group form-inline btn-group"} do |f|
-        concat f.input(:load, inline_label: "choose load",  as: :select, collection: (potential_loads), label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
+        concat f.input(:load, inline_label: "choose load",  as: :select, collection: potential_loads, label_method: :name, value_method: :id, wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'load' })
         concat f.button :submit, "fill machine" ,method: :patch, class: ' btn btn-primary'
       end
     when "insert_coins"
       simple_form_for machine, url: polymorphic_path(machine, action: :insert_coins), html: { class: "form-group form-inline btn-group"} do |f|
         content_tag :div, class: "input-group select optional" do
-          concat f.input(:coins, as: :select, collection: (1..machine.price),inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
+          concat f.input(:coins, as: :select, collection: max_coins,inline_label: "coin count", wrapper_html:{class: "input-group"},label_html: { class: 'input-group-addon' }, input_html: { name: 'count' } )
           concat f.button :submit, value: :insert_coins, method: :patch, class: ' form-inputs from-group-btn btn btn-primary'
         end
       end
