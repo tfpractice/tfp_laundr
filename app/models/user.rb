@@ -16,5 +16,8 @@ class User < ActiveRecord::Base
   def increase_coins(amt=0)
   	increment!(:coins, amt)
   end
+  def reset_coins
+  	update(coins: 20)
+  end
 
 end

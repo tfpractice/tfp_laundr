@@ -50,6 +50,14 @@ RSpec.describe User, type: :model do
         expect{user.increase_coins(3)}.to change{user.coins}.by(3)
       end
     end
+    describe '#reset_coins' do
+      it 'resets the users coin count to 20' do
+        user.increase_coins(3)
+        user.reset_coins
+        expect(user.coins).to eq(20)
+        # expect{user.reset_coins}.to change{user.coins}.by(-3)
+      end
+    end
   end
 
 end
