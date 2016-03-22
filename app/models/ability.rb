@@ -17,7 +17,7 @@ class Ability
       can :use, Dryer, user: user
       can :use, Washer, :state => "available"
       can :use, Dryer, :state => "available"
-      can :merge, Load, user: user
+      # can :merge, Load, user: user
 
       can :manage, Load, user: user
 
