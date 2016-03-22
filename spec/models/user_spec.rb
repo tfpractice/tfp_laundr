@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:user) { build_stubbed(:user) }
+  let(:user) { create(:user) }
   let(:admin) { create(:admin) }
   describe 'attributes' do
     it 'has an email address' do
@@ -39,9 +39,17 @@ RSpec.describe User, type: :model do
         end
       end
     end
-    # describe 'description' do
+    describe '#reduce_coins' do
+      it 'decrements the users coin count by some amount' do
+        expect{user.reduce_coins(3)}.to change{user.coins}.by(-3)
+      end
 
-    # end
+    end
+    describe '#increase_coins' do
+      it 'decrements the users coin count by some amount' do
+        expect{user.increase_coins(3)}.to change{user.coins}.by(3)
+      end
+    end
   end
 
 end

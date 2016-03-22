@@ -10,5 +10,11 @@ class User < ActiveRecord::Base
   # accepts_nested_attributes_for :loads, allow_destroy: true#, reject_if: proc { |attributes| attributes['name'].blank? }
 
   # has_many :machines
+  def reduce_coins(amt=0)
+  	decrement!(:coins, amt)
+  end
+  def increase_coins(amt=0)
+  	increment!(:coins, amt)
+  end
 
 end
