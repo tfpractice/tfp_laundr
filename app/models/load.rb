@@ -98,6 +98,10 @@ class Load < ActiveRecord::Base
 
     end
   end
+  def hard_reset
+    update(machine: nil, state: "dirty")
+    
+  end
   def fold
   end
   def finish
@@ -149,7 +153,7 @@ class Load < ActiveRecord::Base
     # # puts "#self.weight#{self.weight}"
     # # puts "weight#{weight}"
     update(dry_time: 5*weight)
-    dry_time = weight * 5
+    # dry_time = weight * 5
     # # puts "dry_time#{dry_time}"
     # # puts "self.dry_time#{self.dry_time}"
     # # puts "self.attributes[:dry_time]#{attributes['dry_time']}"

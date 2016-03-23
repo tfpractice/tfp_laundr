@@ -1,6 +1,6 @@
 shared_examples_for("a specific machine") do
   describe "methods" do
-    describe '#hard_reset' do
+    fdescribe '#hard_reset' do
       it 'sets coins to 0' do
         machine.hard_reset
         expect(machine.coins).to eq(0)
@@ -19,6 +19,29 @@ shared_examples_for("a specific machine") do
         machine.hard_reset
         expect(machine.state).to eq("available")
       end
+      context 'its calls hard_reset on @load' do
+        it 'sets @load.state to dirty' do
+          machine.claim!(user)
+          machine.fill!(load)
+          machine.hard_reset
+          expect(load.state).to eq("dirty")
+          # expect { machine.hard_reset }.to change{load.state}.from("in_washer").to("dirty")
+
+        end
+        it 'sets @load.machine to nil' do
+          machine.claim!(user)
+          machine.fill!(load)
+          expect { machine.hard_reset }.to change{load.machine}.from(machine).to(nil)
+
+        end
+      end
+
+
+
+
+
+
+
 
     end
     describe"#enough_coins?" do
@@ -220,7 +243,7 @@ shared_examples_for("a specific machine") do
 
           end
           fdescribe '#return_coins' do
-             it 'increases user.coins by machine.coins' do
+            it 'increases user.coins by machine.coins' do
               expect{machine.return_coins!}.to change{user.coins}.by(machine.coins)
             end
             it 'sets machine coins to 0' do

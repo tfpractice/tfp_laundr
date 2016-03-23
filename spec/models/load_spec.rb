@@ -99,6 +99,39 @@ RSpec.describe Load, type: :model do
     it 'respond_to split' do
       expect(load).to respond_to(:split)
     end
+  end
+  describe '#hard_reset' do
+    let(:rUser) {create(:user) }
+    let(:rLoad) {create(:load, user: rUser, weight:5) }
+    let(:rWasher) {create(:xl_washer) }
+
+    # before(:each) do
+    #   rUser = create(:user)
+    #   rLoad = create(:load, user: rUser, weight:5)
+    #   rWasher =  create(:xl_washer)
+    # end
+    context 'when associated with a machine' do
+      it 'sets @machine to nil' do
+        rWasher.claim!(rUser)
+        rWasher.fill!(rLoad)
+        # rLoad.machine = rWasher
+        expect { rLoad.hard_reset }.to change{rLoad.machine}.from(rWasher).to(nil)
+
+      end
+    end
+    context 'when state is not dirty' do
+      it 'sets @state to dirty' do
+        rWasher.claim!(rUser)
+        rWasher.fill!(rLoad)
+        expect { rLoad.hard_reset }.to change{rLoad.state}.from("in_washer").to("dirty")
+
+      end
+    end
+
+
+
+
+
     # it 'increments load weight by that of second ' do
     # expect { load.split!(load4) }.to change{load.weight}.by(load4.weight)
     # end
@@ -241,7 +274,7 @@ RSpec.describe Load, type: :model do
               it 'respondto dry' do
                 expect(load).to respond_to(:dry)
               end
-              it 'reduces the @dry_time attribute' do
+              it 'reduces the dry_time attribute' do
                 expect { load.dry!(5) }.to change{load.dry_time}
               end
               fcontext 'when drying for less than dry time' do

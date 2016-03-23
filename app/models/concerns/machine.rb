@@ -110,6 +110,7 @@ module Machine
     end
   end
   def hard_reset
+    load.hard_reset unless !load
     self.update(coins: 0, load: nil, user: nil, state: "available")
   end
   def enough_coins?
