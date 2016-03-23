@@ -1,7 +1,10 @@
 <div class="page-header">
+<% if user_signed_in? && current_user.admin?  %>
+
   <%= link_to new_dryer_path, class: 'btn btn-primary' do %>
     <span class="glyphicon glyphicon-plus"></span>
     New Dryer
+  <% end %>
   <% end %>
   <h1>Listing dryers</h1>
 </div>

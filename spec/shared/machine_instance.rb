@@ -1,6 +1,6 @@
 shared_examples_for("a specific machine") do
   describe "methods" do
-    fdescribe '#hard_reset' do
+    describe '#hard_reset' do
       it 'sets coins to 0' do
         machine.hard_reset
         expect(machine.coins).to eq(0)

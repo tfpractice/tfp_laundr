@@ -1,8 +1,14 @@
 <div class="page-header">
-  <%= link_to new_washer_path, class: 'btn btn-primary' do %>
-    <span class="glyphicon glyphicon-plus"></span>
-    New Washer
-  <% end %>
+<% if user_signed_in? && current_user.admin?  %>
+   <%= link_to new_washer_path, class: 'btn btn-primary' do %>
+   <span class="glyphicon glyphicon-plus"></span>
+   New Washer
+ <% end %>
+<% end %>
+ 
+ 
+ 
+ 
   <h1>Listing washers</h1>
 </div>
 <% if user_signed_in?  %>

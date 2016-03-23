@@ -16,7 +16,7 @@ class MachineDecorator < Draper::Decorator
   #   end
   # def object_list_item(object)
   def list_item_class
-    if can? :use, object
+    if can? :use, machine
       case object.state
       when "available"
         "object list-group-item clearfix"
