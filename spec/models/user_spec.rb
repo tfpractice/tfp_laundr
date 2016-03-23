@@ -59,15 +59,19 @@ RSpec.describe User, type: :model do
         # expect{user.reset_coins}.to change{user.coins}.by(-3)
       end
     end
-    describe 'calculate_laundry' do
+    describe 'laundry' do
       it 'sums the total weight of user.loads' do
-        puts user.laundry 
+        puts user.laundry
+        prevWeight = user.laundry
         # user.reload
         (1..4).each { |e| create(:load, user: user)  }
         # expb
+        puts user.laundry
+
         # user.calculate_laundry
-        expect{user.calculate_laundry}.to change{user.laundry}
-        
+        expect(user.laundry).to be > prevWeight
+        # expect{user.calculate_laundry}.to change{user.laundry}
+
       end
 
     end

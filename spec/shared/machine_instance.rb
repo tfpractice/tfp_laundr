@@ -8,12 +8,10 @@ shared_examples_for("a specific machine") do
       it 'sets user to nil' do
         machine.hard_reset
         expect(machine.user).to be_nil
-
       end
       it 'sets load to nil' do
         machine.hard_reset
         expect(machine.load).to be_nil
-
       end
       it 'sets state to available' do
         machine.hard_reset
@@ -26,23 +24,13 @@ shared_examples_for("a specific machine") do
           machine.hard_reset
           expect(load.state).to eq("dirty")
           # expect { machine.hard_reset }.to change{load.state}.from("in_washer").to("dirty")
-
         end
         it 'sets @load.machine to nil' do
           machine.claim!(user)
           machine.fill!(load)
           expect { machine.hard_reset }.to change{load.machine}.from(machine).to(nil)
-
         end
       end
-
-
-
-
-
-
-
-
     end
     describe"#enough_coins?" do
       it "returns false if the machine coins are less than or equal to the price of the machine" do
@@ -122,10 +110,6 @@ shared_examples_for("a specific machine") do
             machine.fill!(load)
             expect(load.machine).to eq(machine)
           end
-
-
-
-
           context ' machine has no coins ' do
             it 'changes machine state to "unpaid"  ' do
               expect{machine.fill!(load)}.to change{machine.state}.from("empty").to("unpaid")
@@ -142,7 +126,6 @@ shared_examples_for("a specific machine") do
         end
         # it 'returns an array of length 2' do
         #   expect(machine.next_steps.length).to eq(2)
-
         # end
         context 'if machine has coins' do
           it 'includes return_coins' do
@@ -155,8 +138,6 @@ shared_examples_for("a specific machine") do
             machine.coins = 0
             # machine.return_coins!
             expect(machine.next_steps).not_to include("return_coins")
-
-
           end
           it 'does not include return_coins' do
             machine.coins = 0
@@ -174,11 +155,9 @@ shared_examples_for("a specific machine") do
           end
           it 'changes @coins by amt' do
             expect{machine.insert_coins!(3)}.to change{machine.coins}.by(3)
-
           end
           it 'changes user.coins by amt' do
             expect{machine.insert_coins!(3)}.to change{user.coins}.by(-3)
-
           end
           context 'when no coins inserted' do
             it 'changes coins by 0 without args' do
@@ -215,7 +194,6 @@ shared_examples_for("a specific machine") do
               expect(machine.next_steps).to include("return_coins")
             end
           end
-
           it 'includes remove_clothes' do
             expect(machine.next_steps).to include("remove_clothes")
           end
@@ -235,12 +213,6 @@ shared_examples_for("a specific machine") do
               machine.start!
               expect(machine.end_time).not_to be_nil
             end
-
-
-
-
-
-
           end
           fdescribe '#return_coins' do
             it 'increases user.coins by machine.coins' do

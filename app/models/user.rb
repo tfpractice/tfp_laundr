@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :loads
   has_many :washers
   has_many :dryers
+
   # accepts_nested_attributes_for :loads, allow_destroy: true#, reject_if: proc { |attributes| attributes['name'].blank? }
 
   # has_many :machines
@@ -19,9 +20,9 @@ class User < ActiveRecord::Base
   def reset_coins
   	update(coins: 20)
   end 
-  def calculate_laundry
-    total = loads.pluck(:weight).reduce(:+)
-    update(laundry: total)
+  def laundry
+    laundry = loads.pluck(:weight).sum
+    # update(laundry: total)
   end
 
 end
