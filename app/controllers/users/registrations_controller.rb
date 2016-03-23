@@ -31,7 +31,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def reset_coins
     current_user.reset_coins
-    redirect_to current_user
+    redirect_to loads_path
 
   end
 

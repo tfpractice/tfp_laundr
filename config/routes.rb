@@ -25,10 +25,10 @@ Rails.application.routes.draw do
   resources :xl_washers,path: 'washers',  controller: 'washers', type: 'XLWasher', concerns: :machine
 
   devise_for :users, controllers: { registrations: 'users/registrations'  } #, path_names:{reset_coins: 'rese'}  # get 'home/index'
-  patch '/users/:id/reset_coins' => 'users/registrations#reset_coins',  as: 'reset_coins'
 
   devise_scope :user do
-    # patch "reset_coins" => "users/registrations#reset_coins"
+    # patch '/users/:id/reset_coins' => 'users/registrations#reset_coins'#,  as: 'reset_coins'
+    patch "reset_coins", to: "users/registrations#reset_coins", as: "reset_coins"
     resources :loads do
       member do
         patch :merge

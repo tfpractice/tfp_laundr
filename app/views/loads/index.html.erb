@@ -4,12 +4,18 @@
     New Load
   <% end %>
   <h1>My Loads</h1>
+  <div class="userInfo">
   <h2>My info</h2>
-  <%# @user %>
-  <%# @current_user.attributes %>
-  <p> <%= "I currently have #{current_user.laundry}lbs. of laundry" %></p>
-  <p><%= "I currently have #{current_user.coins} coins" %></p>
-  <%= link_to reset_coins_path(current_user) %>
+    <%# @user %>
+    <%# @current_user.attributes %>
+    <p> <%= "I currently have #{current_user.laundry}lbs. of laundry" %>
+    </p>
+    <p>
+    <%= "I currently have #{current_user.coins} coins" %>
+    </p>
+    <span ><%= link_to "Reset Coins to 20", reset_coins_path, method: "patch", class: "btn btn-primary" %>
+    </span>
+    </div>
 </div>
 <%#= render partial: "loadLink", collection: current_user.loads.decorate, as: :load %>
 <ul class="dirty_loads list-group bg-danger">

@@ -1,2 +1,2 @@
 <%= current_user.laundry %>
-<%= link_to "Reset Coins", reset_coins_path(current_user) %>
+    <%= link_to "Reset Coins to 20", reset_coins_path, method: "patch", class: "btn btn-primary" %>
