@@ -75,6 +75,19 @@ RSpec.describe User, type: :model do
       end
 
     end
+    describe '#hard_reset' do
+      let(:machine) { create(:washer) }
+      let(:load) { create(:load, weight:4, user: user) }
+      it 'resets user.washers to nil' do
+        machine.claim!(user)
+        expect{user.hard_reset}.to change{user.washers.length}.from(1).to(0)
+
+      end
+      it 'resets user.loads' do
+
+      end
+
+    end
 
   end
 

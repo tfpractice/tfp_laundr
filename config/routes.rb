@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :l_washers, path: 'washers', controller: 'washers', type: 'LWasher', concerns: :machine
   resources :xl_washers,path: 'washers',  controller: 'washers', type: 'XLWasher', concerns: :machine
 
-  devise_for :users, controllers: { registrations: 'users/registrations'  } #, path_names:{reset_coins: 'rese'}  # get 'home/index'
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'users/sessions'  } #, path_names:{reset_coins: 'rese'}  # get 'home/index'
 
   devise_scope :user do
     # patch '/users/:id/reset_coins' => 'users/registrations#reset_coins'#,  as: 'reset_coins'
