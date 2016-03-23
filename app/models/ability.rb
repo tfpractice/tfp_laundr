@@ -10,9 +10,9 @@ class Ability
     else
      
       can :use, [Washer, Dryer], user: user 
-      can :claim, [Washer, Dryer], state: "available"
+      can :use, [Washer, Dryer], state: "available"
       can :use, MachineDecorator, user: user 
-      can :claim, MachineDecorator, state: "available"
+      can :use, MachineDecorator, state: "available"
       can :manage, Load, user: user
       can :manage, LoadDecorator, user: user
       can :read, :all
