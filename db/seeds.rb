@@ -13,8 +13,18 @@ if Rails.env.development?
     Washer.create( type: "MWasher")
     Washer.create( type: "LWasher")
     Washer.create( type: "XlWasher")
-    Dryer.create()
 
   end
+  20.times { |i|    Dryer.create()  }
 
+elsif Rails.env.production?
+  Washer.delete_all
+  Dryer.delete_all
+  10.times do |i|
+    Washer.create( type: "SWasher")
+    Washer.create( type: "MWasher")
+    Washer.create( type: "LWasher")
+    Washer.create( type: "XlWasher")
+  end
+  20.times { |i|    Dryer.create()  }
 end
