@@ -29,7 +29,6 @@ module Machine
       state :unpaid do
         event :insert_coins, :transitions_to => :ready
         event :return_coins, :transitions_to => :unpaid, if: -> (machine) { machine.coins > 0 }
-        # event :unclaim, :transitions_to => :available, if: -> (machine) { machine.coins == 0 }
         event :remove_clothes, :transitions_to => :empty,if: -> (machine) { machine.load != nil }
 
       end
@@ -97,7 +96,6 @@ module Machine
         valid_conditional_events.each { |e| valid_events << event.id2name  }
       end
     end
-    valid_events << "hard_reset"
     valid_events
   end
   def insert_coins(count=0)

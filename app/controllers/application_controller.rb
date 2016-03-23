@@ -2,13 +2,10 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # include MachineController
   before_action :configure_permitted_parameters, if: :devise_controller?
-
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   helper_method :current_or_guest_user
-  # protect_from_forgery with: :exception
-
-
+  
   def current_or_guest_user
     if current_user
       if session[:guest_user_id] && session[:guest_user_id] != current_user.id
@@ -30,23 +27,17 @@ class ApplicationController < ActionController::Base
     guest_user if with_retry
   end
 
-
-
-
-
-
-
   protected
-
+  
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:username, :email, :laundry, :password, :password_confirmation, :current_password) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:username, :email, :laundry, :password, :password_confirmation, :current_password) }
     devise_parameter_sanitizer.for(:account_update) { |u| u.permit(:username, :email, :laundry, :password, :password_confirmation, :current_password) }
   end
-
   private
   def create_guest_user
-    u = User.create(:username => "guest_#{rand(1000)}", :email => "guest_#{rand(100)}@example.com", :admin => false, :laundry => 0, :guest => true)
+    u = User.get_guest
+    # u = User.create(:username => "guest_#{rand(1000)}", :email => "guest_#{rand(100)}@example.com", :admin => false, :laundry => 0, :guest => true)
     u.save!(:validate => false)
     session[:guest_user_id] = u.id
     u

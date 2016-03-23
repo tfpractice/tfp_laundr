@@ -59,11 +59,7 @@ class DryersController < ApplicationController
       end
     end
   end
-  # def insert_coins(count=0)
-  #   @dryer.insert_coins!
-  #   redirect_to @dryer, notice: " machine #{@dryer.name} is ready"
 
-  # end
 
   # DELETE /dryers/1
   # DELETE /dryers/1.json
@@ -82,8 +78,7 @@ class DryersController < ApplicationController
     @dryer = @machine
   end
   def potential_loads
-        @potential_loads =  current_user.loads.with_dirty_state.can_fit_machine(@machine)#: Load.all.with_dirty_state.can_fit_machine(@machine)
-# @potential_loads = current_user ? current_user.loads.with_wet_state.can_fit_machine(@machine): Load.all.with_wet_state.can_fit_machine(@machine)
+    @potential_loads =  current_user.loads.with_dirty_state.can_fit_machine(@machine)#: Load.all.with_dirty_state.can_fit_machine(@machine)
   end
   # Never trust parameters from the scary internet, only allow the white list through.
   def dryer_params

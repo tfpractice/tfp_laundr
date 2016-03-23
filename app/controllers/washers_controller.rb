@@ -3,7 +3,8 @@ class WashersController < ApplicationController
   before_action :subclasses
   before_action :coin_excess, only: [:insert_coins]
   # before_action :potential_loads, :only[:fill]
-
+  # current_or_guest_user
+# load_and_authorize_resource :user
   # rescue_from Workflow::TransitionHalted, with: :model_coin_excess
   load_and_authorize_resource
 
