@@ -10,21 +10,25 @@ class Ability
   # admin users can :manage all records
   # other logged in users can :use Washers and Dryers that are available or claimed by that user
   # users can manage loads which belong to them
- 
+
   # @param user [User] the current user or guest user
   # @return Ability [CanCan::Ability] based on user role
-  
+
   def initialize(user)
-    user ||= User.get_guest 
+    user ||= User.new
     alias_action  :claim, :fill, :unclaim, :insert_coins, :return_coins, :start,  :remove_clothes, :to => :use
     if user.admin?
       can :manage, :all
+    elsif user.new_record?
+      can :read, :all
+
     else
 
       can :use, [Washer, Dryer], user: user
       can :use, [Washer, Dryer], state: "available"
-      can :use, MachineDecorator, user: user
       can :use, MachineDecorator, state: "available"
+      can :use, MachineDecorator, user: user
+
       can :manage, Load, user: user
       can :manage, LoadDecorator, user: user
       can :read, :all

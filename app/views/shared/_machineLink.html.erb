@@ -1,19 +1,8 @@
 <%= content_tag(:li, class:"machine_link_list #{machine.list_item_class}") do %>
   <span > <%= machine.position_label %>
-    <%= machine.class %>
-    <%#= "current_or_guest_user" %>
-    <%#= current_or_guest_user %>
+    
     <%= machine.machine_link %>
     <% if user_signed_in? %>
-      <%#= "current_user can use machine? #{current_user.username}" %>
-      <%#= can? :use, machine %>
-      <%#= "available?" %>
-      <%#= machine.state ==  "available" %>
-      <%#= "claim?" %>
-      <%#= can? :claim, machine %>
-      <%#= "read?" %>
-      <%#= can? :read, machine %>
-      <%#= current_ability %>
     <% end %>
     <% if can? :use, machine %>
       <%= content_tag(:span, class:"machine_event_links btn-toolbar pull-right") do  %>
