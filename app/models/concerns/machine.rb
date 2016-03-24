@@ -1,3 +1,5 @@
+# Provides the general functionality of both Washers and Dryers.
+# Most of the methods here are implementations of the Workflow gem's state-machine behavior
 module Machine
   extend ActiveSupport::Concern
   included do
@@ -8,11 +10,9 @@ module Machine
     after_initialize  :set_instance_attributes
     scope :available_machines, -> {where(state: "available")}
     scope :affordable_machines, ->(user){where(id: all.select { |machine| machine.price <= user.coins }.map(&:id))}
-    # where("price <= ?", user.coins)}
     scope :completed_machines, -> {where(state: "complete")}
     scope :unavailable_machines, -> {where.not(state: "available")}
     scope :can_accept_load, ->(load){where("capacity >= ?", load.weight)}
-    # scope :can_merge_with_load, ->(load){where("capacity >= ?", load.weight)}
     include Workflow
     acts_as_list
     workflow_column :state
@@ -45,19 +45,21 @@ module Machine
       end
     end
   end
+
+  # upon changing @state from :ready to :in_progress
+  # begins a new thread that sleeps for @period
+  # and calls :end_cycle!
   def on_in_progress_entry(new_state, event, *args)
-    puts "on_in_progress_entry"
+    # Runs a thread that sleeps for !@period
 
     thr = Thread.new do
-      puts "current machine state"
-      puts state
-      puts "new_state#{new_state}"
-      puts "running thread"
       sleep period
       end_cycle!
     end
 
   end
+  # :transitions_to => :empty
+  #  sets @param user [User] 
   def claim(user=nil)
     update(user: user)
   end
@@ -80,12 +82,12 @@ module Machine
 
     self.reset_coins
   end
-  # def reduce_capacity(weight=0)
-  #   @capacity -= weight
-  # end
-  # def reduce_price
-  # @price -= @coins
-  # end
+
+
+
+
+
+
   def next_steps
     valid_events = []
     current_state.events.each do |event, val|
