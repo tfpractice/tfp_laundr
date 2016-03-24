@@ -38,7 +38,12 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = false
+  config.before(:each, type: :model) do
 
+    require 'rspec_api_documentation'
+
+    require 'rspec_api_documentation/dsl'
+  end
   config.before(:each, type: :feature) do
     # :rack_test driver's Rack app under test shares database connection
     # with the specs, so continue to use transaction strategy for speed.
@@ -106,5 +111,6 @@ RSpec.configure do |config|
       with.library :rails
     end
   end
+
 
 end
