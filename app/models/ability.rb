@@ -12,7 +12,7 @@ class Ability
   # users can manage loads which belong to them
 
   # @param user [User] the current user or guest user
-  # @return Ability [CanCan::Ability] based on user role
+  # @return [CanCan::Ability] ability based on user role
 
   def initialize(user)
     user ||= User.new

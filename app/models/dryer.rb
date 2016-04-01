@@ -1,40 +1,8 @@
+# Dries the load belonging to the claimed user
 class Dryer < ActiveRecord::Base
   # belongs_to :user
   include Machine
-  # puts self.methods.grep(/^ap/).sort
-  # append_workflow
 
-
-
-
-  # self.states[:ready].events.push(event :insert_coins, :transitions_to => :ready)
-  # .states[:ready].events.push(Workflow::Event.new(:insert_coins, :transitions_to => :ready)
-  # workflow do
-  #   state :available do
-  #     event :claim, :transitions_to => :empty
-  #   end
-  #   state :empty do
-  #     event :fill, :transitions_to => :unpaid
-  #     event :unclaim, :transitions_to => :available
-  #   end
-  #   state :unpaid do
-  #     event :insert_coins, :transitions_to => :ready
-  #     event :remove_clothes, :transitions_to => :empty
-  #   end
-  #   state :ready do
-  #     event :insert_coins, :transitions_to => :ready
-  #     event :start, :transitions_to => :in_progress
-  #     event :remove_clothes, :transitions_to => :empty
-  #   end
-  #   state :in_progress do
-  #     event :insert_coins, :transitions_to => :in_progress
-  #     event :end_cycle, :transitions_to => :complete
-  #   end
-  #   state :complete do
-  #     event :insert_coins, :transitions_to => :ready
-  #     event :remove_clothes, :transitions_to => :empty
-  #   end
-  # end
   def start
     super
     load.dry!(period)
