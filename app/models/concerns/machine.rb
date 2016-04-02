@@ -5,6 +5,7 @@ module Machine
   extend ActiveSupport::Concern
 
   included do
+
     attr_accessor  :price, :capacity, :period, :end_time
 
     # AR relationships
@@ -23,10 +24,13 @@ module Machine
     scope :can_accept_load, ->(load) { where("capacity >= ?", load.weight) }
 
     include Workflow
-    # avaialble states, transitions, and events
+    # acts as list functionality
     acts_as_list
+    # sets workflow column to :state
     workflow_column :state
+    # avaialble states, transitions, and events
     workflow do
+      # default state is available
       state :available do
         event :claim, transitions_to: :empty
       end
