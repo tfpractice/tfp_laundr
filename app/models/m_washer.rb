@@ -1,3 +1,4 @@
+# A Medium washer
 class MWasher < Washer
 
   private
