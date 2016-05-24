@@ -1,15 +1,21 @@
 <div class="page-header">
-<% if user_signed_in? && current_user.admin?  %>
-   <%= link_to new_washer_path, class: 'btn btn-primary' do %>
-   <span class="glyphicon glyphicon-plus"></span>
-   New Washer
+  <% if user_signed_in? && current_user.admin?  %>
+    <%= link_to new_washer_path, class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      New Washer
  <% end %>
-<% end %>
- 
- 
- 
- 
+  <% end %>
+
+  <div class="row">
+    <div class="washer_info col-md-10">
+      <p>There are four types of washing machines, that each come with their own price, capacity, and duration. These details are listed on each washer. Once you claim an available washer, it will be made unavailable to any other users, and a series of action buttons will lead you through the process.</p>
+      <p>
+        The steps for using a washer are "claim", "insert loads", "insert coins", "start", "remove clothes", and "unclaim". Where available, actions to move a step backwards in the process</p>
+    </div>
+  </div>
+
   <h1>Listing washers</h1>
+  
 </div>
 <% if user_signed_in?  %>
   <ul class="unavailable_washers list-group bg-info">
