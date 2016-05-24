@@ -1,12 +1,17 @@
 == Laundr
 
-Laundr is a small application modelling a trip to the laundromat. Employing a state-machine logic, users can create, wash, and dry loads of clothing. There are four types of washing machines (small, medium, large and extra large) with different prices and capacities. And only one type of dryer.
+Laundr is a small rails application modelling a trip to the laundromat. Employing a state-machine logic, users can create, wash, and dry loads of clothing. There are four types of washing machines (small, medium, large and extra large) with different prices and capacities. And only one type of dryer.
+
+Some noteworthy features:
+- Single Table Inheritance (Postgres) for the four washing machine types
+- High level usage of ActiveSupport:Concern to enable shared behavior across 5 models with.
+- State Machine logic (via Workflow gem) to enable more complex controller actions beyond CRUD for 6 models.
+- Use of Decorators (via Draper gem)
+- Extensive test coverage (via rSpec)
+- Documentation for all models (via rDoc)
+- Elementary use of Threads/mutexes
 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
 
 * Ruby version 2.3
 
