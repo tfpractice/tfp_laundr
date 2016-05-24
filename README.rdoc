@@ -1,6 +1,6 @@
-== README
+== Laundr
 
-This is a small application modelling a trip to the laundromat. Employing a state-machine logic, users can create, wash, and dry loads of clothing. There are four types of washing machines (small, medium, large and extra large) with different prices and capacities. And only one type of dryer.
+Laundr is a small application modelling a trip to the laundromat. Employing a state-machine logic, users can create, wash, and dry loads of clothing. There are four types of washing machines (small, medium, large and extra large) with different prices and capacities. And only one type of dryer.
 
 
 This README would normally document whatever steps are necessary to get the
@@ -8,15 +8,15 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby version 2.3
 
 * System dependencies
 
 * Configuration
 
-* Database creation
+* Postgres Database
 
-* Database initialization
+* Rspec Test Suite
 
 * How to run the test suite
 
